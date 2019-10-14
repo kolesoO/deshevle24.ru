@@ -6,8 +6,8 @@ if(empty($arResult)) return "";
 $strReturn = '';
 $count = count($arResult);
 if ($count > 0) {
-    $strReturn .= '<div class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">';
-    $strReturn .= '<div class="container">';
+    $strReturn .= '<div class="breadcrumbs">';
+    $strReturn .= '<div class="container" itemscope itemtype="https://schema.org/BreadcrumbList">';
 
     //root link
     $strReturn .= '
