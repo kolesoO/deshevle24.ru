@@ -24,7 +24,7 @@ if ($count > 0) {
     foreach ($arResult as $key => $arItem) {
         $strReturn .= '
             <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <a href="'.$arItem["LINK"].'" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" itemprop="item">
+                <a href="'.$arItem["LINK"].'" itemprop="item">
                     <span itemprop="name">'.$arItem["TITLE"].'</span>
                 </a>
                 <meta itemprop="position" content="'.($key + 2).'" />
