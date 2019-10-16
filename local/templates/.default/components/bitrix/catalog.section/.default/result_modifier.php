@@ -164,7 +164,7 @@ if (count($arOfferKeysForAmount) > 0) {
     //end
 }
 
-$arResult["INNER_TEMPLATE"] = ($arParams["DEVICE_TYPE"] == "MOBILE" ? ".default-mobile" : ".default");
+$arResult["INNER_TEMPLATE"] = $arParams["DEVICE_TYPE"] == "DESKTOP" ? ".default" : ".default-mobile";
 
 //информация по разделам
 $arResult["SECTIONS"] = [];

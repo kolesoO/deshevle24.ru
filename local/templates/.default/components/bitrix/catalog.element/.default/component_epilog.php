@@ -75,7 +75,7 @@ $arCatalogTopParams = [
     "LINE_ELEMENT_COUNT" => 4
 ];
 if ($arParams["DEVICE_TYPE"] == "TABLET") {
-    $arCatalogTopParams["LINE_ELEMENT_COUNT"] = 3;
+    $arCatalogTopParams["LINE_ELEMENT_COUNT"] = 2;
 } elseif ($arParams["DEVICE_TYPE"] == "MOBILE") {
     $arCatalogTopParams["LINE_ELEMENT_COUNT"] = 1;
 }
@@ -131,7 +131,7 @@ $APPLICATION->IncludeComponent(
         "LINE_ELEMENT_COUNT" => $arCatalogTopParams["LINE_ELEMENT_COUNT"],
         "LOAD_ON_SCROLL" => "N",
         "MESSAGE_404" => "",
-        "MESS_BTN_ADD_TO_BASKET" => "В корзину",
+        "MESS_BTN_ADD_TO_BASKET" => $arParams["MESS_BTN_ADD_TO_BASKET"],
         "MESS_BTN_BUY" => "Купить",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_BTN_LAZY_LOAD" => "Показать ещё",

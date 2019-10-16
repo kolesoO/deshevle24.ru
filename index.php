@@ -4,6 +4,13 @@ $APPLICATION->SetPageProperty("description", "");
 $APPLICATION->SetTitle("");
 
 //баннеры
+$imageSize = [];
+if (DEVICE_TYPE != "DESKTOP") {
+    $imageSize = [
+        "WIDTH" => 875,
+        "HEIGHT" => 500
+    ];
+}
 $GLOBALS["bannerFilter"] = ["!PREVIEW_PICTURE" => false];
 $APPLICATION->IncludeComponent(
     "bitrix:news.list",
@@ -61,10 +68,7 @@ $APPLICATION->IncludeComponent(
         "AJAX_OPTION_STYLE" => "Y",
         "AJAX_OPTION_HISTORY" => "N",
         "AJAX_OPTION_ADDITIONAL" => "",
-        "IMAGE_SIZE" => [
-            "WIDTH" => "",
-            "HEIGHT" => ""
-        ]
+        "IMAGE_SIZE" => $imageSize
     ]
 );
 //end
@@ -300,6 +304,18 @@ $APPLICATION->IncludeComponent(
 //end
 
 //Акционные баннеры
+$imageSize = [];
+if (DEVICE_TYPE == "TABLET") {
+    $imageSize = [
+        "WIDTH" => 296,
+        "HEIGHT" => 131
+    ];
+} elseif (DEVICE_TYPE == "MOBILE") {
+    $imageSize = [
+        "WIDTH" => 275,
+        "HEIGHT" => 122
+    ];
+}
 $GLOBALS["bannerFilter"] = ["!PREVIEW_PICTURE" => false];
 $APPLICATION->IncludeComponent(
     "bitrix:news.list",
@@ -357,10 +373,7 @@ $APPLICATION->IncludeComponent(
         "AJAX_OPTION_STYLE" => "Y",
         "AJAX_OPTION_HISTORY" => "N",
         "AJAX_OPTION_ADDITIONAL" => "",
-        "IMAGE_SIZE" => [
-            "WIDTH" => "",
-            "HEIGHT" => ""
-        ]
+        "IMAGE_SIZE" => $imageSize
     ]
 );
 //end

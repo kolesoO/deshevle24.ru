@@ -153,14 +153,17 @@ $arCatalogItemsParams = [
     var obCatalogItemsParams = <?=CUtil::PhpToJSObject($arCatalogItemsParams)?>;
 </script>
 
-<?if ($arResult["ITEMS_COUNT"] > 0) :?>
-    <?foreach ($arResult["SECTIONS"] as $arSection) :?>
-        <div class="catalog_list-content">
-            <div flex-align="center" class="catalog_item-block">
+<div class="catalog_list-content">
+    <?if ($arResult["ITEMS_COUNT"] > 0) :?>
+        <?foreach ($arResult["SECTIONS"] as $key => $arSection) :?>
+            <?if ($key > 0) :?>
+                <hr class="section_hr">
+            <?endif?>
+            <div flex-align="center" flex-wrap="wrap" class="catalog_item-block">
                 <?if ($arSection["UF_MIN_PRICE"] > 0) :?>
                     <div class="catalog_label">от <?=\CurrencyFormat($arSection["UF_MIN_PRICE"], $arParams["CURRENCY_ID"])?></div>
                 <?endif?>
-                <div class="title-2"><?=$arSection["NAME"]?></div>
+                <div class="title-2 col-xs-24"><?=$arSection["NAME"]?></div>
             </div>
             <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between" items-count="<?=$arParams["LINE_ELEMENT_COUNT"]?>">
                 <?foreach ($arResult["ITEMS"] as $key => $arItem) :
@@ -188,11 +191,11 @@ $arCatalogItemsParams = [
                     </div>
                 <?endforeach;?>
             </div>
-        </div>
-    <?endforeach;?>
-<?else:?>
-    <p>Список товаров пуст</p>
-<?endif?>
+        <?endforeach;?>
+    <?else:?>
+        <p>Список товаров пуст</p>
+    <?endif?>
+</div>
 
 <?if ($showBottomPager) :?>
     <?=$arResult['NAV_STRING']?>

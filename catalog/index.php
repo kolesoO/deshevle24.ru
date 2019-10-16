@@ -15,7 +15,7 @@ if (DEVICE_TYPE == "DESKTOP") {
 } elseif (DEVICE_TYPE == "TABLET") {
     $itemsInRow = 3;
     $itemsInRowInner = 2;
-    $elemsInRow = 2;
+    $elemsInRow = 1;
     $pageElemCount = 12;
     $pagerTmp = ".default-mobile";
 } else {
@@ -131,7 +131,7 @@ $APPLICATION->IncludeComponent(
         ),
         "SHOW_TOP_ELEMENTS" => "N",
         "SECTION_COUNT_ELEMENTS" => "N",
-        "SECTION_TOP_DEPTH" => "3",
+        "SECTION_TOP_DEPTH" => "2",
         "SECTIONS_VIEW_MODE" => "TEXT",
         "SECTIONS_SHOW_PARENT_NAME" => "Y",
         "PAGE_ELEMENT_COUNT" => $pageElemCount,

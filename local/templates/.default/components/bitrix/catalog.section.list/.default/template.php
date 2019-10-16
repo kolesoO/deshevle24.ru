@@ -10,7 +10,7 @@
             <?endif?>
             <!--div class="catalog_label"></div-->
             <div class="title-3"><?=$arSection["NAME"]?></div>
-            <div class="catalog_section" flex-align="start">
+            <div class="catalog_section" flex-align="start" flex-wrap="wrap">
                 <?foreach ($arSection["CHILD_SECTIONS"] as $sectionKey) :
                     $bgImg = (is_array($arResult["SECTIONS"][$sectionKey]["PICTURE"])) ? $arResult["SECTIONS"][$sectionKey]["PICTURE"]["SRC"] : SITE_TEMPLATE_PATH . "/images/no-image.png";
                     ?>

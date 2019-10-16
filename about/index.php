@@ -30,7 +30,7 @@ $APPLICATION->SetTitle("О компании");
     );?>
 </div>
 <div class="company-info" flex-align="start">
-    <div class="company-info-item col-lg-12">
+    <div class="company-info-item col-lg-12 col-md-24 col-xs-24">
         <?$APPLICATION->IncludeComponent(
             "bitrix:main.include",
             ".default",
@@ -41,7 +41,7 @@ $APPLICATION->SetTitle("О компании");
             false
         );?>
     </div>
-    <div class="company-info-item col-lg-12">
+    <div class="company-info-item col-lg-12 hidden-md hidden-xs">
         <img src="<?=SITE_TEMPLATE_PATH?>/images/company-info-divan.png" class="company-info">
     </div>
 </div>

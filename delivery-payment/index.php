@@ -36,8 +36,8 @@ $APPLICATION->SetTitle("Доставка и оплата");
         <img src="<?=SITE_TEMPLATE_PATH?>/images/delivery-boxes.png">
     </div>
 </div>
-<div class="delivery-payment-table" flex-align="start" flex-text_align="space-between">
-    <table class="col-lg-18">
+<div class="delivery-payment-table" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+    <table class="col-lg-18 col-md-24 col-xs-24">
         <tr>
             <td rowspan="2">груз</td>
             <td colspan="2">подъем и занос</td>
@@ -62,7 +62,7 @@ $APPLICATION->SetTitle("Доставка и оплата");
             <td>100 руб. этаж</td>
         </tr>
     </table>
-    <div class="delivery-payment-table-descr col-lg-5">
+    <div class="delivery-payment-table-descr col-lg-5 col-md-24 col-xs-24">
         <p>*Зависит от наличия в доме грузового лифта и веса предмета мебели.</p>
         <p>*Для покупателей, проживающих в частных домах или на первом этаже, занос стоит 450 рублей.</p>
     </div>

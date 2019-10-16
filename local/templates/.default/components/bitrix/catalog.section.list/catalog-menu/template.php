@@ -21,7 +21,7 @@
                 <div class="catalog_menu-main" data-tab_content>
                     <?foreach ($arResult["SECTIONS"] as $arSection) :?>
                         <?if ($arSection["DEPTH_LEVEL"] == 1 && is_array($arSection["CHILD_SECTIONS"])) :?>
-                            <div id="catalog_menu-<?=$arSection["CODE"]?>" data-tab_item flex-wrap="wrap" flex-align="start" flex-text_align="start">
+                            <div id="catalog_menu-<?=$arSection["CODE"]?>" data-tab_item flex-wrap="wrap" flex-align="start" flex-text_align="start" class="col-lg-24 col-md-24 col-xs-24">
                                 <?foreach ($arSection["CHILD_SECTIONS"] as $sectionKey) :?>
                                     <a href="<?=$arResult["SECTIONS"][$sectionKey]["SECTION_PAGE_URL"]?>" class="catalog_menu-item">
                                         <?if (is_array($arResult["SECTIONS"][$sectionKey]["PICTURE"])) :?>

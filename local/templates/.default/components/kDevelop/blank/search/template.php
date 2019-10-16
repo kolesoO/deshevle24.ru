@@ -2,10 +2,10 @@
     <input
         type="text"
         name="q"
-        class="col-lg-15"
+        class="col-lg-15 col-md-15 col-xs-24"
         placeholder="Введите поисковую фразу"
         value="<?=$_GET["q"]?>"
     >
-    <button type="submit" class="btn color col-lg-9">Найти</button>
+    <button type="submit" class="btn color col-lg-9 col-md-9 col-xs-24">Найти</button>
 </form>
 <hr class="section_hr">

@@ -89,6 +89,7 @@ $APPLICATION->IncludeComponent (
         "AJAX_OPTION_HISTORY" => "Y",
         "ELEMENT_IMAGE_SIZE" => $arImageSize,
         "DEVICE_TYPE" => DEVICE_TYPE,
+        "MESS_BTN_ADD_TO_BASKET" => "Купить"
     )
 );
 

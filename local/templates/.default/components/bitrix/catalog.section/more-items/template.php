@@ -37,7 +37,7 @@ $this->setFrameMode(true);
                     data-autoplaySpeed="5000"
                     data-infinite="false"
                     data-speed="1000"
-                    data-arrows="true"
+                    data-arrows="<?=$arParams["DEVICE_TYPE"] == "DESKTOP" ? "true" : "false"?>"
                     data-dots="false"
                     data-slidesToShow="<?=$arParams["LINE_ELEMENT_COUNT"]?>"
             >
@@ -57,12 +57,11 @@ $this->setFrameMode(true);
                                     "OFFER_KEY" => $arItem["OFFER_ID_SELECTED"],
                                     "OFFERS_LIST" => $arItem["OFFERS"],
                                     "WRAP_ID" => "catalog-item-".$arItem["ID"],
-                                    "AREA_ID" => ($arResult["SET_AREA"] ? $this->GetEditAreaId($arItem["ID"]) : null)
+                                    "AREA_ID" => $this->GetEditAreaId($arItem["ID"])
                                 ],
-                                "PARAMS" => $arResult["ORIGINAL_PARAMETERS"],
-                                "PRICES" => $arResult["PRICES"]
+                                "PARAMS" => $arParams
                             ],
-                            null,
+                            $component,
                             ['HIDE_ICONS' => 'Y']
                         );?>
                     </div>

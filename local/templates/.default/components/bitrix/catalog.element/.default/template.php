@@ -35,11 +35,12 @@ if ($arParams['DISPLAY_COMPARE']) {
 
 <section class="section">
     <div class="container">
-        <div flex-align="center" flex-text_align="space-between">
-            <div class="col-lg-7">
+        <div flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
+            <div class="col-lg-7 col-md-24">
                 <div class="title-1"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
             </div>
-            <div class="col-lg-15" flex-align="center" flex-text_align="space-between">
+            <hr class="section_hr hidden-lg col-md-24 col-xs-24">
+            <div class="btn_list col-lg-15 col-md-24 col-xs-24" flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
                 <div align="center">
                     <i class="icon icon-star"></i>
                     <i class="icon icon-star"></i>
@@ -48,20 +49,20 @@ if ($arParams['DISPLAY_COMPARE']) {
                     <i class="icon icon-star"></i>
                     <span>(0)</span>
                 </div>
-                <a href="#" class="btn grey_full" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
+                <a href="#" class="btn grey_full col-xs-24" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
                     <i class="icon icon-favorite"></i>
                     <span>Мне нравится</span>
                 </a>
                 <?if ($arOffer["CAN_BUY"]) :?>
                     <a
                             href="#"
-                            class="btn"
+                            class="btn col-xs-24"
                             align="center"
                             data-popup-open="#buy-one-click"
                     >Купить в 1 клик</a>
                     <a
                             href="#"
-                            class="btn color"
+                            class="btn color col-xs-24"
                             align="center"
                             onclick="obAjax.addToBasket('<?=$arOffer["ID"]?>', '<?=$arPrice["PRICE_ID"]?>', event)"
                     ><?=$arParams["MESS_BTN_ADD_TO_BASKET"]?></a>
@@ -69,17 +70,33 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
         </div>
         <div class="catalog_detail">
-            <div class="product_preview-img col-lg-24 col-md-24 col-xs-24" flex-align="stretch" flex-wrap="wrap">
+            <div class="product_preview-img col-lg-24 col-md-24 col-xs-24" flex-align="stretch" flex-wrap="wrap" flex-text_align="space-between">
                 <?if (is_array($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) && count($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) > 0) :?>
-                    <div class="product_preview-nav col-lg-3">
+                    <div
+                            class="product_preview-nav col-lg-3 col-md-3 hidden-xs"
+                            data-autoplay="false"
+                            data-autoplaySpeed="5000"
+                            data-infinite="false"
+                            data-speed="1000"
+                            data-arrows="true"
+                            data-dots="false"
+                            data-slidesToShow="3"
+                    >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
                             <a href="#" class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></a>
                         <?endforeach;?>
                     </div>
-                    <div class="product_preview-img_big col-lg-21">
-                        <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $key => $arFileInfo) :
-                            if ($key > 0) continue;
-                            ?>
+                    <div
+                            class="product_preview-img_big js-slider col-lg-20 col-md-20 col-xs-24"
+                            data-autoplay="false"
+                            data-autoplaySpeed="5000"
+                            data-infinite="false"
+                            data-speed="1000"
+                            data-arrows="true"
+                            data-dots="false"
+                            data-slidesToShow="1"
+                    >
+                        <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $key => $arFileInfo) :?>
                             <div class="product_preview-img_big-item" style="background-image: url('<?=$arFileInfo["origin"]?>')"></div>
                         <?endforeach;?>
                     </div>
@@ -95,14 +112,14 @@ if ($arParams['DISPLAY_COMPARE']) {
 <section class="section">
     <div class="catalog_detail-tab js-tabs">
         <div flex-align="center" flex-text_align="space-between">
-            <a href="#" class="catalog_detail-tab-item col-lg-6" data-tab_target="#config">Конфигурация</a>
-            <a href="#" class="catalog_detail-tab-item col-lg-18" data-tab_target="#reviews">Отзывы (0)</a>
+            <a href="#" class="catalog_detail-tab-item col-lg-6 col-md-6 col-xs-12" data-tab_target="#config">Конфигурация</a>
+            <a href="#" class="catalog_detail-tab-item col-lg-18 col-md-18 col-xs-12" data-tab_target="#reviews">Отзывы (0)</a>
         </div>
         <div class="section" data-tab_content>
             <div id="config" data-tab_item>
                 <div class="container">
-                    <div class="catalog_detail-description" flex-align="start" flex-text_align="space-between">
-                        <div class="catalog_detail-description-item">
+                    <div class="catalog_detail-description" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                        <div class="catalog_detail-description-item col-lg-6 col-md-8 col-xs-24">
                             <?
                             $propPerBlock = ceil(count($arParams["PRODUCT_PROPERTIES"]) / 4);
                             $counter = 0;
@@ -111,7 +128,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                                 if (!is_string($arProp["VALUE"]) || !$arProp) continue;
                                 ?>
                                 <?if ($counter % $propPerBlock == 0 && $counter > 0) :?>
-                                    </div><div class="catalog_detail-description-item">
+                                    </div><div class="catalog_detail-description-item col-lg-6 col-md-8 col-xs-24">
                                 <?endif?>
                                 <div class="catalog_item-block">
                                     <div class="title-4"><?=$arProp["NAME"]?>:</div>
@@ -122,7 +139,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                             endforeach;?>
                         </div>
                         <?if ($arOffer["CAN_BUY"]) :?>
-                            <div class="catalog_detail-description-item">
+                            <div class="catalog_detail-description-item col-lg-6 col-md-24 col-xs-24">
                                 <div class="catalog_item-block">
                                     <div class="title-4">Цена:</div>
                                     <div flex-align="center" flex-text_align="space-between">
@@ -138,7 +155,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                                     </div>
                                 </div>
                                 <div class="catalog_item-block">
-                                    <a href="#" class="btn btn-arrow col-lg-24" align="center" data-popup-open="#buy-one-click">
+                                    <a href="#" class="btn btn-arrow col-lg-24 col-xs-24" align="center" data-popup-open="#buy-one-click">
                                         <span>Купить в 1 клик</span>
                                         <i class="icon icon-arrow-orange"></i>
                                     </a>
@@ -146,7 +163,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                                 <div class="catalog_item-block">
                                     <a
                                             href="#"
-                                            class="btn color btn-arrow col-lg-24"
+                                            class="btn color btn-arrow col-lg-24 col-xs-24"
                                             align="center"
                                             onclick="obAjax.addToBasket('<?=$arOffer["ID"]?>', '<?=$arPrice["PRICE_ID"]?>', event)"
                                     >
@@ -158,29 +175,29 @@ if ($arParams['DISPLAY_COMPARE']) {
                         <?endif?>
                     </div>
                     <hr class="section_hr">
-                    <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                        <div class="col-lg-5">
+                    <div class="articles_list" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
+                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
                             <div class="catalog_item-block">
                                 <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
                             </div>
                             <div class="title-4">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
                             <div class="catalog_item-block">
                                 <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
                             </div>
                             <div class="title-4">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
                             <div class="catalog_item-block">
                                 <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
                             </div>
                             <div class="title-4">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
                             <div class="catalog_item-block">
                                 <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
                             </div>
@@ -191,7 +208,9 @@ if ($arParams['DISPLAY_COMPARE']) {
                 </div>
             </div>
             <div id="reviews" data-tab_item>
-                reviews
+                <div class="container">
+                    <p>Список отзывов пуст</p>
+                </div>
             </div>
         </div>
     </div>
@@ -207,7 +226,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                     data-autoplaySpeed="5000"
                     data-infinite="false"
                     data-speed="1000"
-                    data-arrows="true"
+                    data-arrows="<?=$arParams["DEVICE_TYPE"] == "DESKTOP" ? "true" : "false"?>"
                     data-dots="false"
                     data-slidesToShow="<?=$arParams["ALSO_BUY_ELEMENT_COUNT"]?>"
             >

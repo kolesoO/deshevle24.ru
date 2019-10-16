@@ -129,7 +129,7 @@ unset($arSortItem);*/
                 $component,
                 ['HIDE_ICONS' => 'Y']
             );?>
-            <div class="catalog_list col-lg-18">
+            <div class="catalog_list col-lg-18 col-md-16 col-xs-24">
                 <div class="catalog_list-top" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
                     <span id="modef" style="display:none">Найдено товаров: <b id="modef_num">206</b></span>
                     <div class="catalog_list-top-links">

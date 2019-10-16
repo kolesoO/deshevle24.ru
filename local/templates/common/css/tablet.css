@@ -21,6 +21,9 @@
     .col-md-18{
         width:75%;
     }
+    .col-md-16{
+        width:66.6666%;
+    }
     .col-md-15{
         width:62.5%;
     }
@@ -201,7 +204,8 @@
     }
     .catalog_slider .catalog_item,
     .catalog_section .catalog_section-item{
-        margin: 0 15px;
+        margin-left:15px;
+        margin-right:15px;
     }
     [items-count] .catalog_item{
         margin-bottom: 15px;
@@ -290,8 +294,7 @@
     .popup_content.product{
         width: 80%;
     }
-    .content_tab,
-    .catalog_detail-tab{
+    .content_tab{
         margin-bottom: 30px;
     }
     .catalog_detail-tab-item:first-child{
@@ -301,7 +304,8 @@
         padding-top: 45px;
     }
     .catalog_section-item{
-        width: calc(100%/6);
+        width: calc(100%/3 - 30px);
+        margin-bottom: 15px;
     }
     .catalog_detail{
         margin-top: 30px;
@@ -325,12 +329,9 @@
         padding: 24px;
     }
     .catalog_menu-wrap{
-        position: absolute;
         top: 100%;
         left: -100%;
         width: 100%;
-        background-color: #fff;
-        transition: left .3s;
     }
     .catalog_menu-wrap.active{
         left: 0;
@@ -388,6 +389,9 @@
     .product_preview-description{
         padding-left: 45px;
     }
+    .product_preview-img_big-item{
+        height: 390px;
+    }
     .catalog_color-item + .catalog_color-item{
         margin-left: 20px;
     }
@@ -395,15 +399,15 @@
         padding: 15px 0;
     }
     .delivery-payment-descr{
-        width: 85%;
-        padding: 20px 40px;
-        margin-bottom: 50px;
+        width: 100%;
+        padding: 30px 40px;
+        margin-bottom: 30px;
     }
     .delivery-payment-info-item {
-        padding: 80px;
+        padding: 30px 40px;
     }
-    .delivery-payment-info-item:first-child{
-        width: 45%;
+    .delivery-payment-info-item + .delivery-payment-info-item{
+        margin-top: 15px;
     }
     .delivery-payment-info-item:first-child .title-4 {
         margin-bottom: 30px;
@@ -411,26 +415,26 @@
     .delivery-payment small{
         margin-bottom: 20px;
     }
-    .delivery-payment-info-item:nth-child(2){
-        width: 50%;
-    }
     .delivery-payment-table {
         margin-top: 50px;
     }
     .delivery-payment-table td{
         padding: 20px;
     }
+    .delivery-payment-table-descr{
+        margin-top: 10px;
+    }
     .company-employees-photo{
-        margin-bottom: 70px;
+        margin-bottom: 50px;
     }
     .company-info-item:first-child{
-        padding: 50px;
+        padding: 40px;
     }
     .company-text {
-        margin-top: 70px;
+        margin-top: 50px;
     }
     .company-galary {
-        margin-top: 35px;
+        margin-top: 15px;
     }
     .company-galary-item{
         padding: 30px 30px 0 30px;
@@ -518,7 +522,7 @@
         margin-left: 10px;
     }
     .catalog_list-top{
-        padding: 26px 25px;
+        padding: 21px 25px;
     }
     .catalog_list-top-links > a + a{
         margin-left: 20px;
@@ -541,8 +545,23 @@
     .catalog_filter-title{
         margin-bottom: 15px;
     }
-    .catalog_detail-description-item:not(:last-child){
+    .catalog_detail-description-item{
         padding-right: 30px;
+        padding-bottom: 30px;
+        width: calc(33.3333% - 30px);
+    }
+    .catalog_detail-description-item:not(:nth-child(3)){
+        margin-right:30px;
+    }
+    .catalog_detail-description-item:nth-child(3){
+        border:0;
+    }
+    .catalog_detail-description-item.col-md-24{
+        width: 100%;
+        margin-right: 0;
+    }
+    .articles_list-item{
+        margin-bottom: 40px;
     }
 
 }

@@ -13,8 +13,8 @@
 $this->setFrameMode(true);
 ?>
 
-<aside class="catalog_filter col-lg-6 js-drop_down">
-    <a href="#" class="btn color full col-lg-24 js-drop_down-btn" align="center">
+<aside class="catalog_filter col-lg-6 col-md-8 col-xs-24 js-drop_down">
+    <a href="#" class="btn color full col-lg-24 col-md-24 col-xs-24 js-drop_down-btn" align="center">
         <span>Скрыть фильтры</span>
         <i class="icon"></i>
     </a>
@@ -43,7 +43,7 @@ $this->setFrameMode(true);
                         <div class="catalog_filter-title">Цена, руб.</div>
                         <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
                             <input
-                                    class="col-lg-11"
+                                    class="col-lg-11 col-md-24 col-xs-24 catalog_filter-option"
                                     name="<?=$arItem["VALUES"]["MIN"]["CONTROL_NAME"]?>"
                                     id="<?=$arItem["VALUES"]["MIN"]["CONTROL_ID"]?>"
                                     type="text"
@@ -52,7 +52,7 @@ $this->setFrameMode(true);
                                     value="<?=$arItem["VALUES"]["MIN"]["HTML_VALUE"]?>"
                             >
                             <input
-                                    class="col-lg-11"
+                                    class="col-lg-11 col-md-24 col-xs-24"
                                     name="<?=$arItem["VALUES"]["MAX"]["CONTROL_NAME"]?>"
                                     id="<?=$arItem["VALUES"]["MAX"]["CONTROL_ID"]?>"
                                     type="text"
@@ -111,7 +111,7 @@ $this->setFrameMode(true);
                                         $ar["URL_ID"] = "#fff";
                                     }
                                     ?>
-                                    <div class="col-lg-11 catalog_checkbox catalog_filter-option">
+                                    <div class="col-lg-11 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
                                         <input
                                                 type="checkbox"
                                                 value="<?=$ar["HTML_VALUE"]?>"
