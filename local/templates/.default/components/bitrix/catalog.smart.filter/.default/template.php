@@ -69,10 +69,8 @@ $this->setFrameMode(true);
             <?
             //остальные свойства
             foreach ($arResult["ITEMS"] as $key=>$arItem) :
-                if(empty($arItem["VALUES"]) || isset($arItem["PRICE"]))
-                    continue;
-                if ($arItem["DISPLAY_TYPE"] == "A" && ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0))
-                    continue;
+                if(empty($arItem["VALUES"]) || isset($arItem["PRICE"])) continue;
+                if ($arItem["DISPLAY_TYPE"] == "A" && ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)) continue;
                 $arCur = current($arItem["VALUES"]);
                 ?>
                 <div class="catalog_filter-item">
@@ -106,26 +104,61 @@ $this->setFrameMode(true);
                                     }
                                 }
                                 ?>
-                                <?foreach ($arItem["VALUES"] as $val => $ar) :
-                                    if (!isset($ar["URL_ID"]) || strlen($ar["URL_ID"]) == 0) {
-                                        $ar["URL_ID"] = "#fff";
-                                    }
-                                    ?>
-                                    <div class="col-lg-11 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
-                                        <input
-                                                type="checkbox"
-                                                value="<?=$ar["HTML_VALUE"]?>"
-                                                name="<?=$ar["CONTROL_NAME"]?>"
-                                                id="<?=$ar["CONTROL_ID"]?>"
-                                            <?if ($ar["CHECKED"]) :?> checked<?endif?>
-                                                onclick="smartFilter.click(this)"
-                                        >
-                                        <label for="<?=$ar["CONTROL_ID"]?>">
-                                            <span class="catalog_color-color" style="background-color: <?=$ar["URL_ID"]?>"></span>
-                                            <span><?=$ar["VALUE"]?></span>
-                                        </label>
-                                    </div>
-                                <?endforeach?>
+                                <?if ($arItem["CODE"] == "color") :?>
+                                    <?foreach ($arItem["VALUES"] as $val => $ar) :
+                                        if (!isset($ar["URL_ID"]) || strlen($ar["URL_ID"]) == 0) {
+                                            $ar["URL_ID"] = "#fff";
+                                        }
+                                        ?>
+                                        <div class="col-lg-11 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
+                                            <input
+                                                    type="checkbox"
+                                                    value="<?=$ar["HTML_VALUE"]?>"
+                                                    name="<?=$ar["CONTROL_NAME"]?>"
+                                                    id="<?=$ar["CONTROL_ID"]?>"
+                                                <?if ($ar["CHECKED"]) :?> checked<?endif?>
+                                                    onclick="smartFilter.click(this)"
+                                            >
+                                            <label for="<?=$ar["CONTROL_ID"]?>">
+                                                <span class="catalog_color-color" style="background-color: <?=$ar["URL_ID"]?>"></span>
+                                                <span><?=$ar["VALUE"]?></span>
+                                            </label>
+                                        </div>
+                                    <?endforeach?>
+                                <?else:?>
+                                    <?foreach ($arItem["VALUES"] as $val => $ar) :?>
+                                        <div class="col-lg-24 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
+                                            <input
+                                                    type="checkbox"
+                                                    value="<?=$ar["HTML_VALUE"]?>"
+                                                    name="<?=$ar["CONTROL_NAME"]?>"
+                                                    id="<?=$ar["CONTROL_ID"]?>"
+                                                <?if ($ar["CHECKED"]) :?> checked<?endif?>
+                                                    onclick="smartFilter.click(this)"
+                                            >
+                                            <label for="<?=$ar["CONTROL_ID"]?>">
+                                                <span class="catalog_color-color"></span>
+                                                <span><?=$ar["VALUE"]?></span>
+                                            </label>
+                                        </div>
+                                    <?endforeach?>
+                                <?endif?>
+                                <?break;
+                            case "K":
+                                break;
+                            case "P":?>
+                                <div class="col-lg-24 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
+                                    <select
+                                        name="<?=$arCur["CONTROL_NAME_ALT"]?>"
+                                        class="col-lg-24 col-md-24 col-xs-24"
+                                        onchange="smartFilter.click(this)"
+                                    >
+                                        <option value=""><?=GetMessage("CT_BCSF_FILTER_ALL")?></option>
+                                        <?foreach ($arItem["VALUES"] as $val => $ar):?>
+                                            <option value="<?=$ar["CONTROL_NAME_ALT"]?>"<?if ($ar["CHECKED"]) :?> checked<?endif?>><?=$ar["VALUE"]?></option>
+                                        <?endforeach?>
+                                    </select>
+                                </div>
                                 <?break;
                         }?>
                     </div>
