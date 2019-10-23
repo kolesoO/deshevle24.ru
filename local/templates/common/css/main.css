@@ -852,3 +852,16 @@ hr.section_hr{
 .system-popup .icon{
     margin-right:5px
 }
+.news_list-img{
+    display: block;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    margin-bottom: 10px;
+}
+.news_list-img.default{
+    background-size: contain;
+}
+.news_list-title{
+    line-height: 1.2;
+}

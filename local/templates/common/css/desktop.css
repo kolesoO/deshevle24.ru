@@ -554,4 +554,10 @@
         width: calc(25% - 30px);
         border-right: 1px solid #fff;
     }
+    .news_list-item{
+        margin-bottom: 40px;
+    }
+    .news_list-img{
+        height: 200px;
+    }
 }

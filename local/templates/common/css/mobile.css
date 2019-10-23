@@ -581,5 +581,11 @@
     .articles_list-item + .articles_list-item{
         margin-top: 40px;
     }
+    .news_list-item + .news_list-item{
+        margin-top: 30px;
+    }
+    .news_list-img{
+        height: 150px;
+    }
 
 }
