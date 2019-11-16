@@ -41,6 +41,13 @@ var obSlider = {
         obParams.slidesToScroll = (!!$(self).attr("data-slidesToScroll") ? parseInt($(self).attr("data-slidesToScroll")) : this.slidesToScroll);
         obParams.centerMode = $(self).attr("data-centerMode") == "true";
 
+        if (!!$(self).attr("data-asNavFor")) {
+            obParams.asNavFor = $(self).attr("data-asNavFor");
+        }
+        if (!!$(self).attr("data-focusOnSelect")) {
+            obParams.focusOnSelect = $(self).attr("data-focusOnSelect");
+        }
+
         return obParams;
 
     },

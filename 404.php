@@ -1,4 +1,6 @@
 <?
+define("H1_IN_HEADER", "Y");
+
 include_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/urlrewrite.php');
 
 CHTTP::SetStatus("404 Not Found");
@@ -7,7 +9,6 @@ CHTTP::SetStatus("404 Not Found");
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
 $APPLICATION->SetTitle("Страница не найдена");
-$APPLICATION->SetPageProperty("header_section-class", "section");
 
 $APPLICATION->IncludeComponent("bitrix:main.map", ".default", Array(
 	"LEVEL"	=>	"3",

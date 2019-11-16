@@ -78,9 +78,11 @@ if ($arParams['DISPLAY_COMPARE']) {
                             data-autoplaySpeed="5000"
                             data-infinite="false"
                             data-speed="1000"
-                            data-arrows="true"
+                            data-arrows="false"
                             data-dots="false"
                             data-slidesToShow="3"
+                            data-asNavFor=".product_preview-img_big"
+                            data-focusOnSelect="true"
                     >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
                             <a href="#" class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></a>

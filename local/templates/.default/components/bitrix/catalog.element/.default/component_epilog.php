@@ -214,7 +214,7 @@ $APPLICATION->IncludeComponent(
 
 <div id="buy-one-click" class="popup">
     <div class="popup_wrapper">
-        <div class="popup_content js-popup_content">
+        <div class="popup_content small js-popup_content">
             <a href="#" class="popup_content-close" data-popup-close>
                 <i class="icon icon-close"></i>
             </a>
