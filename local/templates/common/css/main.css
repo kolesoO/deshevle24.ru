@@ -236,6 +236,7 @@ hr.section_hr{
 
 }
 .header-menu-item{
+    position: relative;
     line-height: 1;
     font-size: 80%;
     background-color: transparent;
@@ -836,14 +837,15 @@ hr.section_hr{
     align-items:center;
     position:fixed;
     bottom:0;
-    right:0;
+    left:0;
     transition-property:transform;
     transition-duration:.5s;
     transition-timing-function:ease;
     -ms-transform:translate(100%,0);
     transform:translate(100%,0);
     transition-delay:.3s;
-    z-index:9
+    z-index:9;
+    box-shadow:0 0 10px #414b79;
 }
 .system-popup.active{
     -ms-transform:translate(0,0);

@@ -587,5 +587,8 @@
     .news_list-img{
         height: 150px;
     }
+    #map{
+        height: 400px;
+    }
 
 }

@@ -1,7 +1,14 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
+
+/** @global \Bitrix\Main\Page\Asset $rsAsset */
+
 $APPLICATION->SetPageProperty("description", "");
 $APPLICATION->SetTitle("");
+
+$rsAsset->addString('<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>');
+$rsAsset->addJs(SITE_TEMPLATE_PATH . '/js/modules/ymap/script.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH . '/js/map.js');
 
 //баннеры
 $imageSize = [];
@@ -504,6 +511,18 @@ $APPLICATION->IncludeComponent(
         "CACHE_TYPE" => "A",
         "CACHE_TIME" => "3600"
     ]
+);
+//end
+
+//карта
+$APPLICATION->IncludeComponent(
+    "bitrix:main.include",
+    ".default",
+    [
+        "AREA_FILE_SHOW" => "file",
+        "PATH" => SITE_TEMPLATE_PATH . "/include/index/contacts-map.php"
+    ],
+    false
 );
 //end
 

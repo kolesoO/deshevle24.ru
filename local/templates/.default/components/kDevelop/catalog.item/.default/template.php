@@ -40,10 +40,10 @@ $arPrice = $arResult["OFFER"]["PRICES"][$arParams["PRICE_CODE"][0]];
     <?endif?>
     <a href="#"><?=$arResult["OFFER"]["NAME"]?></a>
 </div>
-<?if ($arPrice["PRICE"] > 0) :?>
+<?if ($arPrice["VALUE"] > 0) :?>
     <div class="catalog_item-block">
         <div>Цена</div>
-        <div class="catalog_item-price"><?=$arPrice["PRINT_RATIO_PRICE"]?></div>
+        <div class="catalog_item-price"><?=$arPrice["PRINT_VALUE"]?></div>
     </div>
 <?endif?>
 <div class="catalog_item-footer">
