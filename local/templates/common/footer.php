@@ -33,7 +33,7 @@
             </div>
             <div class="footer-item col-lg-5 col-md-7 col-xs-24">
                 <div class="col-lg-22">
-                    <div class="title-4">Инфо для покупателей</div>
+                    <div class="title-5">Инфо для покупателей</div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom",
@@ -150,7 +150,7 @@
             <?if (DEVICE_TYPE == "DESKTOP") :?>
                 <div class="col-lg-4">
                     <div class="col-lg-22">
-                        <div class="title-4">Каталог</div>
+                        <div class="title-5">Каталог</div>
                         <?$APPLICATION->IncludeComponent(
                             "bitrix:catalog.section.list",
                             "footer",
@@ -176,7 +176,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="title-4">Товары для сна</div>
+                    <div class="title-5">Товары для сна</div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:catalog.section.list",
                         "footer",

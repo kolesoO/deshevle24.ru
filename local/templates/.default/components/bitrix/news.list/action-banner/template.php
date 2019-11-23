@@ -11,7 +11,15 @@
                     <div class="banner-description col-lg-12 col-md-12 col-xs-24">
                         <div class="col-lg-21">
                             <div class="banner-title"><?=$arItem["NAME"]?></div>
-                            <?=$arItem["PREVIEW_TEXT_TYPE"] == "text" ? $arItem["PREVIEW_TEXT"] : htmlspecialcharsback($arItem["PREVIEW_TEXT"])?>
+                            <div class="medium"><?=$arItem["PREVIEW_TEXT_TYPE"] == "text" ? $arItem["PREVIEW_TEXT"] : htmlspecialcharsback($arItem["PREVIEW_TEXT"])?></div>
+                            <?if (isset($arItem["PROPERTIES"]["LINK_MORE"]) && strlen($arItem["PROPERTIES"]["LINK_MORE"]["VALUE"]) > 0) :?>
+                                <p>
+                                    <a href="<?=$arItem["PROPERTIES"]["LINK_MORE"]["VALUE"]?>" class="link upper" flex-align="center">
+                                        <span>Подробнее</span>&nbsp;&nbsp;<i class="icon icon-arrow-orange"></i>
+                                    </a>
+                                </p>
+                            <?endif?>
+                            <?=$arItem["DETAIL_TEXT_TYPE"] == "text" ? $arItem["DETAIL_TEXT"] : htmlspecialcharsback($arItem["DETAIL_TEXT"])?>
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-xs-24">

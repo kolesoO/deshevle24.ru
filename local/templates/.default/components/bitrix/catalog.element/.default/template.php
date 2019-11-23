@@ -37,7 +37,7 @@ if ($arParams['DISPLAY_COMPARE']) {
     <div class="container">
         <div flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
             <div class="col-lg-7 col-md-24">
-                <div class="title-1"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
+                <div class="title-3 medium"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
             </div>
             <hr class="section_hr hidden-lg col-md-24 col-xs-24">
             <div class="btn_list col-lg-15 col-md-24 col-xs-24" flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
@@ -85,7 +85,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                             data-focusOnSelect="true"
                     >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
-                            <a href="#" class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></a>
+                            <div class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></div>
                         <?endforeach;?>
                     </div>
                     <div
@@ -97,6 +97,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                             data-arrows="true"
                             data-dots="false"
                             data-slidesToShow="1"
+                            data-asNavFor=".product_preview-nav"
                     >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $key => $arFileInfo) :?>
                             <div class="product_preview-img_big-item" style="background-image: url('<?=$arFileInfo["origin"]?>')"></div>

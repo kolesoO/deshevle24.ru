@@ -12,11 +12,11 @@ $isMainPage = $strCurPage == SITE_DIR;
 //css
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/fonts/Gilroy/index.min.css');
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/icons.min.css');
-$rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/main.min.css');
+$rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/main.css');
 if (DEVICE_TYPE == "MOBILE") {
     $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/mobile.min.css');
 } else {
-    $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/desktop.min.css');
+    $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/desktop.css');
     $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/tablet.min.css');
 }
 //end
@@ -24,10 +24,10 @@ if (DEVICE_TYPE == "MOBILE") {
 //js
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/jquery1.12.4.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/slick.js');
-$rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/slider/script.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/slider/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/tabs/script.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/functions.js');
-$rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/main.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/main.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
 //end
 ?>

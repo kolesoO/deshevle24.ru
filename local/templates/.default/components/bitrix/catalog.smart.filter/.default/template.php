@@ -126,7 +126,14 @@ $this->setFrameMode(true);
                                         </div>
                                     <?endforeach?>
                                 <?else:?>
-                                    <?foreach ($arItem["VALUES"] as $val => $ar) :?>
+                                    <?
+                                    $counter = 0;
+                                    $visibleCount = 5;
+                                    foreach ($arItem["VALUES"] as $val => $ar) :?>
+                                        <?if ($counter == $visibleCount) :?>
+                                            <div class="js-drop_down">
+                                                <div class="catalog_filter-options_list js-drop_down-content">
+                                        <?endif?>
                                         <div class="col-lg-24 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
                                             <input
                                                     type="checkbox"
@@ -141,12 +148,19 @@ $this->setFrameMode(true);
                                                 <span><?=$ar["VALUE"]?></span>
                                             </label>
                                         </div>
-                                    <?endforeach?>
+                                        <?
+                                        $counter++;
+                                    endforeach?>
+                                    <?if ($counter > $visibleCount) :?>
+                                            </div>
+                                            <a href="#" class="color-grey dropdown-btn js-drop_down-btn">Показать все</a>
+                                        </div>
+                                    <?endif?>
                                 <?endif?>
                                 <?break;
                             case "K":
                                 break;
-                            case "P":?>
+                            case "P": //выпадающий список?>
                                 <div class="col-lg-24 col-md-24 col-xs-24 catalog_checkbox catalog_filter-option">
                                     <select
                                         name="<?=$arCur["CONTROL_NAME_ALT"]?>"

@@ -1,4 +1,4 @@
-<div class="title-4">Адреса магазинов Дешевле24</div>
+<div class="title-5">Адреса магазинов Дешевле24</div>
 <div class="grey_link" itemscope itemtype="https://schema.org/Organization">
     <span>
         <span itemprop="name">г. Липецк</span>

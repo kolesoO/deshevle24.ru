@@ -13,7 +13,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-$arResult["SECTION_COUNT"] = count($arResult["SECTIONS"]);
+global $USER_FIELD_MANAGER;
+
 if (is_array($arParams["IMAGE_SIZE"])) {
     //кеширование изображений
     foreach ($arResult["SECTIONS"] as &$arSection) {
@@ -33,7 +34,28 @@ if (is_array($arParams["IMAGE_SIZE"])) {
     //end
 }
 
+//избавляемся от разделов 1ого уровня
+$newSections = [];
+foreach ($arResult["SECTIONS"] as $arSection) {
+    if ($arSection["DEPTH_LEVEL"] > 1) continue;
+    //пользовательские свойства
+    $arFields = $USER_FIELD_MANAGER->GetUserFields("IBLOCK_" . $arParams["IBLOCK_ID"] . "_SECTION", $arSection["ID"]);
+    if (is_array($arFields)) {
+        $arSection = array_merge($arSection, $arFields);
+    }
+    //end
+    $newSections[$arSection["ID"]] = $arSection;
+}
+foreach ($arResult["SECTIONS"] as $key => $arSection) {
+    if ($arSection["DEPTH_LEVEL"] > 1 && $arSection["IBLOCK_SECTION_ID"]) {
+        $newSections[$arSection["IBLOCK_SECTION_ID"]]["CHILD_SECTIONS"][] = $arSection;
+    }
+}
+$arResult["SECTIONS"] = $newSections;
+$arResult["SECTION_COUNT"] = count($arResult["SECTIONS"]);
+//end
+
 $cp = $this->__component;
 if (is_object($cp)) {
-    $cp->SetResultCacheKeys(["SECTION_COUNT"]);
+    $cp->SetResultCacheKeys(["SECTION_COUNT", "SECTIONS"]);
 }

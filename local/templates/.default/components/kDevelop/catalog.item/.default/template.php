@@ -55,15 +55,15 @@ $arPrice = $arResult["OFFER"]["PRICES"][$arParams["PRICE_CODE"][0]];
         <div class="catalog_item-block">
             <div>Размеры</div>
             <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                <div class="col-lg-8">
+                <div class="catalog_item-footer-part">
                     <small>длина</small>
                     <span><?=$arResult["OFFER"]["PROPERTIES"]["size_length"]["VALUE"]?> см</span>
                 </div>
-                <div class="col-lg-8">
+                <div class="catalog_item-footer-part">
                     <small>ширина</small>
                     <span><?=$arResult["OFFER"]["PROPERTIES"]["size_width"]["VALUE"]?> см</span>
                 </div>
-                <div class="col-lg-8">
+                <div class="catalog_item-footer-part">
                     <small>высота</small>
                     <span><?=$arResult["OFFER"]["PROPERTIES"]["size_height"]["VALUE"]?> см</span>
                 </div>
@@ -78,15 +78,15 @@ $arPrice = $arResult["OFFER"]["PRICES"][$arParams["PRICE_CODE"][0]];
         <div class="catalog_item-block">
             <div>Спальное место</div>
             <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                <div class="col-lg-8">
+                <div class="catalog_item-footer-part">
                     <small>длина</small>
                     <span><?=$arResult["OFFER"]["PROPERTIES"]["sleep_size_length"]["VALUE"]?> см</span>
                 </div>
-                <div class="col-lg-8">
+                <div class="catalog_item-footer-part">
                     <small>ширина</small>
                     <span><?=$arResult["OFFER"]["PROPERTIES"]["sleep_size_width"]["VALUE"]?> см</span>
                 </div>
-                <div class="col-lg-8">
+                <div class="catalog_item-footer-part">
                     <small>высота</small>
                     <span><?=$arResult["OFFER"]["PROPERTIES"]["sleep_size_height"]["VALUE"]?> см</span>
                 </div>

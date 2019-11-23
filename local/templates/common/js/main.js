@@ -12,43 +12,47 @@ $(document).ready(function(){
 
     //drop-down
     var dropdownContentHeight = 0,
-        $dropdownWrap;
-    $(".js-drop_down").each(function(){
-        $(this).find(".js-drop_down-content").each(function(){
-            dropdownContentHeight = $(this).outerHeight();
-            if (dropdownContentHeight > 0) {
-                $(this).attr("data-height", dropdownContentHeight);
-                if ($(this).attr("is-active") != "true") {
-                    $(this).height(0);
-                } else {
-                    var $parent = $(this).parents(".js-drop_down").first();
-                    $parent.find(".js-drop_down-btn").addClass("active");
-                    $parent.find(".js-drop_down-content").addClass("active");
-                    $(this).outerHeight($(this).attr("data-height"));
+        $dropdownWrap,
+        initDropdownContent = ($elem) => {
+            /*if ($elem.find(".js-drop_down").length > 0) {
+                $elem.find(".js-drop_down").each(function() {
+                    initDropdownContent($(this));
+                });
+            }*/
+            $elem.find(".js-drop_down-content").each(function(){
+                dropdownContentHeight = $(this).outerHeight();
+                if (dropdownContentHeight > 0) {
+                    $(this).attr("data-height", dropdownContentHeight);
+                    if ($(this).attr("is-active") != "true") {
+                        $(this).height(0);
+                    } else {
+                        var $parent = $(this).parents(".js-drop_down").first();
+                        $parent.find(".js-drop_down-btn").first().addClass("active");
+                        $(this).addClass("active");
+                        $(this).outerHeight($(this).attr("data-height"));
+                    }
                 }
-            }
-        })
-    })
+            })
+        };
+    $(".js-drop_down").each(function(){
+        initDropdownContent($(this));
+    });
     $("body").on("click", ".js-drop_down-btn", function(e){
         e.preventDefault();
-        var $parent = $(this).parents(".js-drop_down").first();
+        var $parent = $(this).closest(".js-drop_down"),
+            $content = $parent.find(".js-drop_down-content").first();
         if($parent.length > 0){
             if($(this).hasClass("active")){
-                $parent.find(".js-drop_down-content").removeClass("active");
-                $parent.find(".js-drop_down-content").outerHeight(0);
+                $content.removeClass("active");
+                $content.outerHeight(0);
             }
             else{
-                $parent.find(".js-drop_down-content").addClass("active");
-                $parent.find(".js-drop_down-content").outerHeight($parent.find(".js-drop_down-content").attr("data-height"));
+                $content.addClass("active");
+                $content.height($content.attr("data-height"));
             }
         }
-        if($(this).hasClass("active")){
-            $(this).removeClass("active");
-        }
-        else{
-            $(this).addClass("active");
-        }
-    })
+        $(this).toggleClass('active');
+    });
     $("body").on("click touchstart", function(e){
         if($(e.target).closest(".js-drop_down-btn").length > 0) return;
         if($(e.target).closest(".js-drop_down-content").length > 0) return;
@@ -58,7 +62,7 @@ $(document).ready(function(){
             $dropdownWrap.find(".js-drop_down-content").removeClass("active");
             $dropdownWrap.find(".js-drop_down-content").height(0);
         })
-    })
+    });
     //end
 
     //popup
@@ -83,21 +87,21 @@ $(document).ready(function(){
             })
             //end
         }
-    })
+    });
     $("body").on("click", "[data-popup-close]", function(e){
         e.preventDefault();
         var $popup = $(this).parents(".popup").first();
         $("body").css("overflow", "auto");
         $popup.hide();
         $popup.find(".popup-content").removeClass("animate");
-    })
+    });
     $("body").on("click touchstart", function(e){
         if($(e.target).closest(".js-popup_content").length > 0) return;
         if($(e.target).closest("[data-popup-open]").length > 0) return;
         $("body").css("overflow", "auto");
         $(".popup .popup-content").removeClass("animate");
         $(".popup").hide();
-    })
+    });
     //end
 
     //toggle class
@@ -119,7 +123,7 @@ $(document).ready(function(){
             $target.addClass(className);
             $(this).addClass(className);
         }
-    })
+    });
     //end
 
     //gallery

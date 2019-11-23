@@ -131,16 +131,28 @@ unset($arSortItem);*/
             );?>
             <div class="catalog_list col-lg-18 col-md-16 col-xs-24">
                 <div class="catalog_list-top" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
-                    <span id="modef" style="display:none">Найдено товаров: <b id="modef_num">206</b></span>
+                    <span id="modef" class="color-grey">Найдено: <span id="modef_num"></span></span>
                     <div class="catalog_list-top-links">
-                        <a href="#">
-                            <span>По группам</span>
-                            <i class="icon"></i>
-                        </a>
-                        <a href="#">
-                            <span>Выводить сначала</span>
-                            <i class="icon"></i>
-                        </a>
+                        <!--div class="js-drop_down">
+                            <a href="#" class="dropdown-btn js-drop_down-btn">
+                                <span>По группам</span>
+                            </a>
+                            <div class="js-drop_down-content">
+
+                            </div>
+                        </div-->
+                        <div class="dropdown js-drop_down">
+                            <a href="#" class="dropdown-btn js-drop_down-btn">
+                                <span>Выводить сначала</span>
+                            </a>
+                            <div class="dropdown-content js-drop_down-content">
+                                <div class="dropdown-content_inner">
+                                    <a href="#">самые популярные</a>
+                                    <a href="#">самые дорогие</a>
+                                    <a href="#">самые дешевые</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="comp_catalog-list-wrap">

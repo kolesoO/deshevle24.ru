@@ -47,6 +47,7 @@ var obSlider = {
         if (!!$(self).attr("data-focusOnSelect")) {
             obParams.focusOnSelect = $(self).attr("data-focusOnSelect");
         }
+        console.log(obParams);
 
         return obParams;
 

@@ -1,7 +1,7 @@
 @media screen and (min-width:1249px){
 
     input, textarea{
-        padding: 24px 45px;
+        padding: 24px 40px;
     }
     .col-lg-24{
         width:100%;
@@ -71,7 +71,7 @@
         font-size: 225%;
     }
     .title-1 + *{
-        margin-top: 40px;
+        margin-top: 15px;
     }
     .title-2{
         font-size: 175%;
@@ -81,13 +81,16 @@
     }
     .title-2 + *,
     .title-3 + *{
-        margin-top: 20px;
+        margin-top: 10px;
     }
     .title-4{
-        font-size: 110%;
+        font-size: 125%;
     }
-    .title-4 + *{
-        margin-top: 5px;
+    .title-5{
+        font-size: 114%;
+    }
+    .title-5 + *{
+        margin-top: 10px;
     }
     .btn{
         padding: 25px 45px;
@@ -101,7 +104,7 @@
         padding: 0 43px;
     }
     .section{
-        padding: 55px 0;
+        padding: 65px 0;
     }
     .section_hr{
         padding: 25px 0;
@@ -134,7 +137,7 @@
         padding: 0 32px;
     }
     .header-menu_btn + .logo{
-        margin-left: 40px;
+        margin-left: 45px;
     }
     .logo > img{
         max-width: 55px;
@@ -190,23 +193,29 @@
     .main_slider-block{
         margin-bottom: 30px;
     }
-    .main_slider-description-title{
-        font-size: 200%;
+    .main_slider-description-title,
+    .banner-title{
+        font-size: 257%;
     }
     .main_slider-description-price{
-        font-size: 170%;
+        font-size: 235%;
     }
     .catalog_slider,
     .catalog_section{
         margin-left: -15px;
         margin-right: -15px;
     }
+    * + .catalog_slider{
+        margin-top: 35px;
+    }
+    * + .catalog_section{
+        margin-top: 30px;
+    }
     .catalog_item,
     .catalog_section-item{
         padding: 30px;
     }
     .catalog_item:hover{
-        padding-bottom: 0;
         box-shadow: 0px 15px 15px #adabab;
     }
     .catalog_item:hover .catalog_item-header{
@@ -231,7 +240,27 @@
     }
     .catalog_item:hover .catalog_item-footer{
         display: block;
-        box-shadow: 0px 16px 15px #adabab;
+        margin-top: -20px;
+        box-shadow: 0 16px 15px #adabab;
+    }
+    .catalog_item-footer-part{
+        padding: 0 15px;
+        position: relative;
+    }
+    .catalog_item-footer-part:nth-child(3n-2){
+        padding-left: 0;
+    }
+    .catalog_item-footer-part:not(:nth-child(3n-2)):before{
+        content: "";
+        position: absolute;
+        left: 0;
+        top: calc(50% - 5px);
+        width: 1px;
+        height: 10px;
+        background-color: #e5e5e5;
+    }
+    .catalog_item-footer-part:nth-child(3n){
+        padding-right: 0;
     }
     .catalog_item .btn,
     .catalog_detail-description-item .btn{
@@ -276,10 +305,7 @@
         font-size: 160%;
     }
     .banner {
-        padding: 80px 100px;
-    }
-    .banner-title{
-        font-size: 190%;
+        padding: 50px 100px;
     }
     .gallery-item{
         width: 20%;
@@ -299,7 +325,7 @@
         margin-top: 50px;
     }
     .popup_content {
-        padding: 30px 40px;
+        padding: 50px 70px;
         width: 660px;
         max-height: 90%;
     }
@@ -338,6 +364,9 @@
     }
     .gallery-bottom > * + * {
         margin-left: 20px;
+    }
+    .content_tab-item{
+        font-size: 85.7%;
     }
     .content_tab-item,
     .catalog_detail-tab-item{
@@ -537,8 +566,11 @@
     [flex-align] .catalog_label + *{
         margin-left: 10px;
     }
+    .catalog_label + .title-2{
+        margin-top: 20px;
+    }
     .catalog_list-top{
-        padding: 26px 25px;
+        padding: 26px 0 26px 25px;
     }
     .catalog_list-top-links > a + a{
         margin-left: 20px;
@@ -555,11 +587,13 @@
     .catalog_filter-item + .catalog_filter-item{
         margin-top: 25px;
     }
-    .catalog_filter-item input[type="text"]{
+    .catalog_filter-item input[type="text"],
+    .catalog_filter-item select{
         padding: 11px 15px;
     }
     .catalog_filter-title{
         margin-bottom: 15px;
+        font-size: 114%;
     }
     .catalog_detail-description-item:not(:last-child){
         padding-right: 30px;
@@ -575,5 +609,12 @@
     }
     #map{
         height: 800px;
+    }
+    .catalog_list-top .dropdown-btn{
+        margin: -26px 0;
+        padding: 26px 40px;
+    }
+    .dropdown-content_inner{
+        padding: 30px 50px;
     }
 }
