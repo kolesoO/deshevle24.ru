@@ -145,11 +145,19 @@
 .icon-close:after {
     transform: rotate(-45deg);
 }
-.icon-close:hover:before {
+.icon-close:not(.dark):hover:before {
     transform: rotate(135deg);
 }
-.icon-close:hover:after {
+.icon-close:not(.dark):hover:after {
     transform: rotate(45deg);
+}
+.icon-close.dark{
+    width: 18px;
+    height: 18px;
+}
+.icon-close.dark:before,
+.icon-close.dark:after{
+    background-color: #121212;
 }
 .icon-star,
 .icon-star_full,
@@ -172,7 +180,7 @@
     background-image: url('../images/icons/icon-star-black.png');
 }
 .icon-file {
-    width: 16px;
-    height: 16px;
+    width: 25px;
+    height: 20px;
     background-image: url('../images/icons/picture.svg');
 }

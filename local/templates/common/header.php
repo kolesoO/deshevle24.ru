@@ -11,7 +11,7 @@ $isMainPage = $strCurPage == SITE_DIR;
 
 //css
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/fonts/Gilroy/index.min.css');
-$rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/icons.min.css');
+$rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/icons.css');
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/main.css');
 if (DEVICE_TYPE == "MOBILE") {
     $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/mobile.min.css');
@@ -23,7 +23,7 @@ if (DEVICE_TYPE == "MOBILE") {
 
 //js
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/jquery1.12.4.min.js');
-$rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/slick.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/slick.1.8.1.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/slider/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/tabs/script.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/functions.js');

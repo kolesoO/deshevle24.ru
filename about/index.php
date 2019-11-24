@@ -45,7 +45,7 @@ $APPLICATION->SetTitle("О компании");
         <img src="<?=SITE_TEMPLATE_PATH?>/images/company-info-divan.png" class="company-info">
     </div>
 </div>
-<div class="company-text title-4" align="center">
+<div class="company-text title-2 light" align="center">
     <?$APPLICATION->IncludeComponent(
         "bitrix:main.include",
         ".default",
@@ -56,7 +56,7 @@ $APPLICATION->SetTitle("О компании");
         false
     );?>
 </div>
-<div class="company-text title-4" align="center">
+<div class="company-text title-2 light" align="center">
     <?$APPLICATION->IncludeComponent(
         "bitrix:main.include",
         ".default",

@@ -144,4 +144,27 @@ $(document).ready(function(){
     }
     //end
 
+    //TODO убрать после доработки
+    $('.product_preview-nav').slick({
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        arrows: false,
+        dots: false,
+        vertical: true,
+        asNavFor: '.product_preview-img_big'
+    });
+
+    $('.product_preview-img_big').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        dots: false,
+        asNavFor: '.product_preview-nav',
+        centerMode: true,
+        autoplay: true,
+        focusOnSelect: true,
+        infinite: false
+    });
+    //end
+
 })

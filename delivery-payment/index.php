@@ -20,7 +20,7 @@ $APPLICATION->SetTitle("Доставка и оплата");
 </div>
 <div class="delivery-payment-info">
     <div class="delivery-payment-info-item">
-        <div class="title-4">Просим обратить внимание:</div>
+        <div class="title-2 medium">Просим обратить внимание:</div>
         <p>Работы по освобождению проходов помещений от хлама,
             демонтаж дверей и т.д - в цену подъема не входят.</p>
         <p>Чтобы нам легко и быстро занести диван в комнату,

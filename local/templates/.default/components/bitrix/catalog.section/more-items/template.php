@@ -18,7 +18,7 @@ $this->setFrameMode(true);
     <section class="section">
         <div class="container">
             <?if (strlen($arParams["SECTION_TITLE"]) > 0) :?>
-                <div class="title-2"><?=htmlspecialcharsback($arParams["SECTION_TITLE"])?></div>
+                <div class="title-3 medium"><?=htmlspecialcharsback($arParams["SECTION_TITLE"])?></div>
             <?endif?>
             <?if (strlen($arParams["INCLUDE_AREA_PATH"]) > 0) :?>
                 <?$APPLICATION->IncludeComponent(

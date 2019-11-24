@@ -27,25 +27,28 @@ var obSlider = {
 
         var obParams = {};
 
-        obParams.autoplay = ($(self).attr("data-autoplay") == "true");
+        obParams.autoplay = ($(self).attr("data-autoplay") === "true");
         obParams.autoplaySpeed = (!!$(self).attr("data-autoplaySpeed") ? $(self).attr("data-autoplaySpeed") : this.autoplaySpeed);
-        obParams.infinite = $(self).attr("data-infinite") == "true";
+        obParams.infinite = $(self).attr("data-infinite") === "true";
         obParams.speed = (!!$(self).attr("data-speed") ? $(self).attr("data-speed") : this.speed);
-        obParams.arrows = $(self).attr("data-arrows") == "true";
+        obParams.arrows = $(self).attr("data-arrows") === "true";
         if(obParams.arrows){
             obParams.nextArrow = (!!$(self).attr("data-nextArrow") ? $(self).attr("data-nextArrow") : this.nextArrow);
             obParams.prevArrow = (!!$(self).attr("data-prevArrow") ? $(self).attr("data-prevArrow") : this.prevArrow);
         }
-        obParams.dots = $(self).attr("data-dots") == "true";
+        obParams.dots = $(self).attr("data-dots") === "true";
         obParams.slidesToShow = (!!$(self).attr("data-slidesToShow") ? parseInt($(self).attr("data-slidesToShow")) : this.slidesToShow);
         obParams.slidesToScroll = (!!$(self).attr("data-slidesToScroll") ? parseInt($(self).attr("data-slidesToScroll")) : this.slidesToScroll);
-        obParams.centerMode = $(self).attr("data-centerMode") == "true";
+        obParams.centerMode = $(self).attr("data-centerMode") === "true";
 
         if (!!$(self).attr("data-asNavFor")) {
             obParams.asNavFor = $(self).attr("data-asNavFor");
         }
         if (!!$(self).attr("data-focusOnSelect")) {
-            obParams.focusOnSelect = $(self).attr("data-focusOnSelect");
+            obParams.focusOnSelect = $(self).attr("data-focusOnSelect") === "true";
+        }
+        if (!!$(self).attr("data-vertical")) {
+            obParams.vertical = $(self).attr("data-vertical") === "true";
         }
         console.log(obParams);
 

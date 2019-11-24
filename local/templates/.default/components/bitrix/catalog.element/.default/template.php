@@ -73,14 +73,13 @@ if ($arParams['DISPLAY_COMPARE']) {
             <div class="product_preview-img col-lg-24 col-md-24 col-xs-24" flex-align="stretch" flex-wrap="wrap" flex-text_align="space-between">
                 <?if (is_array($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) && count($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) > 0) :?>
                     <div
-                            class="product_preview-nav col-lg-3 col-md-3 hidden-xs"
+                            class="product_preview-nav hidden-xs"
+                            data-slidesToShow="3"
                             data-autoplay="false"
-                            data-autoplaySpeed="5000"
-                            data-infinite="false"
                             data-speed="1000"
                             data-arrows="false"
                             data-dots="false"
-                            data-slidesToShow="3"
+                            data-vertical="true"
                             data-asNavFor=".product_preview-img_big"
                             data-focusOnSelect="true"
                     >
@@ -89,14 +88,13 @@ if ($arParams['DISPLAY_COMPARE']) {
                         <?endforeach;?>
                     </div>
                     <div
-                            class="product_preview-img_big js-slider col-lg-20 col-md-20 col-xs-24"
+                            class="product_preview-img_big"
                             data-autoplay="false"
-                            data-autoplaySpeed="5000"
-                            data-infinite="false"
                             data-speed="1000"
-                            data-arrows="true"
+                            data-arrows="false"
                             data-dots="false"
-                            data-slidesToShow="1"
+                            data-centerMode="true"
+                            data-focusOnSelect="true"
                             data-asNavFor=".product_preview-nav"
                     >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $key => $arFileInfo) :?>
@@ -222,7 +220,7 @@ if ($arParams['DISPLAY_COMPARE']) {
 <?if (count($arResult["OFFERS"]) > 1) :?>
     <section class="section first">
         <div class="container">
-            <div class="title-2">Ещё варианты <?=$arResult["NAME"]?></div>
+            <div class="title-3 medium">Ещё варианты <?=$arResult["NAME"]?></div>
             <div
                     class="catalog_slider js-slider clearfix"
                     data-autoplay="false"
