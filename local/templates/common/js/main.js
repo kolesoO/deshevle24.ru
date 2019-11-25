@@ -144,6 +144,21 @@ $(document).ready(function(){
     }
     //end
 
+    //BX loading
+    BX.ready(function(){
+        BX.showWait=function(a){
+            BX.lastNode=a;
+            BX.addClass(BX(a),"loading");
+        };
+        BX.closeWait=function(a){
+            if(!a){
+                a=BX.lastNode
+            }
+            BX.removeClass(BX(a),"loading");
+        }
+    });
+    //end
+
     //TODO убрать после доработки
     $('.product_preview-nav').slick({
         slidesToShow: 5,

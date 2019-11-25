@@ -983,3 +983,20 @@ hr.section_hr{
 .dropdown-content-item + .dropdown-content-item{
     margin-top: 10px;
 }
+.loading{
+    position:relative
+}
+.loading:before{
+    content:" ";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:2;
+    background-color:rgba(255,255,255,0.7);
+    /*background-image:url("../images/icons/loading.gif");*/
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+    background-size:50px 50px
+}
