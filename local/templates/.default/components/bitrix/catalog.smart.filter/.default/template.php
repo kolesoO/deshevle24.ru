@@ -86,6 +86,7 @@ $this->setFrameMode(true);
                                         placeholder="<?=GetMessage("CT_BCSF_FILTER_FROM")." ".number_format(floatval($arItem["VALUES"]["MIN"]["VALUE"]), 0, ".", " ")?>"
                                         value="<?=$arItem["VALUES"]["MIN"]["HTML_VALUE"]?>"
                                         onkeyup="smartFilter.keyup(this)"
+                                        class="col-lg-11 col-md-24 col-xs-24 catalog_filter-option"
                                 >
                                 <input
                                         name="<?=$arItem["VALUES"]["MAX"]["CONTROL_NAME"]?>"
@@ -94,6 +95,7 @@ $this->setFrameMode(true);
                                         placeholder="<?=GetMessage("CT_BCSF_FILTER_TO")." ".number_format(floatval($arItem["VALUES"]["MAX"]["VALUE"]), 0, ".", " ")?>"
                                         value="<?=$arItem["VALUES"]["MAX"]["HTML_VALUE"]?>"
                                         onkeyup="smartFilter.keyup(this)"
+                                        class="col-lg-11 col-md-24 col-xs-24 catalog_filter-option"
                                 >
                                 <?break;
                             case "F": //флажки
