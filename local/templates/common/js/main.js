@@ -160,8 +160,7 @@ $(document).ready(function(){
         arrows: false,
         dots: false,
         asNavFor: '.product_preview-nav',
-        centerMode: true,
-        autoplay: true,
+        autoplay: false,
         focusOnSelect: true,
         infinite: false
     });

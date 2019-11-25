@@ -132,24 +132,39 @@ unset($arSortItem);*/
             <div class="catalog_list col-lg-18 col-md-16 col-xs-24">
                 <div class="catalog_list-top" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
                     <span id="modef" class="color-grey">Найдено: <span id="modef_num"></span></span>
-                    <div class="catalog_list-top-links">
-                        <!--div class="js-drop_down">
+                    <div class="catalog_list-top-links" flex-align="center" flex-wrap="wrap">
+                        <div class="dropdown js-drop_down">
                             <a href="#" class="dropdown-btn js-drop_down-btn">
                                 <span>По группам</span>
                             </a>
-                            <div class="js-drop_down-content">
-
+                            <div class="dropdown-content big js-drop_down-content">
+                                <div class="dropdown-content_inner">
+                                    <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
+                                        <div class="col-lg-10">
+                                            <div class="title-5">Механизм</div>
+                                            <div class="dropdown-content-item"><a href="#">прямые диваны еврокнижки</a></div>
+                                            <div class="dropdown-content-item"><a href="#">прямые живаны аккордеон</a></div>
+                                            <div class="dropdown-content-item"><a href="#">прямые диваны дельфин</a></div>
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <div class="title-5">Размеры</div>
+                                            <div class="dropdown-content-item"><a href="#">узкие</a></div>
+                                            <div class="dropdown-content-item"><a href="#">длинные</a></div>
+                                            <div class="dropdown-content-item"><a href="#">2 метра</a></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div-->
+                        </div>
                         <div class="dropdown js-drop_down">
                             <a href="#" class="dropdown-btn js-drop_down-btn">
                                 <span>Выводить сначала</span>
                             </a>
                             <div class="dropdown-content js-drop_down-content">
                                 <div class="dropdown-content_inner">
-                                    <a href="#">самые популярные</a>
-                                    <a href="#">самые дорогие</a>
-                                    <a href="#">самые дешевые</a>
+                                    <div class="dropdown-content-item"><a href="#">самые популярные</a></div>
+                                    <div class="dropdown-content-item"><a href="#">самые дорогие</a></div>
+                                    <div class="dropdown-content-item"><a href="#">самые дешевые</a></div>
                                 </div>
                             </div>
                         </div>

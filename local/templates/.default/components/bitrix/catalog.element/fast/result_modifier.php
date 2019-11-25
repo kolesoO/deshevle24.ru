@@ -12,19 +12,20 @@ $arResult["OFFERS_COUNT"] = count($arResult["OFFERS"]);
 //на входе имеем код выбранного sku, ищем ключ этого sku
 if (strlen($arParams["OFFER_CODE_SELECTED"]) > 0) {
     foreach ($arResult["OFFERS"] as $key => $arOffer) {
-        if ($arOffer["CODE"] == $arParams["OFFER_CODE_SELECTED"]) {
+        if ($arOffer["ID"] == $arParams["OFFER_ID_SELECTED"]) {
             $arResult["OFFER_ID_SELECTED"] = $key;
             break;
         }
     }
 }
+//end
 
 if (isset($arResult["OFFERS"][$arResult["OFFER_ID_SELECTED"]])) {
     foreach ($arResult["OFFERS"] as $key => &$arOffer) {
         if ($updateOfferProps && (!is_array($arOffer["PROPERTIES"]) || count($arOffer["PROPERTIES"]) == 0)) {
             $arOfferKeys[$arOffer["ID"]] = $key;
         }
-        $arOffer["DETAIL_PAGE_URL"] = str_replace(\kDevelop\Help\Tools::getOfferSefUrlTmp(), \kDevelop\Help\Tools::getOfferPrefixInUrl() . $arOffer["CODE"], $arResult["DETAIL_PAGE_URL"]);
+        $arOffer["DETAIL_PAGE_URL"] = $arResult["DETAIL_PAGE_URL"] . \kDevelop\Help\Tools::getOfferPrefixInUrl() . $arOffer["CODE"] . "/";
     }
     unset($arOffer);
     //Доп. свойства основного товара
@@ -137,19 +138,13 @@ foreach ($arResult["PROPERTIES"] as $code => $arProp) {
 }
 //end
 
-//seo fields
-if (isset($arResult["OFFERS"][$arResult["OFFER_ID_SELECTED"]])) {
-    $seoIblockId = $arParams["LINK_IBLOCK_ID"];
-    $seoItemId = $arResult["OFFERS"][$arResult["OFFER_ID_SELECTED"]]["ID"];
-} else {
-    $seoIblockId = $arParams["IBLOCK_ID"];
-    $seoItemId = $arResult["ID"];
+//родительский раздел
+if (intval($arResult["IBLOCK_SECTION_ID"]) > 0) {
+    $arResult["PARENT_SECTION"] = \CIBlockSection::GetByID($arResult["IBLOCK_SECTION_ID"])->fetch();
 }
-$rsIProps = new \Bitrix\Iblock\InheritedProperty\ElementValues($seoIblockId, $seoItemId);
-$arResult["IPROP_VALUES"] = $rsIProps->getValues();
 //end
 
 $cp = $this->__component;
 if (is_object($cp)) {
-    $cp->SetResultCacheKeys(["OFFERS_COUNT", "OFFERS", "OFFER_ID_SELECTED", "PROPERTIES", "IPROP_VALUES"]);
+    $cp->SetResultCacheKeys(["OFFERS_COUNT", "OFFERS", "OFFER_ID_SELECTED", "PROPERTIES", "INNER_TEMPLATE", "PARENT_SECTION"]);
 }

@@ -77,6 +77,7 @@ $this->setFrameMode(true);
                     <div class="catalog_filter-title"><?=$arItem["NAME"]?></div>
                     <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
                         <?switch ($arItem["DISPLAY_TYPE"]) {
+                            case "A":
                             case "B": //числа ?>
                                 <input
                                         name="<?=$arItem["VALUES"]["MIN"]["CONTROL_NAME"]?>"
@@ -128,7 +129,7 @@ $this->setFrameMode(true);
                                 <?else:?>
                                     <?
                                     $counter = 0;
-                                    $visibleCount = 5;
+                                    $visibleCount = 4;
                                     foreach ($arItem["VALUES"] as $val => $ar) :?>
                                         <?if ($counter == $visibleCount) :?>
                                             <div class="js-drop_down">

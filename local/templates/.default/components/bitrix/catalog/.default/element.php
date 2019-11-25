@@ -164,9 +164,7 @@ $componentElementParams = array(
 
     "DEVICE_TYPE" => $arParams["DEVICE_TYPE"],
     "OFFER_CODE_SELECTED" => (strlen($arResult["VARIABLES"]["SKU_CODE"]) > 0 ? str_replace(\kDevelop\Help\Tools::getOfferPrefixInUrl(), "", $arResult["VARIABLES"]["SKU_CODE"]) : ""),
-
     "IMAGE_SIZE" => $arParams["DETAIL_IMAGE_SIZE"],
-    "DEVICE_TYPE" => $arParams["DEVICE_TYPE"],
     "ALSO_BUY_ELEMENT_COUNT" => $arParams["ALSO_BUY_ELEMENT_COUNT"],
 );
 

@@ -163,7 +163,7 @@ $arCatalogItemsParams = [
                 <?if ($arSection["UF_MIN_PRICE"] > 0) :?>
                     <div class="catalog_label">от <?=\CurrencyFormat($arSection["UF_MIN_PRICE"], $arParams["CURRENCY_ID"])?></div>
                 <?endif?>
-                <div class="title-2 col-xs-24"><?=$arSection["NAME"]?></div>
+                <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
             </div>
             <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between" items-count="<?=$arParams["LINE_ELEMENT_COUNT"]?>">
                 <?foreach ($arResult["ITEMS"] as $key => $arItem) :

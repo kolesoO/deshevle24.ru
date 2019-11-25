@@ -13,12 +13,12 @@
 
 $this->setFrameMode(true);
 
-$arPrice = $arResult["OFFER"]["PRICES"][$arParams["PRICE_CODE"][0]];
+$arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELECTED"]];
 ?>
 
 <div class="catalog_item-block catalog_item-header" flex-align="center" flex-text_align="space-between">
     <?if ($arParams["HIDE_FAST_PRODUCT"] != "Y") :?>
-        <a href="#" data-popup-open="#fast-product" onclick="obAjax.getFastProduct('<?=$arResult["OFFER"]["ID"]?>')">
+        <a href="#" data-popup-open="#fast-product" onclick="obAjax.getFastProduct('<?=$arResult["ITEM"]["ID"]?>')">
             <i class="icon icon-search"></i>
             <span>Быстрый просмотр</span>
         </a>
@@ -38,12 +38,12 @@ $arPrice = $arResult["OFFER"]["PRICES"][$arParams["PRICE_CODE"][0]];
     <?if (isset($arResult["ITEM"]["PARENT_SECTION"])) :?>
         <small><?=$arResult["ITEM"]["PARENT_SECTION"]["NAME"]?></small>
     <?endif?>
-    <a href="#"><?=$arResult["OFFER"]["NAME"]?></a>
+    <a href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"><?=$arResult["OFFER"]["NAME"]?></a>
 </div>
-<?if ($arPrice["VALUE"] > 0) :?>
+<?if ($arPrice["PRICE"] > 0) :?>
     <div class="catalog_item-block">
         <div>Цена</div>
-        <div class="catalog_item-price"><?=$arPrice["PRINT_VALUE"]?></div>
+        <div class="catalog_item-price"><?=$arPrice["PRINT_RATIO_PRICE"]?></div>
     </div>
 <?endif?>
 <div class="catalog_item-footer">
@@ -98,7 +98,7 @@ $arPrice = $arResult["OFFER"]["PRICES"][$arParams["PRICE_CODE"][0]];
                 href="#"
                 class="btn color upper btn-arrow col-lg-24"
                 align="center"
-                onclick="obAjax.addToBasket('<?=$arResult["OFFER"]["ID"]?>', '<?=$arPrice["PRICE_ID"]?>', event)"
+                onclick="obAjax.addToBasket('<?=$arResult["OFFER"]["ID"]?>', '<?=$arPrice["PRICE_TYPE_ID"]?>', event)"
         >
             <span><?=$arParams["MESS_BTN_ADD_TO_BASKET"]?></span>
             <i class="icon icon-arrow"></i>

@@ -9,7 +9,7 @@
             <div class="catalog_label"><?=$arSection["UF_SECTION_LABEL"]["VALUE"]?></div>
         <?endif?>
         <?if (isset($arSection["NAME"])) :?>
-            <div class="title-2 medium"><?=$arSection["NAME"]?></div>
+            <div class="title-2 medium for_label"><?=$arSection["NAME"]?></div>
         <?endif?>
         <div class="catalog_section" flex-align="start" flex-wrap="wrap">
             <?foreach ($arSection["CHILD_SECTIONS"] as $childSection) :

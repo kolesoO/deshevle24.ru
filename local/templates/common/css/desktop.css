@@ -442,10 +442,13 @@
         padding-left: 45px;
     }
     .product_preview-img_big{
-        width: calc(100% - 91px);
+        width: calc(100% - 88px);
     }
     .product_preview-img_big-item{
         height: 666px;
+    }
+    .product_preview .product_preview-img_big-item{
+        height: 535px;
     }
     .catalog_color-item + .catalog_color-item{
         margin-left: 20px;
@@ -576,7 +579,7 @@
     [flex-align] .catalog_label + *{
         margin-left: 10px;
     }
-    .catalog_label + .title-2{
+    .catalog_label + .title-2.for_label{
         margin-top: 20px;
     }
     .catalog_list-top{
