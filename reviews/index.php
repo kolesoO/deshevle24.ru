@@ -85,7 +85,7 @@ $APPLICATION->SetTitle("Отзывы");
                 </div>
                 <div class="def_form-item def_form_footer col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
                     <div class="def_form-item col-lg-15">
-                        <div>
+                        <div class="catalog_item-block">
                             <span class="form-item-rate title-5 medium">Поставьте оценку</span>
                             <a href="#"><i class="icon icon-star-gray-empty"></i></a>
                             <a href="#"><i class="icon icon-star-gray-empty"></i></a>
@@ -93,25 +93,23 @@ $APPLICATION->SetTitle("Отзывы");
                             <a href="#"><i class="icon icon-star-gray-empty"></i></a>
                             <a href="#"><i class="icon icon-star-gray-empty"></i></a>
                         </div>
-                        <br>
                         <div class="title-5 medium">Вы рекомендуете этот товар?</div>
-                        <br>
-                        <div flex-align="start">
+                        <a href="#" flex-align="center" class="list_block-item">
                             <div class="col-lg-2">
-                                <i class="icon icon-like-black"></i>
+                                <i class="icon icon-like"></i>
                             </div>
                             <div class="col-lg-22">
-                                <a href="#">Да, я рекомендую эту модель!</a>
+                                <span>Да, я рекомендую эту модель!</span>
                             </div>
-                        </div>
-                        <div flex-align="start">
+                        </a>
+                        <a href="#" flex-align="center" class="list_block-item">
                             <div class="col-lg-2">
                                 <i class="icon icon-close dark"></i>
                             </div>
                             <div class="col-lg-22">
-                                <a href="#">Я не рекомендую эту модель!</a>
+                                <span>Я не рекомендую эту модель!</span>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-8">
                         <div class="file_input">
@@ -124,8 +122,8 @@ $APPLICATION->SetTitle("Отзывы");
                     </div>
                 </div>
                 <div class="def_form-item def_form_footer" flex-align="start" flex-text_align="space-between">
-                    <button type="submit" class="btn color col-lg-13 col-md-24 col-xs-24" align="center">Отправить отзыв</button>
-                    <button class="btn light_grey col-lg-9 col-md-24 col-xs-24" align="center" data-popup-close="myfeedback">Отменить</button>
+                    <button type="submit" class="btn color col-lg-14 col-md-24 col-xs-24" align="center">Отправить отзыв</button>
+                    <button class="btn light_grey col-lg-8 col-md-24 col-xs-24" align="center" data-popup-close="myfeedback">Отменить</button>
                 </div>
             </form>
         </div>

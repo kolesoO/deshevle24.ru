@@ -7,7 +7,7 @@
  */
 $compositeStub = (isset($arResult['COMPOSITE_STUB']) && $arResult['COMPOSITE_STUB'] == 'Y');
 ?>
-<a href="<?=($arResult['NUM_PRODUCTS'] > 0 ? $arParams['PATH_TO_BASKET'] : "#")?>">
+<a href="<?=($arResult['NUM_PRODUCTS'] > 0 ? $arParams['PATH_TO_BASKET'] : "#")?>" class="hover-opacity">
     <i class="icon icon-basket">
         <?if ($arResult['NUM_PRODUCTS'] > 0) :?>
             <span class="icon-inner"><?=$arResult['NUM_PRODUCTS']?></span>

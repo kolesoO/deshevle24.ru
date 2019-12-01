@@ -1,6 +1,7 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();?>
 
 <?if ($arResult["SECTION_COUNT"] > 0) :?>
+    <div class="title-5"><?=$arResult["SECTION"]["UF_SECTION_LABEL"]["VALUE"]?></div>
     <?foreach ($arResult["SECTIONS"] as $arSection) :
         $this->AddEditAction(
             $arSection['ID'],

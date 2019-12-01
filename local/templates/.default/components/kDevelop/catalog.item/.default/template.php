@@ -96,7 +96,7 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
     <?if ($arResult["OFFER"]["CAN_BUY"]) :?>
         <a
                 href="#"
-                class="btn color upper btn-arrow col-lg-24"
+                class="btn color btn-arrow col-lg-24"
                 align="center"
                 onclick="obAjax.addToBasket('<?=$arResult["OFFER"]["ID"]?>', '<?=$arPrice["PRICE_TYPE_ID"]?>', event)"
         >

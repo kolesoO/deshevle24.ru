@@ -1,5 +1,6 @@
 html, body {
-    margin:0;padding:0;
+    margin:0;
+    padding:0;
     overflow-x: hidden!important;
 }
 body {
@@ -21,6 +22,12 @@ a {
 }
 a:hover {
     color: #ce5d03!important;
+}
+a.hover-opacity{
+    transition: .3s opacity;
+}
+a.hover-opacity:hover{
+    opacity: .5;
 }
 ul, ol {
     margin:0 0 20px 20px;
@@ -111,6 +118,9 @@ hr.section_hr{
 [align='right']{
     text-align: right;
 }
+.margin-0{
+    margin:0!important;
+}
 .container{
     margin:0 auto;
 }
@@ -174,6 +184,9 @@ hr.section_hr{
 }
 .color-grey{
     color: #959595;
+}
+.dashed{
+    border-bottom: 1px dashed;
 }
 .title-1,
 .title-2,
@@ -299,6 +312,7 @@ hr.section_hr{
 }
 .main_slider{
     position: relative;
+    overflow:hidden;
 }
 .main_slider-item{
     display: flex;
@@ -441,12 +455,9 @@ hr.section_hr{
 .footer_socials-item{
     width: 41px;
     height: 40px;
-    border: 1px solid #a5a6a6;
-    border-radius: 100%;
     background-repeat: no-repeat;
-    background-size: 70% auto;
+    background-size: auto 100%;
     background-position: 50% 50%;
-    transition: border .3s;
 }
 .footer_socials-item:hover{
     border-color: #f56d01;
@@ -461,7 +472,17 @@ hr.section_hr{
 .footer_copyright{
     font-size: 71.4%;
     color: #767676;
+}
+.footer_copyright{
     border-top: 1px solid #dedede;
+}
+.developers a{
+    color: #004eff;
+    transition: .3s color;
+    text-decoration: underline;
+}
+.developers a:hover{
+    color: #427bfd!important;
 }
 .popup {
     display: none;
@@ -648,6 +669,9 @@ hr.section_hr{
 .breadcrumbs a {
     color: #a4a4a4;
 }
+.breadcrumbs-item:last-child a{
+    color: #535353;
+}
 .delivery-payment-descr {
     background-color: #e7fcff;
     line-height: 1.25;
@@ -696,7 +720,15 @@ hr.section_hr{
     align-self: center;
     transition: box-shadow .3s;
 }
+.company-galary_img{
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: contain;
+    height: 90px;
+}
 .company-galary-item p {
+    margin-top: 20px;
+    margin-bottom: 0;
 }
 
 .company-galary-item:hover {
@@ -964,6 +996,9 @@ hr.section_hr{
     top: calc(50% - 7px);
     border-bottom-color: #f56d01;
 }
+.header .dropdown_wrap{
+    padding-right: 15px;
+}
 .dropdown-content{
     overflow: hidden;
     position: absolute;
@@ -999,4 +1034,7 @@ hr.section_hr{
     background-repeat:no-repeat;
     background-position:50% 50%;
     background-size:50px 50px
+}
+.list_block-item + .list_block-item{
+    margin-top: 5px;
 }

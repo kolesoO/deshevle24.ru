@@ -39,26 +39,26 @@ $APPLICATION->SetTitle("Доставка и оплата");
 <div class="delivery-payment-table" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
     <table class="col-lg-18 col-md-24 col-xs-24">
         <tr>
-            <td rowspan="2">груз</td>
-            <td colspan="2">подъем и занос</td>
-            <td rowspan="2">сборка диванов</td>
+            <td rowspan="2">Груз</td>
+            <td colspan="2">Подъем и занос</td>
+            <td rowspan="2">Сборка диванов</td>
         </tr>
         <tr>
-            <td>грузовой лифт</td>
-            <td>ручной подъём</td>
+            <td>Грузовой лифт</td>
+            <td>Ручной подъём</td>
         </tr>
         <tr>
-            <td>прямой диван</td>
+            <td>Прямой диван</td>
             <td rowspan="3">450 руб.</td>
             <td>200 руб. этаж</td>
             <td rowspan="3">450 руб.</td>
         </tr>
         <tr>
-            <td>угловой диван</td>
+            <td>Угловой диван</td>
             <td>250 руб. этаж</td>
         </tr>
         <tr>
-            <td>кресло, пуф</td>
+            <td>Кресло, пуф</td>
             <td>100 руб. этаж</td>
         </tr>
     </table>

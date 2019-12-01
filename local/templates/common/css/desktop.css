@@ -24,6 +24,9 @@
     .col-lg-15{
         width:62.5%;
     }
+    .col-lg-14{
+        width:58.3333%;
+    }
     .col-lg-13{
         width:54.1666%;
     }
@@ -127,14 +130,20 @@
         background-color: #fff;
         box-shadow: 0 0 10px #adabab;
     }
+    .header-menu-item:first-child:before,
     .header-menu-item:not(:last-child):after{
         content: "";
         position: absolute;
-        right: 0;
         top: 33.3333%;
         width: 1px;
         height: 33.3333%;
         background-color: #fff;
+    }
+    .header-menu-item:first-child:before{
+        left:0;
+    }
+    .header-menu-item:not(:last-child):after{
+        right: 0;
     }
     .header-menu_btn{
         padding: 0 32px;
@@ -347,6 +356,9 @@
     .footer {
         padding-top: 55px;
     }
+    .footer .logo{
+        margin-bottom: 30px;
+    }
     .catalog_section-item{
         width: calc(100% / 6 - 30px);
         margin-bottom: 15px;
@@ -462,10 +474,10 @@
         margin-bottom: 50px;
     }
     .delivery-payment-info-item {
-        padding: 80px;
+        padding: 7%;
     }
     .delivery-payment-info-item:first-child{
-        width: 45%;
+        width: 43%;
     }
     .delivery-payment-info-item:first-child .title-4 {
         margin-bottom: 30px;
@@ -474,7 +486,10 @@
         margin-bottom: 20px;
     }
     .delivery-payment-info-item:nth-child(2){
-        width: 50%;
+        width: 53%;
+    }
+    .delivery-payment-info-item .title-2{
+        margin-bottom: 25px;
     }
     .delivery-payment-table {
         margin-top: 50px;
@@ -487,6 +502,9 @@
     }
     .company-info-item:first-child{
         padding: 50px;
+    }
+    .company-info-item .title-2{
+        margin-bottom: 25px;
     }
     .company-text {
         margin-top: 60px;
@@ -501,6 +519,9 @@
     .company-galary-item img {
         margin-bottom: 20px;
         height: 90px;
+    }
+    .title-1 + .feedback-btn{
+        margin-top: -46px;
     }
     .feedback-list {
         margin-top: 30px;
@@ -525,7 +546,7 @@
         margin-right: 20px;
     }
     .file_input label{
-        padding: 40px 0;
+        padding: 28px 0;
     }
     .basket-info {
         margin-bottom: 40px;

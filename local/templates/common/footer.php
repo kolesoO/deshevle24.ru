@@ -19,7 +19,6 @@
                             false
                         );?>
                     </div>
-                    <br>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         ".default",
@@ -31,7 +30,7 @@
                     );?>
                 </div>
             </div>
-            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
+            <div class="footer-item col-lg-4 col-md-7 col-xs-24">
                 <div class="col-lg-22">
                     <div class="title-5">Инфо для покупателей</div>
                     <?$APPLICATION->IncludeComponent(
@@ -135,7 +134,7 @@
                     );
                     //end
                     ?>
-                    <br>
+                    <br><br>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         ".default",
@@ -148,62 +147,63 @@
                 </div>
             </div>
             <?if (DEVICE_TYPE == "DESKTOP") :?>
-                <div class="col-lg-4">
-                    <div class="col-lg-22">
-                        <div class="title-5">Каталог</div>
-                        <?$APPLICATION->IncludeComponent(
-                            "bitrix:catalog.section.list",
-                            "footer",
-                            [
-                                "VIEW_MODE" => "TEXT",
-                                "SHOW_PARENT_NAME" => "Y",
-                                "IBLOCK_TYPE" => "catalog",
-                                "IBLOCK_ID" => IBLOCK_CATALOG_CATALOG,
-                                "SECTION_ID" => "",
-                                "SECTION_CODE" => "razdel_divanov",
-                                "SECTION_URL" => "",
-                                "COUNT_ELEMENTS" => "Y",
-                                "TOP_DEPTH" => "2",
-                                "SECTION_FIELDS" => "",
-                                "SECTION_USER_FIELDS" => "",
-                                "ADD_SECTIONS_CHAIN" => "N",
-                                "CACHE_TYPE" => "A",
-                                "CACHE_TIME" => "36000000",
-                                "CACHE_NOTES" => "",
-                                "CACHE_GROUPS" => "Y"
-                            ]
-                        );?>
+                <div class="col-lg-8">
+                    <div class="title-5">Каталог</div>
+                    <div flex-align="start" flex-wrap="wrap">
+                        <div class="col-lg-11">
+                            <?$APPLICATION->IncludeComponent(
+                                "bitrix:catalog.section.list",
+                                "footer",
+                                [
+                                    "VIEW_MODE" => "TEXT",
+                                    "SHOW_PARENT_NAME" => "Y",
+                                    "IBLOCK_TYPE" => "catalog",
+                                    "IBLOCK_ID" => IBLOCK_CATALOG_CATALOG,
+                                    "SECTION_ID" => "",
+                                    "SECTION_CODE" => "divany_i_kresla",
+                                    "SECTION_URL" => "",
+                                    "COUNT_ELEMENTS" => "Y",
+                                    "TOP_DEPTH" => "2",
+                                    "SECTION_FIELDS" => "",
+                                    "SECTION_USER_FIELDS" => "",
+                                    "ADD_SECTIONS_CHAIN" => "N",
+                                    "CACHE_TYPE" => "A",
+                                    "CACHE_TIME" => "36000000",
+                                    "CACHE_NOTES" => "",
+                                    "CACHE_GROUPS" => "Y"
+                                ]
+                            );?>
+                        </div>
+                        <div class="col-lg-11">
+                            <?$APPLICATION->IncludeComponent(
+                                "bitrix:catalog.section.list",
+                                "footer",
+                                [
+                                    "VIEW_MODE" => "TEXT",
+                                    "SHOW_PARENT_NAME" => "Y",
+                                    "IBLOCK_TYPE" => "catalog",
+                                    "IBLOCK_ID" => IBLOCK_CATALOG_CATALOG,
+                                    "SECTION_ID" => "",
+                                    "SECTION_CODE" => "matrasy_porolon_i_laty",
+                                    "SECTION_URL" => "",
+                                    "COUNT_ELEMENTS" => "Y",
+                                    "TOP_DEPTH" => "2",
+                                    "SECTION_FIELDS" => "",
+                                    "SECTION_USER_FIELDS" => "",
+                                    "ADD_SECTIONS_CHAIN" => "N",
+                                    "CACHE_TYPE" => "A",
+                                    "CACHE_TIME" => "36000000",
+                                    "CACHE_NOTES" => "",
+                                    "CACHE_GROUPS" => "Y"
+                                ]
+                            );?>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="title-5">Товары для сна</div>
-                    <?$APPLICATION->IncludeComponent(
-                        "bitrix:catalog.section.list",
-                        "footer",
-                        [
-                            "VIEW_MODE" => "TEXT",
-                            "SHOW_PARENT_NAME" => "Y",
-                            "IBLOCK_TYPE" => "catalog",
-                            "IBLOCK_ID" => IBLOCK_CATALOG_CATALOG,
-                            "SECTION_ID" => "",
-                            "SECTION_CODE" => "tovary_dlya_sna",
-                            "SECTION_URL" => "",
-                            "COUNT_ELEMENTS" => "Y",
-                            "TOP_DEPTH" => "2",
-                            "SECTION_FIELDS" => "",
-                            "SECTION_USER_FIELDS" => "",
-                            "ADD_SECTIONS_CHAIN" => "N",
-                            "CACHE_TYPE" => "A",
-                            "CACHE_TIME" => "36000000",
-                            "CACHE_NOTES" => "",
-                            "CACHE_GROUPS" => "Y"
-                        ]
-                    );?>
                 </div>
             <?endif?>
         </div>
-        <div class="container footer_copyright" flex-align="center" flex-wrap="wrap" flex-text_align="center">
-            <div class="col-lg-18" align="center">
+        <div class="container footer_copyright" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+            <div class="col-lg-15">
                 <?$APPLICATION->IncludeComponent(
                     "bitrix:main.include",
                     ".default",
@@ -213,6 +213,10 @@
                     ],
                     false
                 );?>
+            </div>
+            <div class="developers col-lg-4">
+                <div>Разработка сайта: <a href="#">Вячеслав Корнев</a></div>
+                <div>Разработка сайта: <a href="#">Алексей Колесниченко</a></div>
             </div>
         </div>
     </footer>

@@ -8,12 +8,12 @@
 }
 .icon .icon-inner{
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: -13px;
+    right: -13px;
     font-size: 11px;
-    line-height: 19px;
-    width: 17px;
-    height: 17px;
+    line-height: 21px;
+    width: 20px;
+    height: 20px;
     text-align: center;
     color: #fff;
     background-color: #f56d01;
@@ -47,23 +47,30 @@
 .icon-search{
     width: 18px;
     height: 18px;
-    background-image: url('../images/icons/search.png');
+    background-image: url('../images/icons/search-black.png');
 }
 .icon-favorite,
-.icon-favorite-white,
-.icon-favorite-full,
-.icon-like-black {
+.icon-like{
+    width: 20px;
+    height: 18px;
+}
+.icon-favorite-white{
     width: 18px;
     height: 18px;
 }
-.icon-favorite{
-    background-image: url('../images/icons/favorite.png');
+.icon-favorite-full{
+    width: 19px;
+    height: 18px;
+}
+.icon-favorite,
+.icon-like{
+    background-image: url('../images/icons/favorite-black.png');
 }
 .icon-favorite-white{
     background-image: url('../images/icons/favorite-white.png');
 }
-.icon-like-black {
-    background-image: url('../images/icons/icon-like-black.png');
+a:hover .icon-like{
+    background-image: url('../images/icons/favorite-full.png');
 }
 .gallery-item:hover .icon-favorite-white,
 .btn:hover .icon-favorite{
@@ -136,7 +143,7 @@
     left: 50%;
     height: 100%;
     width: 2px;
-    transition: transform .3s;
+    transition: transform .4s ease;
     background-color: #f56d01;
 }
 .icon-close:before {
@@ -146,10 +153,10 @@
     transform: rotate(-45deg);
 }
 .icon-close:not(.dark):hover:before {
-    transform: rotate(135deg);
+    transform: rotate(405deg);
 }
 .icon-close:not(.dark):hover:after {
-    transform: rotate(45deg);
+    transform: rotate(315deg);
 }
 .icon-close.dark{
     width: 18px;

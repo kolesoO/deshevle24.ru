@@ -13,6 +13,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
+global $USER_FIELD_MANAGER;
+
 $arResult["SECTION_COUNT"] = count($arResult["SECTIONS"]);
 if (is_array($arParams["IMAGE_SIZE"])) {
     //кеширование изображений
@@ -32,6 +34,15 @@ if (is_array($arParams["IMAGE_SIZE"])) {
     unset($arSection);
     //end
 }
+
+//пользовательские свойства
+if (is_array($arResult["SECTION"])){
+    $arFields = $USER_FIELD_MANAGER->GetUserFields("IBLOCK_" . $arParams["IBLOCK_ID"] . "_SECTION", $arResult["SECTION"]["ID"]);
+    if (is_array($arFields)) {
+        $arResult["SECTION"] = array_merge($arResult["SECTION"], $arFields);
+    }
+}
+//end
 
 $cp = $this->__component;
 if (is_object($cp)) {

@@ -37,9 +37,13 @@ if ($arParams['DISPLAY_COMPARE']) {
     <div class="container">
         <div flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
             <div class="col-lg-7 col-md-24">
-                <div class="title-3 medium"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
+                <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+                    <div class="title-3 medium col-lg-13"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
+                    <?if ($arOffer["CAN_BUY"]) :?>
+                        <div class="catalog_label title-3 margin-0 light col-lg-10" align="center"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
+                    <?endif?>
+                </div>
             </div>
-            <hr class="section_hr hidden-lg col-md-24 col-xs-24">
             <div class="btn_list col-lg-15 col-md-24 col-xs-24" flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
                 <div align="center">
                     <i class="icon icon-star"></i>
@@ -89,7 +93,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                     </div>
                     <div
                             class="product_preview-img_big"
-                            data-autoplay="false"
+                            data-autoplay="true"
                             data-speed="1000"
                             data-arrows="false"
                             data-dots="false"
@@ -223,7 +227,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             <div class="title-3 medium">Ещё варианты <?=$arResult["NAME"]?></div>
             <div
                     class="catalog_slider js-slider clearfix"
-                    data-autoplay="false"
+                    data-autoplay="true"
                     data-autoplaySpeed="5000"
                     data-infinite="false"
                     data-speed="1000"

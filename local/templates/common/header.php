@@ -87,15 +87,17 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     )
                 );?>
                 <div class="header-contacts col-xs-11">
-                    <?$APPLICATION->IncludeComponent(
-                        "bitrix:main.include",
-                        ".default",
-                        [
-                            "AREA_FILE_SHOW" => "file",
-                            "PATH" => SITE_TEMPLATE_PATH . "/include/header/contacts.php"
-                        ],
-                        false
-                    );?>
+                    <div flex-align="center" flex-wrap="wrap">
+                        <?$APPLICATION->IncludeComponent(
+                            "bitrix:main.include",
+                            ".default",
+                            [
+                                "AREA_FILE_SHOW" => "file",
+                                "PATH" => SITE_TEMPLATE_PATH . "/include/header/contacts.php"
+                            ],
+                            false
+                        );?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,10 +134,10 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     <?endif?>
                 </div>
                 <div flex-align="center" flex-wrap="wrap">
-                    <a href="/search/" class="header-col">
+                    <a href="/search/" class="header-col hover-opacity">
                         <i class="icon icon-search"></i>
                     </a>
-                    <a href="/favorite/" class="header-col">
+                    <a href="/favorite/" class="header-col hover-opacity">
                         <i id="favorite-wrapper" class="icon icon-favorite">
                             <?if (\kDevelop\Ajax\Favorite::getCount() > 0) :?>
                                 <span class="icon-inner"><?=\kDevelop\Ajax\Favorite::getCount()?></span>

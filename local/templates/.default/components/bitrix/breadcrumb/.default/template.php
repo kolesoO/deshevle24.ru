@@ -11,7 +11,7 @@ if ($count > 0) {
 
     //root link
     $strReturn .= '
-        <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumbs-item">
             <a href="'.SITE_DIR.'" itemprop="item">
                 <span itemprop="name">Главная</span>
             </a>
@@ -23,7 +23,7 @@ if ($count > 0) {
 
     foreach ($arResult as $key => $arItem) {
         $strReturn .= '
-            <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumbs-item">
                 <a href="'.$arItem["LINK"].'" itemprop="item">
                     <span itemprop="name">'.$arItem["TITLE"].'</span>
                 </a>
