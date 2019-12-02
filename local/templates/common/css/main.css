@@ -289,8 +289,6 @@ hr.section_hr{
     transition: box-shadow .3s;
     height: 100%;
 }
-.header-menu_btn:hover,
-.header-menu_btn.active,
 .header-col:hover{
     box-shadow: 0px 0px 15px #adabab;
 }
@@ -741,6 +739,9 @@ hr.section_hr{
 .feedback-list-item {
     background-color: #f5f5f5;
 }
+.catalog_detail-tab .feedback-list-item{
+    background-color: #fff;
+}
 .user-info-txt {
     font-size: 14px;
 }
@@ -1037,4 +1038,9 @@ hr.section_hr{
 }
 .list_block-item + .list_block-item{
     margin-top: 5px;
+}
+.articles_list-img{
+    background-position: 50% 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
 }

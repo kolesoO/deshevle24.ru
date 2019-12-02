@@ -258,3 +258,73 @@ $APPLICATION->IncludeComponent(
         </div>
     </div>
 </div>
+
+<div id="myfeedback" class="popup">
+    <div class="popup_wrapper">
+        <div class="popup_content js-popup_content">
+            <a href="#" class="popup_content-close" data-popup-close>
+                <i class="icon icon-close"></i>
+            </a>
+            <div class="title-5 medium">Мой отзыв</div>
+            <br>
+            <div>
+                <small>Диван</small>
+                <div class="title-2 medium">Beige</div>
+            </div>
+            <br>
+            <form class="def_form">
+                <div class="def_form-item">
+                    <input type="text" placeholder="Номер заказа" class="col-lg-24 col-md-24 col-xs-24" required>
+                </div>
+                <div class="def_form-item">
+                    <input type="text" placeholder="Ваше имя" class="col-lg-24 col-md-24 col-xs-24" required>
+                </div>
+                <div class="def_form-item">
+                    <textarea  name="Текст отзыва" class="col-lg-24 col-md-24 col-xs-24" placeholder="Текст отзыва" required></textarea>
+                </div>
+                <div class="def_form-item def_form_footer col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                    <div class="def_form-item col-lg-15">
+                        <div class="catalog_item-block">
+                            <span class="form-item-rate title-5 medium">Поставьте оценку</span>
+                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
+                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
+                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
+                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
+                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
+                        </div>
+                        <div class="title-5 medium">Вы рекомендуете этот товар?</div>
+                        <a href="#" flex-align="center" class="list_block-item">
+                            <div class="col-lg-2">
+                                <i class="icon icon-like"></i>
+                            </div>
+                            <div class="col-lg-22">
+                                <span>Да, я рекомендую эту модель!</span>
+                            </div>
+                        </a>
+                        <a href="#" flex-align="center" class="list_block-item">
+                            <div class="col-lg-2">
+                                <i class="icon icon-close dark"></i>
+                            </div>
+                            <div class="col-lg-22">
+                                <span>Я не рекомендую эту модель!</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="file_input">
+                            <label for="file">
+                                <i class="icon icon-file"></i>
+                                <small>Добавить<br>фотографию</small>
+                            </label>
+                            <input id="file" type="file">
+                        </div>
+                    </div>
+                </div>
+                <div class="def_form-item def_form_footer" flex-align="start" flex-text_align="space-between">
+                    <button type="submit" class="btn color col-lg-14 col-md-24 col-xs-24" align="center">Отправить отзыв</button>
+                    <button class="btn light_grey col-lg-8 col-md-24 col-xs-24" align="center" data-popup-close="myfeedback">Отменить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

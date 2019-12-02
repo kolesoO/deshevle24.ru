@@ -118,7 +118,8 @@ if ($arParams['DISPLAY_COMPARE']) {
     <div class="catalog_detail-tab js-tabs">
         <div flex-align="center" flex-text_align="space-between">
             <a href="#" class="catalog_detail-tab-item col-lg-6 col-md-6 col-xs-12" data-tab_target="#config">Конфигурация</a>
-            <a href="#" class="catalog_detail-tab-item col-lg-18 col-md-18 col-xs-12" data-tab_target="#reviews">Отзывы (0)</a>
+            <a href="#" class="catalog_detail-tab-item col-lg-3 col-md-6 col-xs-12" data-tab_target="#reviews-old" align="center">Отзывы (0)</a>
+            <a href="#" class="catalog_detail-tab-item col-lg-18 col-md-18 col-xs-12" data-tab_target="#reviews">Отзывы (2)</a>
         </div>
         <div class="section" data-tab_content>
             <div id="config" data-tab_item>
@@ -182,39 +183,124 @@ if ($arParams['DISPLAY_COMPARE']) {
                     <hr class="section_hr">
                     <div class="articles_list" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
                         <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="catalog_item-block">
-                                <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
-                            </div>
-                            <div class="title-4">Скандинавский стиль</div>
+                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
+                            <div class="title-5 medium">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
                         </div>
                         <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="catalog_item-block">
-                                <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
-                            </div>
-                            <div class="title-4">Скандинавский стиль</div>
+                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
+                            <div class="title-5 medium">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
                         </div>
                         <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="catalog_item-block">
-                                <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
-                            </div>
-                            <div class="title-4">Скандинавский стиль</div>
+                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
+                            <div class="title-5 medium">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
                         </div>
                         <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="catalog_item-block">
-                                <img src="<?=SITE_TEMPLATE_PATH?>/images/config-item.png">
-                            </div>
-                            <div class="title-4">Скандинавский стиль</div>
+                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
+                            <div class="title-5 medium">Скандинавский стиль</div>
                             <div>Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="reviews-old" data-tab_item>
+                <div class="container">
+                    <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+                        <div>
+                            <div class="title-5 light">Рейтинг (0)</div>
+                            <div>
+                                <i class="icon icon-star-gray-empty"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="#" class="btn color btn-arrow" flex-text_align="end" data-popup-open="#myfeedback">
+                                <span>Оставить отзыв</span>
+                                <i class="icon icon-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="feedback-list">
+                        <div class="feedback-empty" flex-align="center" flex-wrap="wrap" flex-text_align="center">
+                            <div align="center">
+                                <i class="icon icon-chat_msg"></i>
+                                <br><br><br>
+                                <div>Отзывов о данном товаре пока нет</div>
+                                <div class="title-5 medium">Оставь отзыв первым</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="reviews" data-tab_item>
                 <div class="container">
-                    <p>Список отзывов пуст</p>
+                    <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+                        <div>
+                            <div class="title-5 light">Рейтинг (0)</div>
+                            <div>
+                                <i class="icon icon-star"></i>
+                                <i class="icon icon-star"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                                <i class="icon icon-star-gray-empty"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="#" class="btn color btn-arrow" flex-text_align="end" data-popup-open="#myfeedback">
+                                <span>Оставить отзыв</span>
+                                <i class="icon icon-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="feedback-list">
+                        <div class="feedback-list-item">
+                            <div flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                                <div class="user-info col-lg-18" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                                    <div class="title-5 medium">Иванов Максим</div>
+                                    <p>26.01.2019 12.30</p>
+                                    <div class="feedback-stars col-lg-24">
+                                        <i class="icon icon-star"></i>
+                                        <i class="icon icon-star"></i>
+                                        <i class="icon icon-star"></i>
+                                        <i class="icon icon-star"></i>
+                                        <i class="icon icon-star-gray-empty"></i>
+                                    </div>
+                                    <div class="user-info-txt col-lg-24">
+                                        <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
+                                    </div>
+                                    <div class="feedback-like col-lg-24" flex-align="start">
+                                        <i class="icon icon-like-black"></i>
+                                        <p>Да, я рекомендую эту модель!</p>
+                                    </div>
+                                </div>
+                                <img src="/local/templates/common/images/instagram-item.png" class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="feedback-list-item">
+                            <div class="user-info col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                                <div class="title-5 medium">Иванов Максим</div>
+                                <p>26.01.2019 12.30</p>
+                                <div class="feedback-stars col-lg-24">
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star-gray-empty"></i>
+                                </div>
+                                <div class="user-info-txt col-lg-24">
+                                    <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div flex-align="center" flex-text_align="center">
+                        <a href="#" class="title-5 medium btn" align="center" data-popup-open="#">Все отзывы</a>
+                    </div>
                 </div>
             </div>
         </div>

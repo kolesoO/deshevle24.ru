@@ -542,6 +542,9 @@
     .feedback-like i {
         margin-right: 10px;
     }
+    .feedback-empty{
+        height: 560px;
+    }
     .form-item-rate {
         margin-right: 20px;
     }
@@ -650,5 +653,8 @@
     }
     .dropdown-content_inner{
         padding: 30px 50px;
+    }
+    .articles_list-img{
+        height: 150px;
     }
 }

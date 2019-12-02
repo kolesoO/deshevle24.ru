@@ -191,3 +191,8 @@ a:hover .icon-like{
     height: 20px;
     background-image: url('../images/icons/picture.svg');
 }
+.icon-chat_msg{
+    width: 56px;
+    height: 46px;
+    background-image: url('../images/icons/chat-message.png');
+}
