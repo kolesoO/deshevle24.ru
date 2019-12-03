@@ -388,6 +388,7 @@ ymaps .logo{
     top: 0;
     left: 0;
     width: 100%;
+    background-color: #fff;
 }
 .catalog_slider{
     position: relative;
