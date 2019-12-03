@@ -40,6 +40,7 @@ $this->setFrameMode(true);
                     data-arrows="true"
                     data-dots="false"
                     data-slidesToShow="<?=$arParams["LINE_ELEMENT_COUNT"]?>"
+                    style="<?=isset($arParams["Z_INDEX"]) && strlen($arParams["Z_INDEX"]) > 0 ? 'z-index:' . $arParams["Z_INDEX"] : ''?>"
             >
                 <?foreach ($arResult["ITEMS"] as $arItem) :
                     if ($arResult["SET_AREA"]) {

@@ -6,8 +6,8 @@
     </main>
     <footer class="footer">
         <div class="container" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
-                <div class="col-lg-22">
+            <div class="footer-item col-lg-6 col-md-7 col-xs-24">
+                <div class="col-lg-14">
                     <div class="logo">
                         <?$APPLICATION->IncludeComponent(
                             "bitrix:main.include",
@@ -30,8 +30,8 @@
                     );?>
                 </div>
             </div>
-            <div class="footer-item col-lg-4 col-md-7 col-xs-24">
-                <div class="col-lg-22">
+            <div class="footer-item col-lg-6 col-md-7 col-xs-24">
+                <div class="col-lg-16">
                     <div class="title-5">Инфо для покупателей</div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:menu",
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="footer-item col-lg-6 col-md-7 col-xs-24">
-                <div class="col-lg-22">
+                <div class="col-lg-19">
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         ".default",
@@ -86,9 +86,9 @@
                             "SORT_ORDER1" => "DESC",
                             "SORT_BY2" => "SORT",
                             "SORT_ORDER2" => "ASC",
-                            "FILTER_NAME" => "bannerFilter",
+                            "FILTER_NAME" => "",
                             "FIELD_CODE" => Array("ID", "NAME", "PREVIEW_PICTURE"),
-                            "PROPERTY_CODE" => Array("LINK"),
+                            "PROPERTY_CODE" => Array("LINK", "IMAGE"),
                             "CHECK_DATES" => "N",
                             "DETAIL_URL" => "",
                             "PREVIEW_TRUNCATE_LEN" => "",
@@ -147,9 +147,9 @@
                 </div>
             </div>
             <?if (DEVICE_TYPE == "DESKTOP") :?>
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                     <div class="title-5">Каталог</div>
-                    <div flex-align="start" flex-wrap="wrap">
+                    <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
                         <div class="col-lg-11">
                             <?$APPLICATION->IncludeComponent(
                                 "bitrix:catalog.section.list",
@@ -203,7 +203,7 @@
             <?endif?>
         </div>
         <div class="container footer_copyright" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
-            <div class="col-lg-15">
+            <div class="col-lg-19">
                 <?$APPLICATION->IncludeComponent(
                     "bitrix:main.include",
                     ".default",
@@ -227,70 +227,69 @@
                     <a href="#" class="popup_content-close" data-popup-close>
                         <i class="icon icon-close"></i>
                     </a>
-                    <div class="js-tabs">
-                        <div class="content_tab" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
-                            <a href="#" class="content_tab-item" data-tab_target="#callback-form">Перезвоните мне</a>
-                            <a href="#" class="content_tab-item" data-tab_target="#question-form">Задать вопрос</a>
-                        </div>
-                        <div data-tab_content>
-                            <div id="callback-form" data-tab_item>
-                                <?$APPLICATION->IncludeComponent(
-                                    "bitrix:form.result.new",
-                                    "",
-                                    [
-                                        "SEF_MODE" => "N",
-                                        "WEB_FORM_ID" => WEB_FORM_CALLBACK,
-                                        "LIST_URL" => "",
-                                        "EDIT_URL" => "",
-                                        "SUCCESS_URL" => "",
-                                        "CHAIN_ITEM_TEXT" => "",
-                                        "CHAIN_ITEM_LINK" => "",
-                                        "IGNORE_CUSTOM_TEMPLATE" => "Y",
-                                        "USE_EXTENDED_ERRORS" => "Y",
-                                        "CACHE_TYPE" => "A",
-                                        "CACHE_TIME" => "3600",
-                                        "AJAX_MODE" => "Y",
-                                        "AJAX_OPTION_SHADOW" => "N",
-                                        "AJAX_OPTION_JUMP" => "N",
-                                        "AJAX_OPTION_STYLE" => "Y",
-                                        "AJAX_OPTION_HISTORY" => "N"
-                                    ]
-                                );?>
+                    <div class="popup_content-inner">
+                        <div class="js-tabs">
+                            <div class="content_tab" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+                                <a href="#" class="content_tab-item" data-tab_target="#callback-form">Перезвоните мне</a>
+                                <a href="#" class="content_tab-item" data-tab_target="#question-form">Задать вопрос</a>
                             </div>
-                            <div id="question-form" data-tab_item>
-                                <?$APPLICATION->IncludeComponent(
-                                    "bitrix:form.result.new",
-                                    "",
-                                    [
-                                        "SEF_MODE" => "N",
-                                        "WEB_FORM_ID" => WEB_FORM_QUESTION,
-                                        "LIST_URL" => "",
-                                        "EDIT_URL" => "",
-                                        "SUCCESS_URL" => "",
-                                        "CHAIN_ITEM_TEXT" => "",
-                                        "CHAIN_ITEM_LINK" => "",
-                                        "IGNORE_CUSTOM_TEMPLATE" => "Y",
-                                        "USE_EXTENDED_ERRORS" => "Y",
-                                        "CACHE_TYPE" => "A",
-                                        "CACHE_TIME" => "3600",
-                                        "AJAX_MODE" => "Y",
-                                        "AJAX_OPTION_SHADOW" => "N",
-                                        "AJAX_OPTION_JUMP" => "N",
-                                        "AJAX_OPTION_STYLE" => "Y",
-                                        "AJAX_OPTION_HISTORY" => "N"
-                                    ]
-                                );?>
+                            <div data-tab_content>
+                                <div id="callback-form" data-tab_item>
+                                    <?$APPLICATION->IncludeComponent(
+                                        "bitrix:form.result.new",
+                                        "",
+                                        [
+                                            "SEF_MODE" => "N",
+                                            "WEB_FORM_ID" => WEB_FORM_CALLBACK,
+                                            "LIST_URL" => "",
+                                            "EDIT_URL" => "",
+                                            "SUCCESS_URL" => "",
+                                            "CHAIN_ITEM_TEXT" => "",
+                                            "CHAIN_ITEM_LINK" => "",
+                                            "IGNORE_CUSTOM_TEMPLATE" => "Y",
+                                            "USE_EXTENDED_ERRORS" => "Y",
+                                            "CACHE_TYPE" => "A",
+                                            "CACHE_TIME" => "3600",
+                                            "AJAX_MODE" => "Y",
+                                            "AJAX_OPTION_SHADOW" => "N",
+                                            "AJAX_OPTION_JUMP" => "N",
+                                            "AJAX_OPTION_STYLE" => "Y",
+                                            "AJAX_OPTION_HISTORY" => "N"
+                                        ]
+                                    );?>
+                                </div>
+                                <div id="question-form" data-tab_item>
+                                    <?$APPLICATION->IncludeComponent(
+                                        "bitrix:form.result.new",
+                                        "",
+                                        [
+                                            "SEF_MODE" => "N",
+                                            "WEB_FORM_ID" => WEB_FORM_QUESTION,
+                                            "LIST_URL" => "",
+                                            "EDIT_URL" => "",
+                                            "SUCCESS_URL" => "",
+                                            "CHAIN_ITEM_TEXT" => "",
+                                            "CHAIN_ITEM_LINK" => "",
+                                            "IGNORE_CUSTOM_TEMPLATE" => "Y",
+                                            "USE_EXTENDED_ERRORS" => "Y",
+                                            "CACHE_TYPE" => "A",
+                                            "CACHE_TIME" => "3600",
+                                            "AJAX_MODE" => "Y",
+                                            "AJAX_OPTION_SHADOW" => "N",
+                                            "AJAX_OPTION_JUMP" => "N",
+                                            "AJAX_OPTION_STYLE" => "Y",
+                                            "AJAX_OPTION_HISTORY" => "N"
+                                        ]
+                                    );?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="popup_content-success" class="popup_content-success">
-                        <a href="#" class="popup_content-close js-toggle_class" data-class="active" data-target="#popup_content-success">
-                            <i class="icon icon-close"></i>
-                        </a>
-                        <div flex-align="center" flex-text_align="center" flex-wrap="wrap">
-                            <div>
-                                <div class="popup_content-success-title col-lg-24 col-md-24 col-xs-24">Спасибо!</div>
-                                <span>Менеджер перезвонит Вам <br>в ближайшее время.</span>
+                        <div id="popup_content-success" class="popup_content-success">
+                            <div flex-align="center" flex-text_align="center" flex-wrap="wrap">
+                                <div>
+                                    <div class="popup_content-success-title col-lg-24 col-md-24 col-xs-24">Спасибо!</div>
+                                    <span>Менеджер перезвонит Вам <br>в ближайшее время.</span>
+                                </div>
                             </div>
                         </div>
                     </div>

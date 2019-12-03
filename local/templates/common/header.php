@@ -134,16 +134,23 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     <?endif?>
                 </div>
                 <div flex-align="center" flex-wrap="wrap">
-                    <a href="/search/" class="header-col hover-opacity">
-                        <i class="icon icon-search"></i>
-                    </a>
-                    <a href="/favorite/" class="header-col hover-opacity">
-                        <i id="favorite-wrapper" class="icon icon-favorite">
-                            <?if (\kDevelop\Ajax\Favorite::getCount() > 0) :?>
-                                <span class="icon-inner"><?=\kDevelop\Ajax\Favorite::getCount()?></span>
-                            <?endif?>
-                        </i>
-                    </a>
+                    <div class="header-col header_search">
+                        <form action="/search/">
+                            <input type="text" name="q">
+                            <button type="submit" class="header_search-btn hover-opacity">
+                                <i class="icon icon-search"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="header-col">
+                        <a href="/favorite/" class="hover-opacity">
+                            <i id="favorite-wrapper" class="icon icon-favorite">
+                                <?if (\kDevelop\Ajax\Favorite::getCount() > 0) :?>
+                                    <span class="icon-inner"><?=\kDevelop\Ajax\Favorite::getCount()?></span>
+                                <?endif?>
+                            </i>
+                        </a>
+                    </div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:sale.basket.basket.line",
                         "",

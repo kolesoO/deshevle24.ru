@@ -17,7 +17,7 @@
         <input
                 type="submit"
                 name="web_form_submit"
-                class="btn col-lg-24 col-md-24 col-xs-24"
+                class="btn color col-lg-24 col-md-24 col-xs-24"
                 align="center"
                 value="<?=$arResult["arForm"]["BUTTON"]?>"
         >
@@ -26,5 +26,10 @@
 <?=$arResult["FORM_FOOTER"]?>
 
 <?if ($arResult["isFormNote"] == "Y") :?>
-    <script>$("#popup_content-success").addClass("active");</script>
+    <script>
+        $("#popup_content-success").addClass("active");
+        setTimeout(function() {
+            $("#popup_content-success").removeClass("active");
+        }, 3000);
+    </script>
 <?endif?>

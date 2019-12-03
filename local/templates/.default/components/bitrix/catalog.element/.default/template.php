@@ -40,7 +40,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                 <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
                     <div class="title-3 medium col-lg-13"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
                     <?if ($arOffer["CAN_BUY"]) :?>
-                        <div class="catalog_label title-3 margin-0 light col-lg-10" align="center"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
+                        <div class="catalog_label title-3 no-m light col-lg-10" align="center"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
                     <?endif?>
                 </div>
             </div>

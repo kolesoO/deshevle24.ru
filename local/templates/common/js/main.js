@@ -126,12 +126,50 @@ $(document).ready(function(){
     });
     //end
 
-    //gallery
-    $("body").on("mouseover", ".js-gallery_item", function(){
-        $(this).find(".animate-start").addClass("animate");
-    });
-    $("body").on("mouseout", ".js-gallery_item", function(){
-        $(this).find(".animate-start").removeClass("animate");
+    //markable
+    $(".js-markable > a").hover(
+        function() {
+            var $parent = $(this).parent(),
+                value = $(this).attr("data-value");
+
+            if (parseInt(value) > 0 && $parent.length > 0) {
+                $parent.find("a").each(function() {
+                    if ($(this).attr("data-value") <= value) {
+                        $(this).addClass("active");
+                    }
+                });
+            }
+        },
+        function() {
+            var $parent = $(this).parent(),
+                value = !!$parent.attr("data-value") ? $parent.attr("data-value") : 0;
+
+            if (!$parent.hasClass("active")) {
+                $parent.find("a").each(function() {
+                    if ($(this).attr("data-value") > value) {
+                        $(this).removeClass("active");
+                    }
+                });
+            }
+        }
+    );
+    $(".js-markable > a").on("click", function(e) {
+        e.preventDefault();
+
+        var $parent = $(this).parent(),
+            value = $(this).attr("data-value");
+
+        if (parseInt(value) > 0 && $parent.length > 0) {
+            $parent.find("a").each(function() {
+                if ($(this).attr("value") <= value) {
+                    $(this).addClass("active");
+                }
+            });
+            if (!!$parent.attr("data-target")) {
+                $($parent.attr("data-target")).val(value);
+            }
+            $parent.attr("data-value", value);
+        }
     });
     //end
 

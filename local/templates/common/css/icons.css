@@ -45,14 +45,14 @@
     margin-top: 4px;
 }
 .icon-search{
-    width: 18px;
-    height: 18px;
-    background-image: url('../images/icons/search-black.png');
+    width: 16px;
+    height: 16px;
+    background-image: url('../images/icons/magnifying-glass.svg');
 }
 .icon-favorite,
 .icon-like{
-    width: 20px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 .icon-favorite-white{
     width: 18px;
@@ -64,12 +64,13 @@
 }
 .icon-favorite,
 .icon-like{
-    background-image: url('../images/icons/favorite-black.png');
+    background-image: url('../images/icons/like.svg');
 }
 .icon-favorite-white{
     background-image: url('../images/icons/favorite-white.png');
 }
-a:hover .icon-like{
+a:hover .icon-like,
+.pseudo_link:hover .icon-like{
     background-image: url('../images/icons/favorite-full.png');
 }
 .gallery-item:hover .icon-favorite-white,
@@ -80,9 +81,9 @@ a:hover .icon-like{
     background-image: url('../images/icons/favorite-full.png');
 }
 .icon-basket{
-    width: 18px;
-    height: 18px;
-    background-image: url('../images/icons/basket.png');
+    width: 16px;
+    height: 16px;
+    background-image: url('../images/icons/shopping-cart.svg');
 }
 .icon-arrow,
 .icon-arrow-orange{
@@ -144,7 +145,7 @@ a:hover .icon-like{
     height: 100%;
     width: 2px;
     transition: transform .4s ease;
-    background-color: #f56d01;
+    background-color: #fff;
 }
 .icon-close:before {
     transform: rotate(45deg);
@@ -177,7 +178,8 @@ a:hover .icon-like{
 .icon-star{
     background-image: url('../images/icons/star-full.png');
 }
-.icon-star_full{
+.icon-star_full,
+.markable > a.active > .icon-star-gray-empty{
     background-image: url('../images/icons/star-full.png');
 }
 .icon-star-gray-empty {

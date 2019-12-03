@@ -11,8 +11,7 @@
                     id="<?=$this->GetEditAreaId($arItem['ID']);?>"
                     href="<?=$arItem["PROPERTIES"]["LINK"]["VALUE"]?>" class="footer_socials-item"
                     target="_blank"
-                    style="background-image: url('<?=$arItem["PREVIEW_PICTURE"]["SRC"]?>')"
-            ></a>
+            ><?=file_get_contents($_SERVER["DOCUMENT_ROOT"] . $arItem["PROPERTIES"]["IMAGE"]["SRC"])?></a>
         <?endforeach;?>
     </div>
 <?endif?>

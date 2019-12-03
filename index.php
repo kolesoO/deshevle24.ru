@@ -7,7 +7,7 @@ $APPLICATION->SetPageProperty("description", "");
 $APPLICATION->SetTitle("");
 
 $rsAsset->addString('<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>');
-$rsAsset->addJs(SITE_TEMPLATE_PATH . '/js/modules/ymap/script.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH . '/js/modules/ymap/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH . '/js/map.js');
 
 //баннеры
@@ -190,7 +190,8 @@ $APPLICATION->IncludeComponent(
         "DEVICE_TYPE" => DEVICE_TYPE,
         "IMAGE_SIZE" => $arCatalogTopParams["IMAGE_SIZE"],
         "SECTION_TITLE" => "Лидеры продаж",
-        "INCLUDE_AREA_PATH" => "/include/index/leader_text.php"
+        "INCLUDE_AREA_PATH" => "/include/index/leader_text.php",
+        "Z_INDEX" => "2"
     ]
 );
 //end

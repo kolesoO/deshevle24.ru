@@ -14,11 +14,22 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 $this->setFrameMode(true);
 
 $arResult["ITEMS_COUNT"] = count($arResult["ITEMS"]);
-
-foreach ($arResult["ITEMS"] as &$arItem) {
-    $arItem["PROPERTIES"]["IMAGE"]["SRC"] = \CFile::GetPath($arItem["PROPERTIES"]["IMAGE"]["VALUE"]);
+if (is_array($arParams["IMAGE_SIZE"])) {
+    //кеширование изображений
+    foreach ($arResult["ITEMS"] as &$arItem) {
+        $thumb = \CFile::ResizeImageGet(
+            $arItem["PREVIEW_PICTURE"],
+            ["width" => $arParams["IMAGE_SIZE"]["WIDTH"], "height" => $arParams["IMAGE_SIZE"]["HEIGHT"]],
+            BX_RESIZE_IMAGE_PROPORTIONAL,
+            true
+        );
+        if ($thumb["src"]) {
+            $arItem["PREVIEW_PICTURE"]["SRC"] = $thumb["src"];
+        }
+    }
+    unset($arItem);
+    //end
 }
-unset($arItem);
 
 $cp = $this->__component;
 if (is_object($cp)) {

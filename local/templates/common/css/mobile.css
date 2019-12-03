@@ -229,9 +229,6 @@
     .catalog_item-block{
         margin-bottom: 20px;
     }
-    .catalog_item-footer{
-        padding: 0 30px 30px 30px;
-    }
     .catalog_item .btn,
     .catalog_detail-description-item .btn{
         padding-top: 20px;
@@ -266,9 +263,6 @@
     .catalog_list-content + .catalog_list-content{
         margin-top: 50px;
     }
-    .catalog_item.active .catalog_item-header{
-        opacity: 1;
-    }
     .catalog_item .btn
     .catalog_item-block{
         margin-bottom: 20px;
@@ -300,12 +294,14 @@
         margin-top: 30px;
     }
     .popup_content {
-        padding: 50px 20px 30px;
         width: 100%;
         min-height: 100%;
     }
     .popup_content.product{
         width: 80%;
+    }
+    .popup_content-inner{
+        padding: 50px 20px 30px;
     }
     .content_tab{
         margin-bottom: 30px;

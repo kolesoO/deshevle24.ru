@@ -2,7 +2,7 @@
 
 <?if (is_array($arResult)) :?>
     <?foreach ($arResult as $arItem) :?>
-        <div>
+        <div class="footer_menu-item">
             <?if ($arItem["SELECTED"] == "Y") :?>
                 <span class="grey_link active"><?=$arItem["TEXT"]?></span>
             <?else:?>

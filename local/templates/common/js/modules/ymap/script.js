@@ -120,7 +120,7 @@ obMap.prototype.initMap = function(){
         }
         ctx.arMarkerInfo.forEach(function(obMarkerInfo){
             obGeoObject = ctx.getGeoPlaceMark(obMarkerInfo.coords);
-        })
+        });
         ctx.obMap.geoObjects.add(obGeoObject);
     }
 

@@ -1,8 +1,8 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();?>
 
 <?if ($arResult["SECTION_COUNT"] > 0) :?>
-    <div class="title-5"><?=$arResult["SECTION"]["UF_SECTION_LABEL"]["VALUE"]?></div>
-    <?foreach ($arResult["SECTIONS"] as $arSection) :
+    <div class="footer_menu-item light"><?=$arResult["SECTION"]["UF_SECTION_LABEL"]["VALUE"]?></div>
+    <?foreach ($arResult["SECTIONS"] as $key => $arSection) :
         $this->AddEditAction(
             $arSection['ID'],
             $arSection['EDIT_LINK'],
@@ -15,7 +15,8 @@
             array("CONFIRM" => GetMessage('CT_BCSL_ELEMENT_DELETE_CONFIRM'))
         );
         ?>
-        <div id="<?=$this->GetEditAreaId($arSection['ID'])?>">
+        <div id="<?=$this->GetEditAreaId($arSection['ID'])?>" class="footer_menu-item">
+            <?=str_repeat('-&nbsp;', $arSection["DEPTH_LEVEL"] - 2)?>
             <a href="<?=$arSection["SECTION_PAGE_URL"]?>" class="grey_link"><?=$arSection["NAME"]?></a>
         </div>
     <?endforeach?>
