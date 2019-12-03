@@ -24,10 +24,10 @@ a:hover,
 .pseudo_link:hover{
     color: #ce5d03!important;
 }
-a.hover-opacity{
+.hover-opacity{
     transition: .3s opacity;
 }
-a.hover-opacity:hover{
+.hover-opacity:hover{
     opacity: .5;
 }
 ul, ol {
