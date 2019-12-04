@@ -6,10 +6,12 @@
     </main>
     <footer class="footer">
         <div class="container" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-            <div class="footer-item col-lg-6 col-md-7 col-xs-24">
+            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
                 <div class="col-lg-14">
                     <div class="logo">
-                        <?$APPLICATION->IncludeComponent(
+                        <?
+                        echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg');
+                        /*$APPLICATION->IncludeComponent(
                             "bitrix:main.include",
                             ".default",
                             [
@@ -17,7 +19,8 @@
                                 "PATH" => SITE_TEMPLATE_PATH . "/include/header/logo.php"
                             ],
                             false
-                        );?>
+                        );*/
+                        ?>
                     </div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:main.include",
@@ -30,7 +33,7 @@
                     );?>
                 </div>
             </div>
-            <div class="footer-item col-lg-6 col-md-7 col-xs-24">
+            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
                 <div class="col-lg-16">
                     <div class="title-5">Инфо для покупателей</div>
                     <?$APPLICATION->IncludeComponent(
@@ -49,7 +52,6 @@
                             "MENU_CACHE_GET_VARS" => ""
                         )
                     );?>
-                    <br><br>
                     <a href="#" class="btn grey upper col-lg-24 col-md-24 col-xs-24" align="center" data-popup-open="#callback">Заказать звонок</a>
                     <br>
                     <br>
@@ -67,74 +69,74 @@
                         ],
                         false
                     );?>
-                    <br><br>
-                    <?
-                    //соц сети
-                    $APPLICATION->IncludeComponent(
-                        "bitrix:news.list",
-                        "socials",
-                        [
-                            "DISPLAY_DATE" => "Y",
-                            "DISPLAY_NAME" => "Y",
-                            "DISPLAY_PICTURE" => "Y",
-                            "DISPLAY_PREVIEW_TEXT" => "Y",
-                            "AJAX_MODE" => "N",
-                            "IBLOCK_TYPE" => "content",
-                            "IBLOCK_ID" => IBLOCK_CONTENT_SOCIALS,
-                            "NEWS_COUNT" => "10",
-                            "SORT_BY1" => "ACTIVE_DATE",
-                            "SORT_ORDER1" => "DESC",
-                            "SORT_BY2" => "SORT",
-                            "SORT_ORDER2" => "ASC",
-                            "FILTER_NAME" => "",
-                            "FIELD_CODE" => Array("ID", "NAME", "PREVIEW_PICTURE"),
-                            "PROPERTY_CODE" => Array("LINK", "IMAGE"),
-                            "CHECK_DATES" => "N",
-                            "DETAIL_URL" => "",
-                            "PREVIEW_TRUNCATE_LEN" => "",
-                            "ACTIVE_DATE_FORMAT" => "d.m.Y",
-                            "SET_TITLE" => "N",
-                            "SET_BROWSER_TITLE" => "N",
-                            "SET_META_KEYWORDS" => "N",
-                            "SET_META_DESCRIPTION" => "N",
-                            "SET_LAST_MODIFIED" => "Y",
-                            "INCLUDE_IBLOCK_INTO_CHAIN" => "N",
-                            "ADD_SECTIONS_CHAIN" => "N",
-                            "HIDE_LINK_WHEN_NO_DETAIL" => "Y",
-                            "PARENT_SECTION" => "",
-                            "PARENT_SECTION_CODE" => "",
-                            "INCLUDE_SUBSECTIONS" => "Y",
-                            "CACHE_TYPE" => "A",
-                            "CACHE_TIME" => "3600",
-                            "CACHE_FILTER" => "Y",
-                            "CACHE_GROUPS" => "Y",
-                            "DISPLAY_TOP_PAGER" => "N",
-                            "DISPLAY_BOTTOM_PAGER" => "N",
-                            "PAGER_TITLE" => "Новости",
-                            "PAGER_SHOW_ALWAYS" => "Y",
-                            "PAGER_TEMPLATE" => "",
-                            "PAGER_DESC_NUMBERING" => "N",
-                            "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
-                            "PAGER_SHOW_ALL" => "Y",
-                            "PAGER_BASE_LINK_ENABLE" => "Y",
-                            "SET_STATUS_404" => "N",
-                            "SHOW_404" => "N",
-                            "MESSAGE_404" => "",
-                            "PAGER_BASE_LINK" => "",
-                            "PAGER_PARAMS_NAME" => "arrPager",
-                            "AJAX_OPTION_JUMP" => "N",
-                            "AJAX_OPTION_STYLE" => "Y",
-                            "AJAX_OPTION_HISTORY" => "N",
-                            "AJAX_OPTION_ADDITIONAL" => "",
-                            "IMAGE_SIZE" => [
-                                "WIDTH" => "",
-                                "HEIGHT" => ""
+                    <div class="footer_shops">
+                        <?
+                        //соц сети
+                        $APPLICATION->IncludeComponent(
+                            "bitrix:news.list",
+                            "socials",
+                            [
+                                "DISPLAY_DATE" => "Y",
+                                "DISPLAY_NAME" => "Y",
+                                "DISPLAY_PICTURE" => "Y",
+                                "DISPLAY_PREVIEW_TEXT" => "Y",
+                                "AJAX_MODE" => "N",
+                                "IBLOCK_TYPE" => "content",
+                                "IBLOCK_ID" => IBLOCK_CONTENT_SOCIALS,
+                                "NEWS_COUNT" => "10",
+                                "SORT_BY1" => "ACTIVE_DATE",
+                                "SORT_ORDER1" => "DESC",
+                                "SORT_BY2" => "SORT",
+                                "SORT_ORDER2" => "ASC",
+                                "FILTER_NAME" => "",
+                                "FIELD_CODE" => Array("ID", "NAME", "PREVIEW_PICTURE"),
+                                "PROPERTY_CODE" => Array("LINK", "IMAGE"),
+                                "CHECK_DATES" => "N",
+                                "DETAIL_URL" => "",
+                                "PREVIEW_TRUNCATE_LEN" => "",
+                                "ACTIVE_DATE_FORMAT" => "d.m.Y",
+                                "SET_TITLE" => "N",
+                                "SET_BROWSER_TITLE" => "N",
+                                "SET_META_KEYWORDS" => "N",
+                                "SET_META_DESCRIPTION" => "N",
+                                "SET_LAST_MODIFIED" => "Y",
+                                "INCLUDE_IBLOCK_INTO_CHAIN" => "N",
+                                "ADD_SECTIONS_CHAIN" => "N",
+                                "HIDE_LINK_WHEN_NO_DETAIL" => "Y",
+                                "PARENT_SECTION" => "",
+                                "PARENT_SECTION_CODE" => "",
+                                "INCLUDE_SUBSECTIONS" => "Y",
+                                "CACHE_TYPE" => "A",
+                                "CACHE_TIME" => "3600",
+                                "CACHE_FILTER" => "Y",
+                                "CACHE_GROUPS" => "Y",
+                                "DISPLAY_TOP_PAGER" => "N",
+                                "DISPLAY_BOTTOM_PAGER" => "N",
+                                "PAGER_TITLE" => "Новости",
+                                "PAGER_SHOW_ALWAYS" => "Y",
+                                "PAGER_TEMPLATE" => "",
+                                "PAGER_DESC_NUMBERING" => "N",
+                                "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+                                "PAGER_SHOW_ALL" => "Y",
+                                "PAGER_BASE_LINK_ENABLE" => "Y",
+                                "SET_STATUS_404" => "N",
+                                "SHOW_404" => "N",
+                                "MESSAGE_404" => "",
+                                "PAGER_BASE_LINK" => "",
+                                "PAGER_PARAMS_NAME" => "arrPager",
+                                "AJAX_OPTION_JUMP" => "N",
+                                "AJAX_OPTION_STYLE" => "Y",
+                                "AJAX_OPTION_HISTORY" => "N",
+                                "AJAX_OPTION_ADDITIONAL" => "",
+                                "IMAGE_SIZE" => [
+                                    "WIDTH" => "",
+                                    "HEIGHT" => ""
+                                ]
                             ]
-                        ]
-                    );
-                    //end
-                    ?>
-                    <br><br>
+                        );
+                        //end
+                        ?>
+                    </div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         ".default",
@@ -147,10 +149,10 @@
                 </div>
             </div>
             <?if (DEVICE_TYPE == "DESKTOP") :?>
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                     <div class="title-5">Каталог</div>
                     <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                        <div class="col-lg-11">
+                        <div class="col-lg-10">
                             <?$APPLICATION->IncludeComponent(
                                 "bitrix:catalog.section.list",
                                 "footer",
@@ -174,7 +176,7 @@
                                 ]
                             );?>
                         </div>
-                        <div class="col-lg-11">
+                        <div class="col-lg-13">
                             <?$APPLICATION->IncludeComponent(
                                 "bitrix:catalog.section.list",
                                 "footer",

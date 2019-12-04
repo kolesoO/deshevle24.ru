@@ -109,7 +109,9 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     </a>
                     <?if ($isMainPage) :?>
                         <div class="logo">
-                            <?$APPLICATION->IncludeComponent(
+                            <?
+                            echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg');
+                            /*$APPLICATION->IncludeComponent(
                                 "bitrix:main.include",
                                 ".default",
                                 [
@@ -117,11 +119,14 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                                     "PATH" => SITE_TEMPLATE_PATH . "/include/header/logo.php"
                                 ],
                                 false
-                            );?>
+                            );*/
+                            ?>
                         </div>
                     <?else:?>
                         <a href="<?=SITE_DIR?>" class="logo">
-                            <?$APPLICATION->IncludeComponent(
+                            <?
+                            echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg');
+                            /*$APPLICATION->IncludeComponent(
                                 "bitrix:main.include",
                                 ".default",
                                 [
@@ -129,14 +134,15 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                                     "PATH" => SITE_TEMPLATE_PATH . "/include/header/logo.php"
                                 ],
                                 false
-                            );?>
+                            );*/
+                            ?>
                         </a>
                     <?endif?>
                 </div>
                 <div flex-align="center" flex-wrap="wrap">
                     <div class="header-col header_search">
                         <form action="/search/">
-                            <input type="text" name="q">
+                            <input type="text" name="q" placeholder="Поиск">
                             <button type="submit" class="header_search-btn hover-opacity">
                                 <i class="icon icon-search"></i>
                             </button>

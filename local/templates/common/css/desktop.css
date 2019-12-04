@@ -116,7 +116,7 @@
         margin-top: 25px;
     }
     .section{
-        padding: 50px 0;
+        padding: 56px 0;
     }
     .section_hr{
         padding: 25px 0;
@@ -140,7 +140,7 @@
         box-shadow: 0 0 10px #adabab;
     }
     .header-menu-item:first-child:before,
-    .header-menu-item:not(:last-child):after{
+    .header-menu-item:after{
         content: "";
         position: absolute;
         top: 33.3333%;
@@ -151,7 +151,7 @@
     .header-menu-item:first-child:before{
         left:0;
     }
-    .header-menu-item:not(:last-child):after{
+    .header-menu-item:after{
         right: 0;
     }
     .header-menu_btn{
@@ -162,6 +162,16 @@
     }
     .logo > img{
         max-width: 55px;
+    }
+    .logo > svg{
+        width: 165px;
+    }
+    .logo > svg .cls-1{
+        fill: #383838;
+    }
+    .logo.bg{
+        width: 180px;
+        height: 62px;
     }
     .header-col{
         padding: 32px;
@@ -246,6 +256,7 @@
     }
     .catalog_item:hover{
         border-color: transparent;
+        overflow: visible;
     }
     .catalog_item-img{
         height: 150px;
@@ -373,8 +384,14 @@
     .footer .logo{
         margin-bottom: 30px;
     }
+    .footer_menu{
+        margin-bottom: 65px;
+    }
     .footer_menu-item + .footer_menu-item{
-        margin-top: 10px;
+        margin-top: 5px;
+    }
+    .footer_shops{
+        margin: 140px 0 23px;
     }
     .catalog_section-item{
         width: calc(100% / 6 - 30px);
@@ -412,9 +429,6 @@
     .catalog_menu-wrap.active{
         left: 0;
     }
-    .catalog_menu{
-        width: calc(100% - 249px);
-    }
     .catalog_menu-nav{
         width: 82px;
     }
@@ -427,25 +441,28 @@
     }
     .catalog_menu-nav-item:hover,
     .catalog_menu-nav-item.active{
-        background-color: #f7f7f7;
-        box-shadow: 0px 0px 10px #adabab;
+        box-shadow: 0 0 15px #e1e1e1;
+        border-bottom-color: #f6f6f6;
     }
     .catalog_menu-main{
         width: calc(100% - 82px);
-        background-color: #f7f7f7;
+        z-index: 2;
+        position: relative;
+        background-color: #fff;
         border-top: 1px solid #f1f1f1;
         border-bottom: 1px solid #f1f1f1;
+        box-shadow: 0 0 15px #e1e1e1;
     }
     .catalog_menu-item{
-        width: 20%;
-        height: 195px;
-        border-right: 1px solid #f1f1f1;
-        border-bottom: 1px solid #f1f1f1;
+        width: calc(50% / 3);
+        height: 200px;
+        border-right: 1px solid #f7f7f7;
+        border-bottom: 1px solid #f7f7f7;
         padding: 50px 30px;
     }
     .catalog_menu-item:hover{
         background-color: #fff;
-        box-shadow: 0px 0px 10px #adabab;
+        box-shadow: 0 0 15px #e1e1e1;
     }
     .catalog_menu-item,
     .catalog_menu-nav-item{

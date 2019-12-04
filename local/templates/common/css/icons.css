@@ -49,6 +49,10 @@
     height: 16px;
     background-image: url('../images/icons/magnifying-glass.svg');
 }
+a:hover .icon-search,
+.pseudo_link:hover .icon-search{
+    background-image: url('../images/icons/magnifying-glass-orange.svg');
+}
 .icon-favorite,
 .icon-like{
     width: 16px;
@@ -71,7 +75,7 @@
 }
 a:hover .icon-like,
 .pseudo_link:hover .icon-like{
-    background-image: url('../images/icons/favorite-full.png');
+    background-image: url('../images/icons/like-orange.svg');
 }
 .gallery-item:hover .icon-favorite-white,
 .btn:hover .icon-favorite{
@@ -89,12 +93,12 @@ a:hover .icon-like,
 .icon-arrow-orange{
     width: 18px;
     height: 13px;
-    background-size: 18px 13px;
+    background-size: 22px 17px;
     background-position: 50% 50%;
 }
 .icon-arrow,
 .btn:hover .icon-arrow-orange{
-    background-image: url('../images/icons/right-arrow.png');
+    background-image: url('../images/icons/right-arrow-white.svg');
 }
 .icon-arrow-orange{
     background-image: url('../images/icons/right-arrow-orange.png');

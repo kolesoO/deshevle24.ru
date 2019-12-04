@@ -37,7 +37,13 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
 <div class="catalog_item-hover">
     <div class="catalog_item-block" flex-align="center" flex-text_align="space-between">
         <?if ($arParams["HIDE_FAST_PRODUCT"] != "Y") :?>
-            <a href="#" data-popup-open="#fast-product" onclick="obAjax.getFastProduct('<?=$arResult["ITEM"]["ID"]?>')">
+            <a
+                    href="#"
+                    data-popup-open="#fast-product"
+                    onclick="obAjax.getFastProduct('<?=$arResult["ITEM"]["ID"]?>')"
+                    flex-align="center"
+                    class="icon_text"
+            >
                 <i class="icon icon-search"></i>
                 <span>Быстрый просмотр</span>
             </a>
