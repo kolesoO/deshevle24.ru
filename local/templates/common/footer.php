@@ -210,8 +210,8 @@
         </div>
         <div class="container footer_copyright" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
             <div class="developers col-lg-4">
-                <div>Дизайн сайта: <a href="#">Вячеслав Корнев</a></div>
-                <div>Разработка сайта: <a href="#">Алексей Колесниченко</a></div>
+                <div>Разработка сайта: <a href="#">Вячеслав Корнев</a></div>
+                <div>Верстка сайта: <a href="#">Алексей Колесниченко</a></div>
             </div>
             <div class="col-lg-19">
                 <?$APPLICATION->IncludeComponent(

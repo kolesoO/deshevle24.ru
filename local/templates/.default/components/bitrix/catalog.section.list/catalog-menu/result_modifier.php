@@ -31,12 +31,6 @@ foreach ($arResult["SECTIONS"] as $key => $arSection) {
         }
     }
     //end
-    if ($arSection["DEPTH_LEVEL"] == 1) {
-        $rootSectionKey = $key;
-    }
-    if ($arSection["DEPTH_LEVEL"] > $arResult["SECTIONS"][$rootSectionKey]["DEPTH_LEVEL"]) {
-        $arResult["SECTIONS"][$rootSectionKey]["CHILD_SECTIONS"][] = $key;
-    }
     $sectionKeyIdRelations[$arSection["ID"]] = $key;
 }
 
