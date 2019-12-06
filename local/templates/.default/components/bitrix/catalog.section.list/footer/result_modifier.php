@@ -15,7 +15,6 @@ $this->setFrameMode(true);
 
 global $USER_FIELD_MANAGER;
 
-$arResult["SECTION_COUNT"] = count($arResult["SECTIONS"]);
 if (is_array($arParams["IMAGE_SIZE"])) {
     //кеширование изображений
     foreach ($arResult["SECTIONS"] as &$arSection) {
@@ -43,8 +42,3 @@ if (is_array($arResult["SECTION"])){
     }
 }
 //end
-
-$cp = $this->__component;
-if (is_object($cp)) {
-    $cp->SetResultCacheKeys(["SECTION_COUNT"]);
-}

@@ -6,7 +6,7 @@
     background-size: contain;
     transition:.3s opacity;
 }
-.icon .icon-inner{
+.icon-inner{
     position: absolute;
     top: -13px;
     right: -13px;
@@ -19,6 +19,9 @@
     background-color: #f56d01;
     border-radius: 100%;
     font-style: normal;
+}
+.icon-wrap{
+    position: relative;
 }
 .icon-burger{
     width: 18px;
@@ -45,8 +48,10 @@
     margin-top: 4px;
 }
 .icon-search{
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
+}
+.icon-search{
     background-image: url('../images/icons/magnifying-glass.svg');
 }
 a:hover .icon-search,
@@ -54,16 +59,13 @@ a:hover .icon-search,
     background-image: url('../images/icons/magnifying-glass-orange.svg');
 }
 .icon-favorite,
-.icon-like{
-    width: 16px;
-    height: 16px;
+.icon-like,
+.icon-favorite-full{
+    width: 20px;
+    height: 20px;
 }
 .icon-favorite-white{
     width: 18px;
-    height: 18px;
-}
-.icon-favorite-full{
-    width: 19px;
     height: 18px;
 }
 .icon-favorite,
@@ -85,8 +87,8 @@ a:hover .icon-like,
     background-image: url('../images/icons/favorite-full.png');
 }
 .icon-basket{
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 22px;
     background-image: url('../images/icons/shopping-cart.svg');
 }
 .icon-arrow,
@@ -101,7 +103,7 @@ a:hover .icon-like,
     background-image: url('../images/icons/right-arrow-white.svg');
 }
 .icon-arrow-orange{
-    background-image: url('../images/icons/right-arrow-orange.png');
+    background-image: url('../images/icons/right-arrow-orange.svg');
 }
 .btn .icon-arrow,
 .btn .icon-arrow-orange{

@@ -149,7 +149,7 @@ hr.section_hr{
     color: #fff!important;
 }
 .btn:hover{
-    box-shadow: 0px 0px 15px #adabab;
+    box-shadow: 0 0 15px #e1e1e1;
 }
 .btn.grey,
 .btn.grey_full{
@@ -164,6 +164,10 @@ hr.section_hr{
 .btn.light_grey{
     color: #8e8e8e;
     border: 1px solid #d2d2d2;
+}
+.btn.dark_grey{
+    color: #323232;
+    border: 1px solid #323232;
 }
 .slick-slide{
     float: left;
@@ -227,6 +231,9 @@ p.short_info{
 .icon_text .icon + span{
     margin-left: 8px;
 }
+.opacity{
+    opacity: .3;
+}
 .section.first{
     padding-top: 0;
 }
@@ -267,13 +274,15 @@ p.short_info{
 }
 .header-col{
     border-right: 1px solid #ebebeb;
+    border-left: 1px solid #ebebeb;
     transition: box-shadow .3s;
 }
-.header-col:first-child{
-    border-left: 1px solid #ebebeb;
+.header-col:not(:last-child) {
+    margin-right: -1px;
 }
 .header-col:hover{
     box-shadow: 0px 0px 15px #e1e1e1;
+    border-color: transparent;
 }
 .header-menu{
 
@@ -391,9 +400,18 @@ ymaps .logo{
     background-size: contain;
     background-position: 50% 50%;
 }
+.catalog_item-price + .sale_label{
+    margin-left: 5px;
+}
+.sale_label + .catalog_item-price{
+    margin-left: 10px;
+}
 .catalog_item-price > s{
     color: #cccccc;
     font-size: 80%;
+}
+.catalog_item-price .sale_label{
+    margin: 0 5px;
 }
 .catalog_item-hover{
     position: absolute;
@@ -603,7 +621,6 @@ ymaps .logo{
     transition: left .3s;
 }
 .catalog_menu{
-    box-shadow: 0 0 15px #e1e1e1;
     background-color: #fff;
 }
 .catalog_menu-nav-item > img,
@@ -921,14 +938,14 @@ ymaps .logo{
 
 }
 .sale_label{
-    width: 70px;
-    height: 70px;
+    display: inline-block;
+    padding: 3px 6px;
     text-align: center;
-    background-color: #0a8c45;
+    background-color: #ff0100;
     color: #fff;
-    font-size: 130%;
-    line-height: 70px;
-    border-radius: 100%;
+    font-size: 85.7%;
+    line-height: 1;
+    border-radius: 5px;
 }
 .system-popup{
     padding:15px 20px;

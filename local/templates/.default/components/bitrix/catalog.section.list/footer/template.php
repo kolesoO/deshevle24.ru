@@ -1,6 +1,6 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();?>
 
-<?if ($arResult["SECTION_COUNT"] > 0) :?>
+<?if ($arResult["SECTIONS_COUNT"] > 0) :?>
     <div class="footer_menu-item light"><?=$arResult["SECTION"]["UF_SECTION_LABEL"]["VALUE"]?></div>
     <?foreach ($arResult["SECTIONS"] as $key => $arSection) :
         $this->AddEditAction(

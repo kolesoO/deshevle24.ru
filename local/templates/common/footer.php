@@ -6,8 +6,8 @@
     </main>
     <footer class="footer">
         <div class="container" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
-                <div class="col-lg-14">
+            <div class="footer-item col-lg-4 col-md-7 col-xs-24">
+                <div class="col-lg-20">
                     <div class="logo">
                         <?
                         echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg');
@@ -33,8 +33,8 @@
                     );?>
                 </div>
             </div>
-            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
-                <div class="col-lg-16">
+            <div class="footer-item col-lg-4 col-md-7 col-xs-24">
+                <div class="col-lg-20">
                     <div class="title-5">Инфо для покупателей</div>
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:menu",
@@ -52,14 +52,18 @@
                             "MENU_CACHE_GET_VARS" => ""
                         )
                     );?>
-                    <a href="#" class="btn grey upper col-lg-24 col-md-24 col-xs-24" align="center" data-popup-open="#callback">Заказать звонок</a>
+                    <a href="#" class="btn dark_grey col-lg-24 col-md-24 col-xs-24" align="center" data-popup-open="#callback">
+                        <span class="title-5 medium">Заказать звонок</span>
+                    </a>
                     <br>
                     <br>
-                    <a href="#" class="btn upper col-lg-24 col-md-24 col-xs-24" align="center" data-popup-open="#callback">Написать нам</a>
+                    <a href="#" class="btn dark_grey col-lg-24 col-md-24 col-xs-24" align="center" data-popup-open="#callback">
+                        <span class="title-5 medium">Написать нам</span>
+                    </a>
                 </div>
             </div>
-            <div class="footer-item col-lg-6 col-md-7 col-xs-24">
-                <div class="col-lg-19">
+            <div class="footer-item col-lg-5 col-md-7 col-xs-24">
+                <div class="col-lg-21">
                     <?$APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         ".default",
@@ -149,7 +153,7 @@
                 </div>
             </div>
             <?if (DEVICE_TYPE == "DESKTOP") :?>
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     <div class="title-5">Каталог</div>
                     <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
                         <div class="col-lg-10">
@@ -164,8 +168,8 @@
                                     "SECTION_ID" => "",
                                     "SECTION_CODE" => "divany_i_kresla",
                                     "SECTION_URL" => "",
-                                    "COUNT_ELEMENTS" => "Y",
-                                    "TOP_DEPTH" => "2",
+                                    "COUNT_ELEMENTS" => "N",
+                                    "TOP_DEPTH" => "3",
                                     "SECTION_FIELDS" => "",
                                     "SECTION_USER_FIELDS" => "",
                                     "ADD_SECTIONS_CHAIN" => "N",
@@ -188,8 +192,8 @@
                                     "SECTION_ID" => "",
                                     "SECTION_CODE" => "matrasy_porolon_i_laty",
                                     "SECTION_URL" => "",
-                                    "COUNT_ELEMENTS" => "Y",
-                                    "TOP_DEPTH" => "2",
+                                    "COUNT_ELEMENTS" => "N",
+                                    "TOP_DEPTH" => "3",
                                     "SECTION_FIELDS" => "",
                                     "SECTION_USER_FIELDS" => "",
                                     "ADD_SECTIONS_CHAIN" => "N",
@@ -205,6 +209,10 @@
             <?endif?>
         </div>
         <div class="container footer_copyright" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+            <div class="developers col-lg-4">
+                <div>Дизайн сайта: <a href="#">Вячеслав Корнев</a></div>
+                <div>Разработка сайта: <a href="#">Алексей Колесниченко</a></div>
+            </div>
             <div class="col-lg-19">
                 <?$APPLICATION->IncludeComponent(
                     "bitrix:main.include",
@@ -215,10 +223,6 @@
                     ],
                     false
                 );?>
-            </div>
-            <div class="developers col-lg-4">
-                <div>Разработка сайта: <a href="#">Вячеслав Корнев</a></div>
-                <div>Разработка сайта: <a href="#">Алексей Колесниченко</a></div>
             </div>
         </div>
     </footer>

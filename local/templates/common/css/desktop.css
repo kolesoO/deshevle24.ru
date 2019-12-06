@@ -263,8 +263,8 @@
     }
     .catalog_item-img .sale_label{
         position: absolute;
-        right: 0;
-        bottom: -20px;
+        left: 0;
+        top: 0;
     }
     .catalog_item-block{
         margin-bottom: 20px;
@@ -310,7 +310,7 @@
         top: calc(50% - 35px);
         box-shadow: 0px 0px 10px #adabab;
         background-color: #fff;
-        background-image: url("../images/icons/right-arrow-black.png");
+        background-image: url("../images/icons/right-arrow-black.svg");
         background-repeat: no-repeat;
         background-position: 50% 50%;
         transition-property: background-position, opacity;
@@ -326,18 +326,20 @@
     }
     .catalog_slider .slick-arrow.arrow-left:hover,
     .catalog_slider .slick-arrow.arrow-right:hover{
-        background-image: url("../images/icons/right-arrow-orange.png");
+        background-image: url("../images/icons/right-arrow-orange.svg");
         background-position: 65% 50%;
     }
     .catalog_list-content + .catalog_list-content{
         margin-top: 50px;
     }
-    .catalog_item .btn
     .catalog_item-block{
         margin-bottom: 20px;
     }
     .catalog_item-price{
-        font-size: 160%;
+        font-size: 155%;
+    }
+    .catalog_item-price.old_price{
+        font-size: 129%;
     }
     .banner {
         padding: 50px 100px;
@@ -385,13 +387,13 @@
         margin-bottom: 30px;
     }
     .footer_menu{
-        margin-bottom: 65px;
+        margin-bottom: 60px;
     }
     .footer_menu-item + .footer_menu-item{
         margin-top: 5px;
     }
     .footer_shops{
-        margin: 140px 0 23px;
+        margin: 138px 0 23px;
     }
     .catalog_section-item{
         width: calc(100% / 6 - 30px);

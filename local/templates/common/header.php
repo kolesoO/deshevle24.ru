@@ -143,14 +143,14 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     <div class="header-col header_search">
                         <form action="/search/">
                             <input type="text" name="q" placeholder="Поиск">
-                            <button type="submit" class="header_search-btn hover-opacity">
-                                <i class="icon icon-search"></i>
+                            <button type="submit" class="header_search-btn">
+                                <i class="icon icon-search opacity"></i>
                             </button>
                         </form>
                     </div>
                     <div class="header-col">
-                        <a href="/favorite/" class="hover-opacity">
-                            <i id="favorite-wrapper" class="icon icon-favorite">
+                        <a href="/favorite/">
+                            <i id="favorite-wrapper" class="icon icon-favorite opacity">
                                 <?if (\kDevelop\Ajax\Favorite::getCount() > 0) :?>
                                     <span class="icon-inner"><?=\kDevelop\Ajax\Favorite::getCount()?></span>
                                 <?endif?>
@@ -186,7 +186,9 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                 </div>
             </div>
         </div>
-        <?$APPLICATION->IncludeComponent(
+        <?
+        $GLOBALS["catalogMenuFilter"] = ["=UF_FOR_MENU" => "1"];
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.section.list",
             "catalog-menu",
             [
@@ -197,15 +199,16 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                 "SECTION_ID" => "",
                 "SECTION_CODE" => "",
                 "SECTION_URL" => "",
-                "COUNT_ELEMENTS" => "Y",
+                "COUNT_ELEMENTS" => "N",
                 "TOP_DEPTH" => "2",
                 "SECTION_FIELDS" => "",
-                "SECTION_USER_FIELDS" => "",
+                "SECTION_USER_FIELDS" => ["UF_*"],
                 "ADD_SECTIONS_CHAIN" => "N",
                 "CACHE_TYPE" => "A",
                 "CACHE_TIME" => "36000000",
                 "CACHE_NOTES" => "",
-                "CACHE_GROUPS" => "Y"
+                "CACHE_GROUPS" => "Y",
+                "FILTER_NAME" => "catalogMenuFilter"
             ]
         );?>
     </header>
