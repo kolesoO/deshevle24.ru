@@ -313,6 +313,7 @@
         background-image: url("../images/icons/right-arrow-black.svg");
         background-repeat: no-repeat;
         background-position: 50% 50%;
+        background-size: 25%;
         transition-property: background-position, opacity;
         transition-duration: .3s;
         z-index: 1;

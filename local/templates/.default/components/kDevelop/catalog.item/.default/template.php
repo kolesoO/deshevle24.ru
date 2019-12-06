@@ -22,7 +22,7 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
         style="background-image: url('<?=(is_array($arResult["OFFER"]["PREVIEW_PICTURE"]) ? $arResult["OFFER"]["PREVIEW_PICTURE"]["SRC"] : SITE_TEMPLATE_PATH."/images/no-image.png")?>')"
 >
     <?if (strlen($arResult["OFFER"]["PROPERTIES"]["label"]["VALUE"]) > 0) :?>
-        <div class="sale_label">-<?=$arResult["OFFER"]["PROPERTIES"]["label"]["VALUE"]?></div>
+        <div class="sale_label upper"><?=$arResult["OFFER"]["PROPERTIES"]["label"]["VALUE"]?></div>
     <?endif?>
 </a>
 <div class="catalog_item-block">
@@ -34,7 +34,15 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
 <?if ($arPrice["PRICE"] > 0) :?>
     <div class="catalog_item-block">
         <div>Цена</div>
-        <div class="catalog_item-price"><?=$arPrice["PRINT_RATIO_PRICE"]?></div>
+        <div flex-align="center" flex-wrap="wrap">
+            <?if ($arPrice["PERCENT"] > 0) :?>
+                <div class="catalog_item-price old_price">
+                    <s><?=number_format($arPrice["DISCOUNT"], 0, '.', ' ')?></s>
+                </div>
+                <div class="sale_label">-<?=$arPrice['PERCENT']?>%</div>
+            <?endif?>
+            <div class="catalog_item-price"><?=$arPrice["PRINT_RATIO_PRICE"]?></div>
+        </div>
     </div>
 <?endif?>
 
@@ -81,7 +89,7 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
                     <div class="catalog_item-price old_price">
                         <s><?=number_format($arPrice["DISCOUNT"], 0, '.', ' ')?></s>
                     </div>
-                    <div class="sale_label upper">-<?=$arPrice['PERCENT']?>%</div>
+                    <div class="sale_label">-<?=$arPrice['PERCENT']?>%</div>
                 <?endif?>
                 <div class="catalog_item-price"><?=$arPrice["PRINT_RATIO_PRICE"]?></div>
             </div>
