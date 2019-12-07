@@ -41,4 +41,11 @@ if (is_array($arResult["SECTION"])){
         $arResult["SECTION"] = array_merge($arResult["SECTION"], $arFields);
     }
 }
+foreach ($arResult["SECTIONS"] as &$section) {
+    $arFields = $USER_FIELD_MANAGER->GetUserFields("IBLOCK_" . $arParams["IBLOCK_ID"] . "_SECTION", $section["ID"]);
+    if (is_array($arFields)) {
+        $section = array_merge($section, $arFields);
+    }
+}
+unset($section);
 //end

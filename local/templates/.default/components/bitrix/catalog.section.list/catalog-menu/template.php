@@ -8,12 +8,15 @@
                     <?foreach ($arResult["SECTIONS"] as $arSection) :
                         if (!is_array($arSection["CHILD_SECTIONS"])) continue;
                         ?>
-                        <a href="<?=$arSection["SECTION_PAGE_URL"]?>" class="catalog_menu-nav-item" data-tab_target="#catalog_menu-<?=$arSection["CODE"]?>">
-                            <?if (is_array($arSection["PICTURE"])) :?>
-                                <img src="<?=$arSection["PICTURE"]["SRC"]?>" alt="<?=$arSection["NAME"]?>">
-                            <?else:?>
-                                <img src="<?=SITE_TEMPLATE_PATH?>/images/no-image.png" alt="<?=$arSection["NAME"]?>">
-                            <?endif?>
+                        <a
+                                href="<?=$arSection["SECTION_PAGE_URL"]?>"
+                                class="catalog_menu-nav-item"
+                                data-tab_target="#catalog_menu-<?=$arSection["CODE"]?>"
+                        >
+                            <div
+                                    class="catalog_menu-nav-img"
+                                    style="background-image:url('<?=is_array($arSection["PICTURE"]) ? $arSection["PICTURE"]["SRC"] : SITE_TEMPLATE_PATH . '/images/no-image.png'?>')"
+                            ></div>
                             <span><?=$arSection["NAME"]?></span>
                         </a>
                     <?endforeach?>
@@ -23,12 +26,14 @@
                         <?if (is_array($arSection["CHILD_SECTIONS"])) :?>
                             <div id="catalog_menu-<?=$arSection["CODE"]?>" data-tab_item flex-wrap="wrap" flex-align="start" flex-text_align="start" class="col-lg-24 col-md-24 col-xs-24">
                                 <?foreach ($arSection["CHILD_SECTIONS"] as $sectionKey) :?>
-                                    <a href="<?=$arResult["SECTIONS"][$sectionKey]["SECTION_PAGE_URL"]?>" class="catalog_menu-item">
-                                        <?if (is_array($arResult["SECTIONS"][$sectionKey]["PICTURE"])) :?>
-                                            <img src="<?=$arResult["SECTIONS"][$sectionKey]["PICTURE"]["SRC"]?>" alt="<?=$arResult["SECTIONS"][$sectionKey]["NAME"]?>">
-                                        <?else:?>
-                                            <img src="<?=SITE_TEMPLATE_PATH?>/images/no-image.png" alt="<?=$arResult["SECTIONS"][$sectionKey]["NAME"]?>">
-                                        <?endif?>
+                                    <a
+                                            href="<?=$arResult["SECTIONS"][$sectionKey]["SECTION_PAGE_URL"]?>"
+                                            class="catalog_menu-item"
+                                    >
+                                        <div
+                                                class="catalog_menu-img"
+                                                style="background-image:url('<?=is_array($arResult["SECTIONS"][$sectionKey]["PICTURE"]) ? $arResult["SECTIONS"][$sectionKey]["PICTURE"]["SRC"] : SITE_TEMPLATE_PATH . '/images/no-image.png'?>')"
+                                        ></div>
                                         <span><?=$arResult["SECTIONS"][$sectionKey]["NAME"]?></span>
                                     </a>
                                 <?endforeach;?>
