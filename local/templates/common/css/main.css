@@ -618,7 +618,7 @@ ymaps .logo{
 }
 .catalog_menu-wrap{
     position: absolute;
-    transition: top .3s;
+    transition: top .5s;
 }
 .catalog_menu{
     background-color: #fff;
