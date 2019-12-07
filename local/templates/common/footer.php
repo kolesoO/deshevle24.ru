@@ -308,7 +308,7 @@
                     <a href="#" class="popup_content-close" data-popup-close>
                         <i class="icon icon-close"></i>
                     </a>
-                    <div id="fast-product-content">
+                    <div id="fast-product-content popup_content-inner">
                         <div class="product_preview-additional">
                             <div class="">
                                 <div class="...-top" flex-align="end">

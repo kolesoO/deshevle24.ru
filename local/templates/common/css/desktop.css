@@ -425,7 +425,7 @@
         padding: 24px;
     }
     .catalog_menu-wrap{
-        top: 0;
+        top: -400%;
         left: 0;
         width: 100%;
         opacity: 0;
