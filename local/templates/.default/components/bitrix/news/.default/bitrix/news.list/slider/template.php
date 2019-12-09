@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 <?if ($arResult["ITEMS_COUNT"]) :?>
     <hr class="default_hr">
     <div
-            class="catalog_slider clearfix js-slider"
+            class="catalog_slider news_list_slider clearfix js-slider"
             data-autoplay="true"
             data-autoplaySpeed="5000"
             data-infinite="false"

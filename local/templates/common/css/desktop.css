@@ -709,6 +709,11 @@
     .news_list-img{
         height: 200px;
     }
+    .news_list_slider .slick-track{
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
     #map{
         height: 800px;
     }
