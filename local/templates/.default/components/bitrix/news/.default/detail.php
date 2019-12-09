@@ -88,7 +88,7 @@ $APPLICATION->IncludeComponent(
         "SECTION_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["section"],
         "IBLOCK_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["news"],
         "DISPLAY_PANEL" => $arParams["DISPLAY_PANEL"],
-        "SET_TITLE" => $arParams["SET_TITLE"],
+        "SET_TITLE" => "N",
         "SET_LAST_MODIFIED" => $arParams["SET_LAST_MODIFIED"],
         "MESSAGE_404" => $arParams["MESSAGE_404"],
         "SET_STATUS_404" => $arParams["SET_STATUS_404"],
