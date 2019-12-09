@@ -31,7 +31,7 @@ $this->setFrameMode(true);
             }
             $dateInfo = explode(" ", $arItem["DISPLAY_ACTIVE_FROM"]);
             ?>
-            <div class="news_list-item col-lg-7 col-md-11 col-xs-24">
+            <div class="news_list-item col-lg-5 col-md-11 col-xs-24">
                 <a
                         href="<?=$arItem["DETAIL_PAGE_URL"]?>"
                         class="news_list-img<?=$previewImageClass?>"

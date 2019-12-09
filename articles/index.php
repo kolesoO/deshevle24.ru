@@ -17,7 +17,7 @@ $APPLICATION->IncludeComponent(
         "AJAX_MODE" => "N",
         "IBLOCK_TYPE" => "news",
         "IBLOCK_ID" => IBLOCK_NEWS_ARTICLES,
-        "NEWS_COUNT" => "10",
+        "NEWS_COUNT" => "8",
         "USE_SEARCH" => "Y",
         "USE_RSS" => "Y",
         "USE_RATING" => "Y",
