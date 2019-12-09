@@ -711,8 +711,6 @@
     }
     .news_list-desc{
         line-height: 1.2;
-        height: 123px;
-        overflow: hidden;
     }
     .news_list_slider .slick-track{
         display: flex;
