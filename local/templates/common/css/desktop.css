@@ -426,7 +426,7 @@
         padding: 24px;
     }
     .catalog_menu-wrap{
-        top: -400%;
+        top: -700%;
         left: 0;
         width: 100%;
         opacity: 0;
@@ -708,6 +708,11 @@
     }
     .news_list-img{
         height: 200px;
+    }
+    .news_list-desc{
+        line-height: 1.2;
+        height: 123px;
+        overflow: hidden;
     }
     .news_list_slider .slick-track{
         display: flex;

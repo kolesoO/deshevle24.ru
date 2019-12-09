@@ -33,6 +33,12 @@ if (is_array($arParams["IMAGE_SIZE"])) {
     //end
 }
 
+foreach ($arResult["ITEMS"] as &$arItem) {
+    if (strlen($arItem["PREVIEW_TEXT"]) <= 70) continue;
+    $arItem["PREVIEW_TEXT"] = mb_substr($arItem["PREVIEW_TEXT"], 0, 70, 'UTF-8') . '...';
+}
+unset($arItem);
+
 $cp = $this->__component;
 if (is_object($cp)) {
     $cp->SetResultCacheKeys(["ITEMS_COUNT"]);
