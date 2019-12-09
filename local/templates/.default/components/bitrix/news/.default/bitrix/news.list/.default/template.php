@@ -31,7 +31,7 @@ $this->setFrameMode(true);
             }
             $dateInfo = explode(" ", $arItem["DISPLAY_ACTIVE_FROM"]);
             ?>
-            <div class="news_list-item col-lg-5 col-md-11 col-xs-24">
+            <div class="news_list-item">
                 <a
                         href="<?=$arItem["DETAIL_PAGE_URL"]?>"
                         class="news_list-img<?=$previewImageClass?>"
@@ -44,7 +44,7 @@ $this->setFrameMode(true);
                     <?endif?>
                 </small>
                 <div class="news_list-desc">
-                    <a href="<?=$arItem["DETAIL_PAGE_URL"]?>" class="news_list-title title-3"><?=$arItem["NAME"]?></a>
+                    <a href="<?=$arItem["DETAIL_PAGE_URL"]?>" class="news_list-title title-5"><?=$arItem["NAME"]?></a>
                     <?=$arItem["PREVIEW_TEXT_TYPE"] == "text" ? '<p>' . $arItem["PREVIEW_TEXT"] . '</p>' : htmlspecialcharsback($arItem["PREVIEW_TEXT"])?>
                 </div>
             </div>
