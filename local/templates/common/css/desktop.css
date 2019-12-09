@@ -121,6 +121,9 @@
     .section_hr{
         padding: 25px 0;
     }
+    .default_hr{
+        margin: 75px 0;
+    }
     .input_icon > .icon{
         top: calc(50% - 6px);
         left: 45px;
@@ -135,8 +138,6 @@
     .header-menu-item.active,
     .header-menu-item:hover{
         background-color: #fff;
-    }
-    .header-menu-item:hover{
         box-shadow: 0 0 10px #adabab;
     }
     .header-menu-item:first-child:before,
@@ -519,12 +520,12 @@
         padding: 15px 0;
     }
     .delivery-payment-descr{
-        width: 85%;
+        width: 64%;
         padding: 20px 40px;
         margin-bottom: 50px;
     }
     .delivery-payment-info-item {
-        padding: 7%;
+        padding: 6%;
     }
     .delivery-payment-info-item:first-child{
         width: 43%;
@@ -546,6 +547,9 @@
     }
     .delivery-payment-table td{
         padding: 20px;
+    }
+    .delivery-payment-table-descr{
+        margin-left: 35px;
     }
     .company-employees-photo{
         margin-bottom: 70px;
@@ -689,7 +693,13 @@
         border-right: 1px solid #fff;
     }
     .news_list-item{
-        margin-bottom: 40px;
+        padding: 35px;
+        border: 1px solid #f7f7f7;
+        transition: box-shadow .3s;
+        margin: 0 15px 30px;
+    }
+    .news_list-item:hover{
+        box-shadow: 0 0 15px #e1e1e1;
     }
     .news_list-img{
         height: 200px;

@@ -14,11 +14,17 @@ $this->setFrameMode(true);
 ?>
 
 <?if ($arResult["ITEMS_COUNT"]) :?>
-    <?if ($arParams["DISPLAY_TOP_PAGER"]) :?>
-        <?=$arResult["NAV_STRING"]?>
-        <hr class="section_hr">
-    <?endif;?>
-    <div class="news_list" flex-align="stretch" flex-wrap="wrap" flex-text_align="space-between">
+    <hr class="default_hr">
+    <div
+            class="catalog_slider clearfix js-slider"
+            data-autoplay="true"
+            data-autoplaySpeed="5000"
+            data-infinite="false"
+            data-speed="1000"
+            data-arrows="true"
+            data-dots="false"
+            data-slidesToShow="<?=$arParams["CATEGORY_ITEMS_COUNT"]?>"
+    >
         <?foreach ($arResult["ITEMS"] as $arItem) :
             $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
             $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
@@ -48,12 +54,7 @@ $this->setFrameMode(true);
                     <?=$arItem["PREVIEW_TEXT_TYPE"] == "text" ? '<p>' . $arItem["PREVIEW_TEXT"] . '</p>' : htmlspecialcharsback($arItem["PREVIEW_TEXT"])?>
                 </div>
             </div>
-        <?endforeach;?>
+        <?endforeach?>
+
     </div>
-    <div align="center">
-        <a href="#" class="btn title-5 medium">Показать ещё</a>
-    </div>
-    <?if ($arParams["DISPLAY_BOTTOM_PAGER"]) :?>
-        <?=$arResult["NAV_STRING"]?>
-    <?endif;?>
 <?endif?>

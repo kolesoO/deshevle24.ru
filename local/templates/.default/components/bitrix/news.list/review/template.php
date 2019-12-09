@@ -16,7 +16,7 @@
                                 <?for ($counter = 0; $counter < $arItem["PROPERTIES"]["MARK"]["VALUE"]; $counter++) :?>
                                     <i class="icon icon-star"></i>
                                 <?endfor?>
-                                <?while ($counter <= 5) {?>
+                                <?while ($counter < 5) {?>
                                     <i class="icon icon-star-gray-empty"></i>
                                     <?
                                     $counter ++;
@@ -38,7 +38,7 @@
                             <?for ($counter = 0; $counter < $arItem["PROPERTIES"]["MARK"]["VALUE"]; $counter++) :?>
                                 <i class="icon icon-star"></i>
                             <?endfor?>
-                            <?while ($counter <= 5) {?>
+                            <?while ($counter < 5) {?>
                                 <i class="icon icon-star-gray-empty"></i>
                                 <?
                                 $counter ++;

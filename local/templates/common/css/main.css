@@ -83,6 +83,11 @@ hr.section_hr{
     margin: 0;
     border: 0;
 }
+hr.default_hr{
+    border: 0;
+    height: 1px;
+    background-color: #e8e8e8;
+}
 [flex-align='center']{
     display:flex;
     align-items: center;
@@ -741,7 +746,7 @@ ymaps .logo{
 .delivery-payment-info-item:nth-child(2) {
     padding: 0;
     border: 1px solid #d2d2d2;
-    box-shadow: 0 3px 5px 1px #d2d2d2;
+    box-shadow: 0 0 15px #e1e1e1;
 }
 .delivery-payment-table table {
     border-collapse: collapse;
@@ -776,10 +781,11 @@ ymaps .logo{
 .company-galary-item p {
     margin-top: 20px;
     margin-bottom: 0;
+    line-height: 1.2;
 }
 
 .company-galary-item:hover {
-    box-shadow: 0 0 5px 2px #dedede;
+    box-shadow: 0 0 15px #e1e1e1;
 }
 .feedback-btn {
     display: flex;
@@ -795,7 +801,7 @@ ymaps .logo{
     font-size: 14px;
 }
 .feedback-list-item p {
-    margin-bottom: 0;
+    margin: 0!important;
 }
 .feedback-like {
     font-size: 14px;
@@ -983,13 +989,17 @@ ymaps .logo{
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 50% 50%;
-    margin-bottom: 10px;
+    margin-bottom: 17px;
 }
 .news_list-img.default{
     background-size: contain;
 }
 .news_list-title{
     line-height: 1.2;
+}
+.news_list-date{
+    color: #767676;
+    margin-bottom: 10px;
 }
 .dropdown{
     position: relative;

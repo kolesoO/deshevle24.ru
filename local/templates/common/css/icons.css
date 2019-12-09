@@ -159,19 +159,23 @@ a:hover .icon-like,
 .icon-close:after {
     transform: rotate(-45deg);
 }
-.icon-close:not(.dark):hover:before {
+.icon-close:not(.static):hover:before {
     transform: rotate(405deg);
 }
-.icon-close:not(.dark):hover:after {
+.icon-close:not(.static):hover:after {
     transform: rotate(315deg);
 }
-.icon-close.dark{
+.icon-close.static{
     width: 18px;
     height: 18px;
 }
-.icon-close.dark:before,
-.icon-close.dark:after{
-    background-color: #121212;
+.icon-close.static:before,
+.icon-close.static:after{
+    background-color: #101010;
+}
+.grey_link .icon-close:before,
+.grey_link .icon-close:after{
+    background-color: #7f7f7f;
 }
 .icon-star,
 .icon-star_full,
