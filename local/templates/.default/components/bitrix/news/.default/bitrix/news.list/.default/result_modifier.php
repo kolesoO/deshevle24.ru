@@ -14,6 +14,13 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 $this->setFrameMode(true);
 
 $arResult["ITEMS_COUNT"] = count($arResult["ITEMS"]);
+$arResult["PICTURE"] = CFile::GetFileArray($arResult["PICTURE"]);
+if (!is_array($arResult["PICTURE"])) {
+    $arResult["PICTURE"] = [
+        "SRC" => SITE_TEMPLATE_PATH . "/images/no-image.png"
+    ];
+}
+
 if (is_array($arParams["IMAGE_SIZE"])) {
     //кеширование изображений
     foreach ($arResult["ITEMS"] as &$arItem) {
