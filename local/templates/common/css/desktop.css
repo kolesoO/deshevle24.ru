@@ -579,6 +579,7 @@
     }
     .feedback-list {
         margin-top: 30px;
+        margin-bottom: 65px;
     }
     .feedback-list-item{
         padding: 30px 50px;
@@ -695,6 +696,7 @@
     .news_list{
         margin-left: -12px;
         margin-right: -12px;
+        margin-bottom: 35px;
     }
     .news_list-item{
         width: calc(25% - 24px);
