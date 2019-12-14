@@ -14,7 +14,7 @@ $this->setFrameMode(true);
 ?>
 
 <aside class="catalog_filter js-drop_down">
-    <a href="#" class="btn color full col-lg-24 col-md-24 col-xs-24 js-drop_down-btn js-catalog_filter" align="center">
+    <a href="#" class="btn color full col-lg-24 js-drop_down-btn js-catalog_filter" align="center">
         <span>Скрыть фильтры</span>
         <i class="icon"></i>
     </a>

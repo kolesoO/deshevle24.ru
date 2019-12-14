@@ -239,10 +239,12 @@ $(document).ready(function(){
         if (!$(this).hasClass('active')) {
             $('.catalog_list').removeClass('col-lg-24');
             $('.catalog_list').addClass('col-lg-18');
+            $('.catalog_list').removeClass('filter_inctive');
             obSlider.destroy('.catalog_list-content');
         } else {
             $('.catalog_list').addClass('col-lg-24');
             $('.catalog_list').removeClass('col-lg-18');
+            $('.catalog_list').addClass('filter_inctive');
             obSlider.init('.catalog_list-content');
         }
     });

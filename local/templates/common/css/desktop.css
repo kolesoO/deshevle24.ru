@@ -259,6 +259,7 @@
     }
     .catalog_slider .catalog_item,
     .catalog_section .catalog_section-item,
+    .catalog_list-slider .catalog_item,
     [items-count] .catalog_item{
         margin-left: 15px;
         margin-right: 15px;
@@ -736,6 +737,12 @@
         align-items: flex-start;
         flex-wrap: wrap;
         justify-content: flex-start;
+    }
+    .catalog_list-slider .catalog_item{
+        width: calc(33.3333% - 30px);
+    }
+    .catalog_list.filter_inctive .catalog_list-slider .catalog_item{
+        width: calc(25% - 30px);
     }
     .catalog_filter-inner-content{
         padding-right: 15px;

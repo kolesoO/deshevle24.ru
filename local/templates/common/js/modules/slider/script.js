@@ -79,6 +79,7 @@ var obSlider = {
     destroy: function(strWrapper) {
         $(strWrapper).find(this.defSliderTarget).each(function(){
             $(this).slick("unslick");
+            $(this).find(".slick-active").attr('style', '');
         })
     },
 

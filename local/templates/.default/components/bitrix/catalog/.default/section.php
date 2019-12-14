@@ -152,7 +152,7 @@ if (!isset($arSection)) {
             </div>
         </div>
         <div flex-align="start" flex-wrap="wrap" flex-text_align="end">
-            <div class="catalog_list col-lg-24 col-md-16 col-xs-24">
+            <div class="catalog_list filter_inctive col-lg-24 col-md-16 col-xs-24">
                 <div id="comp_catalog-list-wrap">
                     <?
                     if (isset($_REQUEST["bxajaxid"])) {

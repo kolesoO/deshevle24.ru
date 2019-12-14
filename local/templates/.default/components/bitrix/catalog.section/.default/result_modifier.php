@@ -179,12 +179,19 @@ if (count($arSectionsId) > 0) {
         ["ID", "IBLOCK_ID", "NAME", "UF_MIN_PRICE"]
     );
     while ($arSection = $secRes->GetNext()) {
+        $arSection['ITEMS_COUNT'] = 0;
+        foreach ($arResult["ITEMS"] as $key => $arItem) {
+            if ($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) {
+                $arSection['ITEMS_COUNT'] ++;
+            }
+        }
         $arResult["SECTIONS"][] = $arSection;
     }
 }
+$arResult['SECTIONS_COUNT'] = count($arResult["SECTIONS"]);
 //end
 
 $cp = $this->__component;
 if (is_object($cp)) {
-    $cp->SetResultCacheKeys(["ITEMS_COUNT", "SECTIONS"]);
+    $cp->SetResultCacheKeys(["ITEMS_COUNT", "SECTIONS", "SECTIONS_COUNT"]);
 }

@@ -166,7 +166,7 @@ $arCatalogItemsParams = [
                 <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
             </div>
             <div
-                    class="catalog_list-slider js-slider clearfix"
+                    class="catalog_list-slider<?if ($arSection['ITEMS_COUNT'] > $arParams["LINE_ELEMENT_COUNT"] + 1) :?> js-slider<?endif?> clearfix"
                     data-autoplay="false"
                     data-autoplaySpeed="5000"
                     data-infinite="false"
@@ -174,7 +174,7 @@ $arCatalogItemsParams = [
                     data-arrows="true"
                     data-dots="false"
                     data-slidesToShow="<?=($arParams["LINE_ELEMENT_COUNT"] + 1)?>"
-                    items-count="<?=$arParams["LINE_ELEMENT_COUNT"]?>"
+                    style="z-index:<?=$arResult['SECTIONS_COUNT']?>"
             >
                 <?foreach ($arResult["ITEMS"] as $key => $arItem) :
                     if($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) continue;
@@ -201,7 +201,9 @@ $arCatalogItemsParams = [
                     </div>
                 <?endforeach;?>
             </div>
-        <?endforeach;?>
+            <?
+            $arResult['SECTIONS_COUNT'] --;
+        endforeach;?>
     <?else:?>
         <p>Список товаров пуст</p>
     <?endif?>
