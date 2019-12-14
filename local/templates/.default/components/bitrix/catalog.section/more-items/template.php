@@ -15,7 +15,7 @@ $this->setFrameMode(true);
 ?>
 
 <?if ($arResult["ITEMS_COUNT"] > 0) :?>
-    <section class="section">
+    <section class="section first">
         <div class="container">
             <?if (strlen($arParams["SECTION_TITLE"]) > 0) :?>
                 <div class="title-3 medium"><?=htmlspecialcharsback($arParams["SECTION_TITLE"])?></div>

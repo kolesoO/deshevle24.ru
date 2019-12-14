@@ -46,13 +46,13 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
             <div class="btn_list col-lg-15 col-md-24 col-xs-24" flex-align="center" flex-text_align="end" flex-wrap="wrap">
                 <div class="btn_list-block">
-                    <div class="btn grey_white col-xs-24" align="center">
+                    <div class="btn grey_white col-xs-24">
                         <i class="icon icon-star-gray-empty"></i>
                         <i class="icon icon-star-gray-empty"></i>
                         <i class="icon icon-star-gray-empty"></i>
                         <i class="icon icon-star-gray-empty"></i>
                         <i class="icon icon-star-gray-empty"></i>
-                        <span class="title-5 light">(0)</span>
+                        <span>(0)</span>
                     </div>
                     <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
                         <i class="icon icon-favorite opacity"></i>
@@ -143,25 +143,114 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
             <div id="config" data-tab_item>
                 <div class="container">
-                    <div class="catalog_detail-description" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                    <div class="catalog_detail-description" flex-align="stretch" flex-text_align="space-between">
                         <div class="catalog_detail-description-item">
-                            <?
-                            $propPerBlock = ceil(count($arParams["PRODUCT_PROPERTIES"]) / 4);
-                            $counter = 0;
-                            foreach ($arParams["PRODUCT_PROPERTIES"] as $code) :
-                                $arProp = isset($arResult["PROPERTIES"][$code]) ? $arResult["PROPERTIES"][$code] : $arOffer["PROPERTIES"][$code];
-                                if (!is_string($arProp["VALUE"]) || !$arProp || strlen($arProp["VALUE"]) == 0) continue;
-                                ?>
-                                <?if ($counter % $propPerBlock == 0 && $counter > 0) :?>
-                                    </div><div class="catalog_detail-description-item">
-                                <?endif?>
-                                <div class="catalog_item-block">
-                                    <div class="title-5 light"><?=$arProp["NAME"]?>:</div>
-                                    <div><?=$arProp["VALUE"]?></div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Материал:</div>
+                                <small>Velvet Pink</small>
+                                <div>Велюр</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Цвет:</div>
+                                <div>Серый</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Каркас:</div>
+                                <div>Массив, мебельный щит</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Цвет ножек:</div>
+                                <select class="inline col-lg-24">
+                                    <option>Орех</option>
+                                    <option>Орех</option>
+                                    <option>Орех</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="catalog_detail-description-item">
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Размеры:</div>
+                                <div flex-align="start" flex-wrap="wrap">
+                                    <div class="catalog_item-footer-part">
+                                        <small>длина</small>
+                                        <span>170 см</span>
+                                    </div>
+                                    <div class="catalog_item-footer-part">
+                                        <small>ширина</small>
+                                        <span>75 см</span>
+                                    </div>
+                                    <div class="catalog_item-footer-part">
+                                        <small>высота</small>
+                                        <span>80 см</span>
+                                    </div>
                                 </div>
-                                <?
-                                $counter++;
-                            endforeach;?>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Спальное место:</div>
+                                <div flex-align="start" flex-wrap="wrap">
+                                    <div class="catalog_item-footer-part">
+                                        <small>длина</small>
+                                        <span>170 см</span>
+                                    </div>
+                                    <div class="catalog_item-footer-part">
+                                        <small>ширина</small>
+                                        <span>75 см</span>
+                                    </div>
+                                    <div class="catalog_item-footer-part">
+                                        <small>высота</small>
+                                        <span>80 см</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Посадочное место:</div>
+                                <div flex-align="start" flex-wrap="wrap">
+                                    <div class="catalog_item-footer-part">
+                                        <small>глубина</small>
+                                        <span>170 см</span>
+                                    </div>
+                                    <div class="catalog_item-footer-part">
+                                        <small>высота</small>
+                                        <span>75 см</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="catalog_detail-description-item">
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Механизм:</div>
+                                <div>Пантограф</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Наполнение:</div>
+                                <div>Пружинная змейка, ППУ</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Наполнение подушек:</div>
+                                <div>Холлофайбер</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Бельевой ящик:</div>
+                                <div>Да</div>
+                            </div>
+                        </div>
+                        <div class="catalog_detail-description-item">
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Съемный чехол:</div>
+                                <div>Нет</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Декоротивные подушки:</div>
+                                <div>Нет</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Вариант доставки:</div>
+                                <div>В разобранном виде</div>
+                            </div>
+                            <div class="catalog_item-block">
+                                <div class="title-5 light">Производитель:</div>
+                                <div>Россия</div>
+                            </div>
                         </div>
                         <?if ($arOffer["CAN_BUY"]) :?>
                             <div class="catalog_detail-description-item">
@@ -276,33 +365,10 @@ if ($arParams['DISPLAY_COMPARE']) {
                         </div>
                     </div>
                     <div class="feedback-list">
-                        <div class="feedback-list-item">
-                            <div flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="user-info col-lg-18" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                    <div class="title-5 medium">Иванов Максим</div>
-                                    <p>26.01.2019 12.30</p>
-                                    <div class="feedback-stars col-lg-24">
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star-gray-empty"></i>
-                                    </div>
-                                    <div class="user-info-txt col-lg-24">
-                                        <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
-                                    </div>
-                                    <div class="feedback-like col-lg-24" flex-align="start">
-                                        <i class="icon icon-like-black"></i>
-                                        <p>Да, я рекомендую эту модель!</p>
-                                    </div>
-                                </div>
-                                <img src="/local/templates/common/images/instagram-item.png" class="col-lg-5">
-                            </div>
-                        </div>
-                        <div class="feedback-list-item">
+                        <div id="bx_3218110189_891" class="feedback-list-item">
                             <div class="user-info col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="title-5 medium">Иванов Максим</div>
-                                <p>26.01.2019 12.30</p>
+                                <div class="title-5 medium">Иванов Максим3</div>
+                                <p>25.01.2019 10.01</p>
                                 <div class="feedback-stars col-lg-24">
                                     <i class="icon icon-star"></i>
                                     <i class="icon icon-star"></i>
@@ -313,6 +379,51 @@ if ($arParams['DISPLAY_COMPARE']) {
                                 <div class="user-info-txt col-lg-24">
                                     <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
                                 </div>
+                                <div class="feedback-like col-lg-24" flex-align="start">
+                                    <i class="icon icon-close static"></i>
+                                    <p>Я не рекомендую эту модель!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="bx_3218110189_890" class="feedback-list-item">
+                            <div class="user-info col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                                <div class="title-5 medium">Иванов Максим2</div>
+                                <p>25.01.2019 10.01</p>
+                                <div class="feedback-stars col-lg-24">
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star"></i>
+                                    <i class="icon icon-star-gray-empty"></i>
+                                    <i class="icon icon-star-gray-empty"></i>
+                                </div>
+                                <div class="user-info-txt col-lg-24">
+                                    <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
+                                </div>
+                                <div class="feedback-like col-lg-24" flex-align="start">
+                                    <i class="icon icon-like"></i>
+                                    <p>Да, я рекомендую эту модель!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="bx_3218110189_889" class="feedback-list-item">
+                            <div flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                                <div class="user-info col-lg-18" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
+                                    <div class="title-5 medium">Иванов Максим</div>
+                                    <p>25.01.2019 10.01</p>
+                                    <div class="feedback-stars col-lg-24">
+                                        <i class="icon icon-star"></i>
+                                        <i class="icon icon-star"></i>
+                                        <i class="icon icon-star-gray-empty"></i>
+                                        <i class="icon icon-star-gray-empty"></i>
+                                        <i class="icon icon-star-gray-empty"></i>
+                                    </div>
+                                    <div class="user-info-txt col-lg-24">Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</div>
+                                    <div class="feedback-like col-lg-24" flex-align="start">
+                                        <i class="icon icon-like"></i>
+                                        <p>Да, я рекомендую эту модель!</p>
+                                    </div>
+                                </div>
+                                <img src="/upload/iblock/e37/e377f3f36918b0df383e365d5edf74f0.png" class="col-lg-5" alt="Иванов Максим">
                             </div>
                         </div>
                     </div>

@@ -50,7 +50,6 @@ var obSlider = {
         if (!!$(self).attr("data-vertical")) {
             obParams.vertical = $(self).attr("data-vertical") === "true";
         }
-        console.log(obParams);
 
         return obParams;
 
@@ -77,11 +76,21 @@ var obSlider = {
      *
      * @param strWrapper
      */
+    destroy: function(strWrapper) {
+        $(strWrapper).find(this.defSliderTarget).each(function(){
+            $(this).slick("unslick");
+        })
+    },
+
+    /**
+     *
+     * @param strWrapper
+     */
     reInit: function(strWrapper){
 
         $(strWrapper).find(this.defSliderTarget).each(function(){
             $(this).slick("unslick");
-        })
+        });
         this.init(strWrapper);
 
     },

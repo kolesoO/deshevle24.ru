@@ -11,6 +11,7 @@ $isMainPage = $strCurPage == SITE_DIR;
 
 //css
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/fonts/Gilroy/index.min.css');
+$rsAsset->addCss(SITE_TEMPLATE_PATH.'/libs/noUiSlider-14.1.0/nouislider.min.css');
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/icons.css');
 $rsAsset->addCss(SITE_TEMPLATE_PATH.'/css/main.css');
 if (DEVICE_TYPE == "MOBILE") {
@@ -24,6 +25,7 @@ if (DEVICE_TYPE == "MOBILE") {
 //js
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/jquery1.12.4.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/slick.1.8.1.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/noUiSlider-14.1.0/nouislider.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/slider/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/tabs/script.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/functions.js');
@@ -212,7 +214,7 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
             ]
         );?>
     </header>
-    <main>
+    <main<?if (!$isMainPage) :?> class="inner"<?endif?>>
         <?if (!$isMainPage) :?>
             <?$APPLICATION->IncludeComponent(
                 "bitrix:breadcrumb",

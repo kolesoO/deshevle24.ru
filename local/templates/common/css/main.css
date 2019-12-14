@@ -67,6 +67,16 @@ input, select, textarea, button{
     -moz-appearance: none;
     appearance: none;
 }
+select.inline{
+    border: 1px solid #8b8b8b;
+    padding: 5px 13px;
+    border-radius: 0;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Ctitle%3Edown-arrow%3C%2Ftitle%3E%3Cg%20fill%3D%22%23000000%22%3E%3Cpath%20d%3D%22M10.293%2C3.293%2C6%2C7.586%2C1.707%2C3.293A1%2C1%2C0%2C0%2C0%2C.293%2C4.707l5%2C5a1%2C1%2C0%2C0%2C0%2C1.414%2C0l5-5a1%2C1%2C0%2C1%2C0-1.414-1.414Z%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    background-size: 8px;
+    background-position: calc(100% - 8px) 50%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
 textarea{
     min-height: 115px;
     display: block;
@@ -157,7 +167,8 @@ hr.default_hr{
     box-shadow: 0 0 15px #e1e1e1;
 }
 .btn.grey,
-.btn.grey_full{
+.btn.grey_full,
+.btn.grey_white{
     color: #8e8e8e;
     border: 1px solid #cacaca;
 }
@@ -173,6 +184,11 @@ hr.default_hr{
 .btn.dark_grey{
     color: #323232;
     border: 1px solid #323232;
+}
+.btn.grey_white:hover{
+    color: #8e8e8e!important;
+    background-color: #fff;
+    border-color: #fff!important;
 }
 .slick-slide{
     float: left;
@@ -238,6 +254,17 @@ p.short_info{
 }
 .opacity{
     opacity: .3;
+}
+.placeholder_wrap{
+    position: relative;
+}
+.placeholder_wrap input{
+    padding-left: 45px!important;
+}
+.placeholder_wrap .placeholder{
+    position: absolute;
+    top: 11px;
+    left: 27px;
 }
 .section.first{
     padding-top: 0;
@@ -390,7 +417,7 @@ ymaps .logo{
     width: calc(50% - 10px);
 }
 [items-count="3"] .catalog_item{
-    width: calc(33.3333% - 10px);
+    width: calc(33.3333% - 30px);
 }
 [items-count="4"] .catalog_item{
     width: calc(25% - 10px);
@@ -425,12 +452,15 @@ ymaps .logo{
     width: 100%;
     background-color: #fff;
 }
-.catalog_slider{
+.catalog_slider,
+.catalog_list-slider{
     position: relative;
     z-index: 1;
 }
 .catalog_slider .slick-slide:not(.slick-active),
-.catalog_slider .slick-disabled{
+.catalog_slider .slick-disabled,
+.catalog_list-slider .slick-slide:not(.slick-active),
+.catalog_list-slider .slick-disabled{
     opacity: 0.3;
 }
 .banner{
@@ -649,12 +679,10 @@ ymaps .logo{
     padding-left: 10px;
     padding-right: 10px;
 }
-.product_preview-img{
-    /*background-color: #f8f8f8;*/
-}
 .product_preview-nav{
     position: relative;
     overflow: hidden;
+    background-color: #f8f8f8
 }
 .product_preview-nav .slick-list,
 .product_preview-img_big .slick-list{
@@ -662,16 +690,18 @@ ymaps .logo{
 }
 .product_preview-nav-item{
     transition: opacity .3s;
-    display: block;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
 }
-.product_preview-nav-item:hover{
-    opacity: 0.5;
-}
+.product_preview-nav-item:hover,
 .product_preview-nav-item.slick-current{
-    border: 1px solid #f8994d;
+    border-color: #f8994d
 }
 .product_preview-img_big{
     overflow: hidden;
+    background-color: #f8f8f8
 }
 .product_preview-img_big-item{
     height: 100%;
@@ -875,7 +905,7 @@ ymaps .logo{
     display: inline-block;
 }
 .catalog_list{
-
+    transition: width .3s;
 }
 .catalog_list-top,
 .catalog_filter .btn{
@@ -915,12 +945,15 @@ ymaps .logo{
     border-top: 0;
 }
 .catalog_filter{
-
+    position: relative;
 }
 .catalog_filter-inner{
     overflow: hidden;
     transition: height .3s;
-    box-shadow: rgb(173, 171, 171) 0px 0px 15px;
+    position: absolute;
+    top: 100%;
+    z-index: 1;
+    background-color: #fff;
 }
 .catalog_filter .btn{
     padding-left: 0;
@@ -1022,12 +1055,12 @@ ymaps .logo{
     transition:.3s all
 }
 .dropdown-btn:before{
-    top:45%;
+    top:calc(50% - 2px);
     border-top:4px solid #101010;
     z-index:0
 }
 .dropdown-btn:after{
-    top:calc(45% - 1px);
+    top:calc(50% - 3px);
     border-top:4px solid #fff;
     z-index:1
 }
@@ -1103,9 +1136,45 @@ ymaps .logo{
 }
 .articles_list-img{
     background-position: 50% 50%;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
+}
+.articles_list-desc{
+    line-height: 1.2;
 }
 .contact_block + .contact_block{
     margin-top: 25px;
+}
+.noUi-horizontal{
+    height: 2px;
+}
+.noUi-target{
+    background-color: #cecece;
+}
+.noUi-connect{
+    background-color: #f56d01;
+}
+.noUi-horizontal .noUi-handle{
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    background-color: #fff;
+    border-radius: 100%;
+    box-shadow: 0 0 15px #e1e1e1;
+}
+.noUi-horizontal .noUi-handle:before,
+.noUi-horizontal .noUi-handle:after{
+    content: '';
+    position: absolute;
+    top: 37%;
+    background-color: #cccccc;
+    height: 36%;
+    width: 1px;
+}
+.noUi-horizontal .noUi-handle:before{
+    left: calc(50% - 2px);
+}
+.noUi-horizontal .noUi-handle:after{
+    right: calc(50% - 2px);
+    left: auto;
 }

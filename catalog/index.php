@@ -1,5 +1,10 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
+
+/**
+ * @var $strCurPage
+ */
+
 $APPLICATION->SetPageProperty("keywords", "");
 $APPLICATION->SetPageProperty("description", "");
 $APPLICATION->SetPageProperty("title", "");

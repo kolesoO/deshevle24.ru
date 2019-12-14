@@ -39,7 +39,7 @@ JCSmartFilter.prototype.keyup = function(input)
 		clearTimeout(this.timer);
 	}
 
-	this.toggleWait(input, true);
+	//this.toggleWait(input, true);
 
 	this.timer = setTimeout(BX.delegate(function(){
 		this.reload(input);
@@ -53,7 +53,7 @@ JCSmartFilter.prototype.click = function(checkbox)
 		clearTimeout(this.timer);
 	}
 
-	this.toggleWait(checkbox, true);
+	//this.toggleWait(checkbox, true);
 
 	this.timer = setTimeout(BX.delegate(function(){
 		this.reload(checkbox);

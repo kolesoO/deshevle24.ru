@@ -173,6 +173,81 @@ $(document).ready(function(){
     });
     //end
 
+    //range-input
+    $("body").on("change", ".js-filter-range-value", function(){
+        var target = $(this).attr("data-target");
+
+        if($(target).length > 0){
+            $(target).val($(this).val());
+            $(target).attr("value", $(this).val());
+            $(target).change();
+        }
+    });
+
+    $("body").on("input", ".js-filter-range-value", function(){
+        var parentBlock = $(this).parent();
+
+        $displayBlock = parentBlock.find(".js-filter-range-display");
+        if($displayBlock.length > 0){
+            if(!!$displayBlock.attr("data-mask")){
+                $displayBlock.html($displayBlock.attr("data-mask").replace("X", number_format($(this).val(), ".", "")));
+            }
+            else{
+                $displayBlock.text(number_format($(this).val(), ".", ""));
+            }
+        }
+    });
+
+    $(".js-range").each(function(){
+        var $this = $(this),
+            step = parseFloat($this.attr("data-step")),
+            thisOb = $this.get(0),
+            minValue = parseFloat($this.attr("data-min")),
+            maxValue = parseFloat($this.attr("data-max")),
+            curMinValue = parseFloat($this.attr("data-cur_min")),
+            curMaxValue = parseFloat($this.attr("data-cur_max")),
+            $minTarget = $($this.attr("data-target_min")),
+            $maxTarget = $($this.attr("data-target_max")),
+            $displayBlock = $this.parent().find(".js-filter-range-display");
+
+        noUiSlider.create(thisOb, {
+            start: [curMinValue, curMaxValue],
+            step: (step > 0 ? step : 10),
+            connect: true,
+            range: {
+                'min': minValue,
+                'max': maxValue
+            }
+        });
+        thisOb.noUiSlider.on("change", function(arValues){
+            //$displayBlock.html($displayBlock.attr("data-mask").replace("X", number_format(arValues[0], ".", "")).replace("Y", number_format(arValues[1], ".", "")));
+            $minTarget.attr("value", arValues[0]);
+            $maxTarget.attr("value", arValues[1]);
+            $maxTarget.keyup();
+        })
+        thisOb.noUiSlider.on("slide", function(arValues){
+            $minTarget.attr("value", arValues[0]);
+            $maxTarget.attr("value", arValues[1]);
+            //$displayBlock.html($displayBlock.attr("data-mask").replace("X", number_format(arValues[0], ".", "")).replace("Y", number_format(arValues[1], ".", "")));
+        });
+    });
+    //end
+
+    //custom
+    $('.js-catalog_filter').on('click', function(e) {
+        e.preventDefault();
+        if (!$(this).hasClass('active')) {
+            $('.catalog_list').removeClass('col-lg-24');
+            $('.catalog_list').addClass('col-lg-18');
+            obSlider.destroy('.catalog_list-content');
+        } else {
+            $('.catalog_list').addClass('col-lg-24');
+            $('.catalog_list').removeClass('col-lg-18');
+            obSlider.init('.catalog_list-content');
+        }
+    });
+    //end
+
     //modules
     if(typeof(obSlider) == "object"){
         obSlider.init();
@@ -198,24 +273,27 @@ $(document).ready(function(){
     //end
 
     //TODO убрать после доработки
-    $('.product_preview-nav').slick({
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        arrows: false,
-        dots: false,
-        vertical: true,
-        asNavFor: '.product_preview-img_big'
-    });
-
     $('.product_preview-img_big').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
         arrows: false,
         dots: false,
         asNavFor: '.product_preview-nav',
+        /*autoplay: false,
+        focusOnSelect: false,
+        infinite: false,
+        centerMode: true*/
+    });
+    $('.product_preview-nav').slick({
+        slidesToShow: 10,
+        slidesToScroll: 1,
+        arrows: true,
+        asNavFor: '.product_preview-img_big',
         autoplay: false,
         focusOnSelect: true,
-        infinite: false
+        centerMode: true,
+        nextArrow: '<a href="javascript:void(0)" class="arrow-left"></a>',
+        prevArrow: '<a href="javascript:void(0)" class="arrow-right"></a>'
     });
     //end
 

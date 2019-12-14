@@ -79,11 +79,12 @@ a:hover .icon-like,
 .pseudo_link:hover .icon-like{
     background-image: url('../images/icons/like-orange.svg');
 }
-.gallery-item:hover .icon-favorite-white,
-.btn:hover .icon-favorite{
+.gallery-item:hover .icon-favorite-white{
     background-image: url('../images/icons/favorite-active.png');
 }
-.icon-favorite-full{
+.icon-favorite-full,
+.btn:hover .icon-favorite{
+    opacity: 1;
     background-image: url('../images/icons/favorite-full.png');
 }
 .icon-basket{

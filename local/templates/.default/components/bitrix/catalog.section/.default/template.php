@@ -165,7 +165,17 @@ $arCatalogItemsParams = [
                 <?endif?>
                 <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
             </div>
-            <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between" items-count="<?=$arParams["LINE_ELEMENT_COUNT"]?>">
+            <div
+                    class="catalog_list-slider js-slider clearfix"
+                    data-autoplay="false"
+                    data-autoplaySpeed="5000"
+                    data-infinite="false"
+                    data-speed="1000"
+                    data-arrows="true"
+                    data-dots="false"
+                    data-slidesToShow="<?=($arParams["LINE_ELEMENT_COUNT"] + 1)?>"
+                    items-count="<?=$arParams["LINE_ELEMENT_COUNT"]?>"
+            >
                 <?foreach ($arResult["ITEMS"] as $key => $arItem) :
                     if($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) continue;
                     $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));

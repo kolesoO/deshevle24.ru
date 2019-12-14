@@ -13,12 +13,12 @@
 $this->setFrameMode(true);
 ?>
 
-<aside class="catalog_filter col-lg-6 col-md-8 col-xs-24 js-drop_down">
-    <a href="#" class="btn color full col-lg-24 col-md-24 col-xs-24 js-drop_down-btn" align="center">
+<aside class="catalog_filter js-drop_down">
+    <a href="#" class="btn color full col-lg-24 col-md-24 col-xs-24 js-drop_down-btn js-catalog_filter" align="center">
         <span>Скрыть фильтры</span>
         <i class="icon"></i>
     </a>
-    <div class="catalog_filter-inner js-drop_down-content" is-active="true">
+    <div class="catalog_filter-inner js-drop_down-content">
         <form
                 name="<?=$arResult["FILTER_NAME"]?>_form"
                 action="<?=$arResult["FORM_ACTION"]?>"
@@ -38,29 +38,49 @@ $this->setFrameMode(true);
                 <?if (isset($arItem["PRICE"])) :
                     if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
                         continue;
+                    if (!isset($arItem["VALUES"]["MIN"]["HTML_VALUE"])) {
+                        $arItem["VALUES"]["MIN"]["HTML_VALUE"] = $arItem["VALUES"]["MIN"]["VALUE"];
+                    }
+                    if (!isset($arItem["VALUES"]["MAX"]["HTML_VALUE"])) {
+                        $arItem["VALUES"]["MAX"]["HTML_VALUE"] = $arItem["VALUES"]["MAX"]["VALUE"];
+                    }
                     ?>
                     <div class="catalog_filter-item">
                         <div class="catalog_filter-title">Цена, руб.</div>
                         <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                            <input
-                                    class="col-lg-11 col-md-24 col-xs-24 catalog_filter-option"
-                                    name="<?=$arItem["VALUES"]["MIN"]["CONTROL_NAME"]?>"
-                                    id="<?=$arItem["VALUES"]["MIN"]["CONTROL_ID"]?>"
-                                    type="text"
-                                    placeholder="<?=GetMessage("CT_BCSF_FILTER_FROM")." ".number_format(floatval($arItem["VALUES"]["MIN"]["VALUE"]), 0, ".", " ")?>"
-                                    onkeyup="smartFilter.keyup(this)"
-                                    value="<?=$arItem["VALUES"]["MIN"]["HTML_VALUE"]?>"
-                            >
-                            <input
-                                    class="col-lg-11 col-md-24 col-xs-24"
-                                    name="<?=$arItem["VALUES"]["MAX"]["CONTROL_NAME"]?>"
-                                    id="<?=$arItem["VALUES"]["MAX"]["CONTROL_ID"]?>"
-                                    type="text"
-                                    placeholder="<?=GetMessage("CT_BCSF_FILTER_TO")." ".number_format(floatval($arItem["VALUES"]["MAX"]["VALUE"]), 0, ".", " ")?>"
-                                    onkeyup="smartFilter.keyup(this)"
-                                    value="<?=$arItem["VALUES"]["MAX"]["HTML_VALUE"]?>"
-                            >
+                            <div class="col-lg-11 col-md-24 col-xs-24 catalog_filter-option placeholder_wrap">
+                                <small class="placeholder"><?=GetMessage("CT_BCSF_FILTER_FROM")?></small>
+                                <input
+                                        class="col-lg-24"
+                                        name="<?=$arItem["VALUES"]["MIN"]["CONTROL_NAME"]?>"
+                                        id="<?=$arItem["VALUES"]["MIN"]["CONTROL_ID"]?>"
+                                        type="text"
+                                        onkeyup="smartFilter.keyup(this)"
+                                        value="<?=$arItem["VALUES"]["MIN"]["HTML_VALUE"]?>"
+                                >
+                            </div>
+                            <div class="col-lg-11 col-md-24 col-xs-24 catalog_filter-option placeholder_wrap">
+                                <small class="placeholder"><?=GetMessage("CT_BCSF_FILTER_TO")?></small>
+                                <input
+                                        class="col-lg-24"
+                                        name="<?=$arItem["VALUES"]["MAX"]["CONTROL_NAME"]?>"
+                                        id="<?=$arItem["VALUES"]["MAX"]["CONTROL_ID"]?>"
+                                        type="text"
+                                        onkeyup="smartFilter.keyup(this)"
+                                        value="<?=$arItem["VALUES"]["MAX"]["HTML_VALUE"]?>"
+                                >
+                            </div>
                         </div>
+                        <div
+                                class="js-range"
+                                data-min="<?=floatval($arItem["VALUES"]["MIN"]["VALUE"])?>"
+                                data-max="<?=floatval($arItem["VALUES"]["MAX"]["VALUE"])?>"
+                                data-target_min="#<?=$arItem["VALUES"]["MIN"]["CONTROL_ID"]?>"
+                                data-target_max="#<?=$arItem["VALUES"]["MAX"]["CONTROL_ID"]?>"
+                                data-cur_min="<?=floatval($arItem["VALUES"]["MIN"]["HTML_VALUE"])?>"
+                                data-cur_max="<?=floatval($arItem["VALUES"]["MAX"]["HTML_VALUE"])?>"
+                                data-step="10"
+                        ></div>
                     </div>
                     <?break;?>
                 <?endif?>

@@ -51,11 +51,17 @@ foreach ($arResult["SECTIONS"] as $key => $arSection) {
         $newSections[$arSection["IBLOCK_SECTION_ID"]]["CHILD_SECTIONS"][] = $arSection;
     }
 }
+foreach ($newSections as $key => $section) {
+    if (!is_array($section["CHILD_SECTIONS"])) {
+        unset($newSections[$key]);
+    }
+}
+
 $arResult["SECTIONS"] = $newSections;
-$arResult["SECTION_COUNT"] = count($arResult["SECTIONS"]);
+$arResult["SECTIONS_COUNT"] = count($newSections);
 //end
 
 $cp = $this->__component;
 if (is_object($cp)) {
-    $cp->SetResultCacheKeys(["SECTION_COUNT", "SECTIONS"]);
+    $cp->SetResultCacheKeys(["SECTIONS"]);
 }
