@@ -155,7 +155,9 @@ $arCatalogItemsParams = [
 
 <div class="catalog_list-content">
     <?if ($arResult["ITEMS_COUNT"] > 0) :?>
-        <?foreach ($arResult["SECTIONS"] as $key => $arSection) :?>
+        <?foreach ($arResult["SECTIONS"] as $key => $arSection) :
+            $isSlider = $arSection['ITEMS_COUNT'] > $arParams["LINE_ELEMENT_COUNT"] + 1;
+            ?>
             <?if ($key > 0) :?>
                 <hr class="section_hr">
             <?endif?>
@@ -166,7 +168,7 @@ $arCatalogItemsParams = [
                 <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
             </div>
             <div
-                    class="catalog_list-slider<?if ($arSection['ITEMS_COUNT'] > $arParams["LINE_ELEMENT_COUNT"] + 1) :?> js-slider<?endif?> clearfix"
+                    class="catalog_list-slider<?if ($isSlider) :?> js-slider<?endif?> clearfix"
                     data-autoplay="false"
                     data-autoplaySpeed="5000"
                     data-infinite="false"
@@ -175,6 +177,7 @@ $arCatalogItemsParams = [
                     data-dots="false"
                     data-slidesToShow="<?=($arParams["LINE_ELEMENT_COUNT"] + 1)?>"
                     style="z-index:<?=$arResult['SECTIONS_COUNT']?>"
+                    items-count
             >
                 <?foreach ($arResult["ITEMS"] as $key => $arItem) :
                     if($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) continue;
