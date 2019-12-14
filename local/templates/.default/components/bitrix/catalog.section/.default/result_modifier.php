@@ -181,7 +181,7 @@ if (count($arSectionsId) > 0) {
     while ($arSection = $secRes->GetNext()) {
         $arSection['ITEMS_COUNT'] = 0;
         foreach ($arResult["ITEMS"] as $key => $arItem) {
-            if ($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) {
+            if ($arItem["~IBLOCK_SECTION_ID"] == $arSection["ID"]) {
                 $arSection['ITEMS_COUNT'] ++;
             }
         }
