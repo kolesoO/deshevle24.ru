@@ -209,3 +209,8 @@ a:hover .icon-like,
     height: 46px;
     background-image: url('../images/icons/chat-message.png');
 }
+.icon-play{
+    width: 70px;
+    height: 70px;
+    background-image: url('../images/icons/play.png');
+}

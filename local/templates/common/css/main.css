@@ -167,8 +167,7 @@ hr.default_hr{
     box-shadow: 0 0 15px #e1e1e1;
 }
 .btn.grey,
-.btn.grey_full,
-.btn.grey_white{
+.btn.grey_full{
     color: #8e8e8e;
     border: 1px solid #cacaca;
 }
@@ -185,10 +184,17 @@ hr.default_hr{
     color: #323232;
     border: 1px solid #323232;
 }
+.btn.grey_white{
+    color: #707070;
+    border: 1px solid #f5f5f5;
+}
 .btn.grey_white:hover{
-    color: #8e8e8e!important;
+    color: #707070!important;
     background-color: #fff;
     border-color: #fff!important;
+}
+.btn.grey_white .icon + span{
+    margin-left: 8px;
 }
 .slick-slide{
     float: left;
@@ -627,19 +633,33 @@ ymaps .logo{
 
 }
 .catalog_detail-tab{
+    position: relative;
+}
+.catalog_detail-tab.first-btn-clicked .catalog_detail-tab-btns:before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    height: 77px;
+    background-color: #f2f2f2;
+    z-index:1;
+}
+.catalog_detail-tab-inner{
     background-color: #f2f2f2;
 }
 .content_tab-item,
 .catalog_detail-tab-item{
     color: #979797;
-    transition-property: background-color, color;
-    transition-duration: .3s;
 }
 .content_tab-item{
     background-color: transparent;
+    transition-property: background-color, color;
+    transition-duration: .3s;
 }
 .catalog_detail-tab-item{
     background-color: #fff;
+    z-index: 2;
 }
 .content_tab-item.active,
 .catalog_detail-tab-item.active{
@@ -649,7 +669,7 @@ ymaps .logo{
     background-color: #e7fcff;
 }
 .catalog_detail-tab-item.active{
-    background-color: transparent;
+    background-color: #f2f2f2;
 }
 .catalog_menu-wrap{
     position: absolute;
@@ -905,7 +925,7 @@ ymaps .logo{
     display: inline-block;
 }
 .catalog_list{
-    transition: width .3s;
+    /*transition: width .3s;*/
 }
 .catalog_list-top,
 .catalog_filter .btn{
@@ -949,7 +969,7 @@ ymaps .logo{
 }
 .catalog_filter-inner{
     overflow: hidden;
-    transition: height .3s;
+    /*transition: height .3s;*/
     position: absolute;
     top: 100%;
     z-index: 1;
@@ -1102,7 +1122,7 @@ ymaps .logo{
     right: 0;
     width: 240px;
     box-shadow: rgb(173, 171, 171) 0 0 15px;
-    z-index: 1;
+    z-index: 5;
     transition: .3s height;
 }
 .dropdown-content.big{
@@ -1135,6 +1155,10 @@ ymaps .logo{
     margin-top: 5px;
 }
 .articles_list-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     background-position: 50% 50%;
     background-size: cover;
     background-repeat: no-repeat;

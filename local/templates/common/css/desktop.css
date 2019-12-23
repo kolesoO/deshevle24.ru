@@ -470,7 +470,7 @@
         padding: 27px 35px;
     }
     .catalog_detail-tab-item:first-child{
-        text-align: right;
+        padding-left: 0;
     }
     .catalog_detail-tab-inner{
         padding: 45px 0 80px;
@@ -762,10 +762,10 @@
     .catalog_filter-item .noUi-horizontal{
         margin-top: 20px;
     }
-    .catalog_detail-description-item:not(:last-child){
-        padding-right: 30px;
-        margin-right: 30px;
-        /*width: calc(25% - 30px);*/
+    .catalog_detail-description-item{
+        padding-right: 50px;
+        margin-right: 50px;
+        /*width: calc(20% - 30px);*/
         border-right: 1px solid #fff;
     }
     .news_list{

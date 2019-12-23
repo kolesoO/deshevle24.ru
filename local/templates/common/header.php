@@ -27,7 +27,7 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/jquery1.12.4.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/slick.1.8.1.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/noUiSlider-14.1.0/nouislider.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/slider/script.js');
-$rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/tabs/script.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/tabs/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/functions.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/main.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');

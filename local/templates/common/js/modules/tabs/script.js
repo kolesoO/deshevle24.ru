@@ -16,7 +16,8 @@ var obTabs = {
         $(strWrapper).find(ctx.defTabTarget).each(function(){
             ctx.initBtns($(this).find("[data-tab_target]"));
             ctx.initContent($(this).find("[data-tab_content] [data-tab_item]"));
-        })
+            $(this).addClass('first-btn-clicked');
+        });
         ctx.initEvents();
 
     },
@@ -67,11 +68,19 @@ var obTabs = {
 
         var ctx = this,
             $wrap = $(self).parents(ctx.defTabTarget).first(),
-            $target = $($(self).attr("data-tab_target"));
+            $target = $($(self).attr("data-tab_target")),
+            fullCount = $wrap.find("[data-tab_target]").length;
 
         $wrap.find("[data-tab_target]").removeClass("active");
         $wrap.find("[data-tab_content] [data-tab_item]").hide();
         $(self).addClass("active");
+        $wrap.removeClass('first-btn-clicked');
+        $wrap.removeClass('last-btn-clicked');
+        if ($(self).index() === fullCount - 1) {
+            $wrap.addClass('last-btn-clicked');
+        } else if ($(self).index() === 0) {
+            $wrap.addClass('first-btn-clicked');
+        }
         $target.fadeIn();
 
     }

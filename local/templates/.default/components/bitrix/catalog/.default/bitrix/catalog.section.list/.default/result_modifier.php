@@ -47,8 +47,17 @@ foreach ($arResult["SECTIONS"] as $arSection) {
     $newSections[$arSection["ID"]] = $arSection;
 }
 foreach ($arResult["SECTIONS"] as $key => $arSection) {
-    if ($arSection["DEPTH_LEVEL"] > 1 && $arSection["IBLOCK_SECTION_ID"]) {
-        $newSections[$arSection["IBLOCK_SECTION_ID"]]["CHILD_SECTIONS"][] = $arSection;
+    if ($arSection["IBLOCK_SECTION_ID"]) {
+        if ($arSection["DEPTH_LEVEL"] > 2) {
+            foreach ($newSections as $innerKey => $innerSection) {
+                if (in_array($arSection["IBLOCK_SECTION_ID"], array_column($innerSection['CHILD_SECTIONS'], 'ID'))) {
+                    $newSections[$innerKey]["CHILD_SECTIONS"][] = $arSection;
+                    break;
+                }
+            }
+        } elseif ($arSection["DEPTH_LEVEL"] > 1) {
+            $newSections[$arSection["IBLOCK_SECTION_ID"]]["CHILD_SECTIONS"][] = $arSection;
+        }
     }
 }
 foreach ($newSections as $key => $section) {

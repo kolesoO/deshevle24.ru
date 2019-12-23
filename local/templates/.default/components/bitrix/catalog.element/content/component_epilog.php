@@ -131,7 +131,7 @@ $APPLICATION->IncludeComponent(
         "LINE_ELEMENT_COUNT" => $arCatalogTopParams["LINE_ELEMENT_COUNT"],
         "LOAD_ON_SCROLL" => "N",
         "MESSAGE_404" => "",
-        "MESS_BTN_ADD_TO_BASKET" => $arParams["MESS_BTN_ADD_TO_BASKET"],
+        "MESS_BTN_ADD_TO_BASKET" => $arParams["MESS_BTN_BUY"],
         "MESS_BTN_BUY" => "Купить",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_BTN_LAZY_LOAD" => "Показать ещё",
@@ -206,7 +206,7 @@ $APPLICATION->IncludeComponent(
         "USE_COMPARE_LIST" => 'Y',
         "IMAGE_SIZE" => $arParams["ELEMENT_IMAGE_SIZE"],
         "DEVICE_TYPE" => $arParams["DEVICE_TYPE"],
-        "SECTION_TITLE" => "Похожие товары"
+        "SECTION_TITLE" => "С этим обычно покупают"
     )
 );
 //end
