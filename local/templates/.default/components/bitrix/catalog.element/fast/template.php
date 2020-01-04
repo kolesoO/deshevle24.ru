@@ -34,17 +34,34 @@ if ($arParams['DISPLAY_COMPARE']) {
 ?>
 
 <div class="product_preview" flex-align="stretch" flex-wrap="wrap">
-    <div class="product_preview-img col-lg-13" flex-align="stretch" flex-wrap="wrap">
+    <div class="product_preview-img col-lg-14" flex-align="stretch" flex-wrap="wrap">
         <?if (is_array($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) && count($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) > 0) :?>
-            <div class="product_preview-nav col-lg-4">
-                <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
-                    <a href="#" class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></a>
-                <?endforeach;?>
-            </div>
-            <div class="product_preview-img_big col-lg-20">
+            <div
+                    class="product_preview-img_big js-slider col-lg-24"
+                    data-autoplay="false"
+                    data-speed="1000"
+                    data-arrows="false"
+                    data-dots="false"
+                    data-asNavFor=".product_preview-nav"
+            >
                 <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
                     <div class="product_preview-img_big-item" style="background-image: url('<?=$arFileInfo["origin"]?>')"></div>
                 <?endforeach?>
+            </div>
+            <div
+                    class="product_preview-nav js-slider col-lg-24 hidden-xs"
+                    data-slidesToShow="5"
+                    data-autoplay="false"
+                    data-speed="1000"
+                    data-arrows="true"
+                    data-dots="false"
+                    data-asNavFor=".product_preview-img_big"
+                    data-focusOnSelect="true"
+                    data-centerMode="false"
+            >
+                <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
+                    <a href="#" class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></a>
+                <?endforeach;?>
             </div>
         <?else:?>
             <div
@@ -53,35 +70,48 @@ if ($arParams['DISPLAY_COMPARE']) {
             ></div>
         <?endif?>
     </div>
-    <div class="product_preview-description col-lg-11">
+    <div class="product_preview-description col-lg-10">
         <div class="catalog_item-block" flex-align="start" flex-text_align="space-between">
-            <div class="btn mark grey_full col-lg-11" align="center">
-                <i class="icon icon-star"></i>
-                <i class="icon icon-star"></i>
-                <i class="icon icon-star"></i>
-                <i class="icon icon-star"></i>
-                <i class="icon icon-star"></i>
+            <div class="btn grey_white col-lg-11" align="center">
+                <i class="icon icon-star-gray-empty"></i>
+                <i class="icon icon-star-gray-empty"></i>
+                <i class="icon icon-star-gray-empty"></i>
+                <i class="icon icon-star-gray-empty"></i>
+                <i class="icon icon-star-gray-empty"></i>
                 <span>(0)</span>
             </div>
-            <a href="#" class="btn grey_full col-lg-11" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
-                <i class="icon icon-favorite"></i>
+            <a href="#" class="btn grey_white col-lg-11" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
+                <i class="icon icon-favorite opacity"></i>
                 <span>Мне нравится</span>
             </a>
         </div>
         <div class="catalog_item-block">
             <?if (isset($arResult["PARENT_SECTION"])) :?>
-                <small><?=$arResult["PARENT_SECTION"]["NAME"]?></small>
+                <div flex-align="start" flex-wrap="wrap">
+                    <div class="light_grey_link"><?=$arResult["PARENT_SECTION"]["NAME"]?></div>
+                    <?if (strlen($arOffer['PROPERTIES']['label']['VALUE']) > 0) :?>
+                        <div class="sale_label upper inline"><?=$arOffer['PROPERTIES']['label']['VALUE']?></div>
+                    <?endif?>
+                </div>
             <?endif?>
-            <div><?=$arResult["NAME"]?></div>
+            <div class="title-2 light"><?=$arResult["NAME"]?></div>
         </div>
         <?if ($arOffer["CAN_BUY"]) :?>
             <div class="catalog_item-block">
-                <small>Цена</small>
-                <div class="catalog_item-price"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
+                <div class="light_grey_link">Цена</div>
+                <div flex-align="center" flex-wrap="wrap">
+                    <?if ($arPrice["DISCOUNT_DIFF_PERCENT"] > 0) :?>
+                        <div class="catalog_item-price old_price">
+                            <s><?=number_format($arPrice["VALUE"], 0, '.', ' ')?></s>
+                        </div>
+                        <div class="sale_label inline">-<?=$arPrice['DISCOUNT_DIFF_PERCENT']?>%</div>
+                    <?endif?>
+                    <div class="catalog_item-price"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
+                </div>
             </div>
         <?endif?>
-        <div class="catalog_item-block">
-            <small>Цвет</small>
+        <!--div class="catalog_item-block">
+            <div class="light_grey_link">Цвет</div>
             <div class="catalog_color" flex-align="start" flex-wrap="wrap">
                 <a href="#" class="catalog_color-item" flex-align="center">
                     <span class="catalog_color-color" style="background-color: #ff9901"></span>
@@ -92,41 +122,53 @@ if ($arParams['DISPLAY_COMPARE']) {
                     <span>Синий</span>
                 </a>
             </div>
-        </div>
-        <div class="catalog_item-block">
-            <div class="title-5 light">Размеры</div>
-            <div flex-align="start" flex-wrap="wrap">
-                <div class="catalog_item-footer-part">
-                    <small>длина</small>
-                    <span>200 см</span>
-                </div>
-                <div class="catalog_item-footer-part">
-                    <small>ширина</small>
-                    <span>96 см</span>
-                </div>
-                <div class="catalog_item-footer-part">
-                    <small>высота</small>
-                    <span>96 см</span>
-                </div>
-            </div>
-        </div>
-        <div class="catalog_item-block">
-            <div class="title-5 light">Спальное место</div>
-            <div flex-align="start" flex-wrap="wrap">
-                <div class="catalog_item-footer-part">
-                    <small>длина</small>
-                    <span>200 см</span>
-                </div>
-                <div class="catalog_item-footer-part">
-                    <small>ширина</small>
-                    <span>96 см</span>
-                </div>
-                <div class="catalog_item-footer-part">
-                    <small>высота</small>
-                    <span>96 см</span>
+        </div-->
+        <?if (
+            (isset($arOffer["PROPERTIES"]["size_length"]) && strlen($arOffer["PROPERTIES"]["size_length"]["VALUE"]) > 0) &&
+            (isset($arOffer["PROPERTIES"]["size_width"]) && strlen($arOffer["PROPERTIES"]["size_width"]["VALUE"]) > 0) &&
+            (isset($arOffer["PROPERTIES"]["size_height"]) && strlen($arOffer["PROPERTIES"]["size_height"]["VALUE"]) > 0)
+        ) :?>
+            <div class="catalog_item-block">
+                <div class="title-5 light">Размеры</div>
+                <div flex-align="start" flex-wrap="wrap">
+                    <div class="catalog_item-footer-part">
+                        <small>длина</small>
+                        <span><?=$arOffer["PROPERTIES"]["size_length"]["VALUE"]?> см</span>
+                    </div>
+                    <div class="catalog_item-footer-part">
+                        <small>ширина</small>
+                        <span><?=$arOffer["PROPERTIES"]["size_width"]["VALUE"]?> см</span>
+                    </div>
+                    <div class="catalog_item-footer-part">
+                        <small>высота</small>
+                        <span><?=$arOffer["PROPERTIES"]["size_height"]["VALUE"]?> см</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        <?endif?>
+        <?if (
+            (isset($arOffer["PROPERTIES"]["sleep_size_length"]) && strlen($arOffer["PROPERTIES"]["sleep_size_length"]["VALUE"]) > 0) &&
+            (isset($arOffer["PROPERTIES"]["sleep_size_width"]) && strlen($arOffer["PROPERTIES"]["sleep_size_width"]["VALUE"]) > 0) &&
+            (isset($arOffer["PROPERTIES"]["sleep_size_height"]) && strlen($arOffer["PROPERTIES"]["sleep_size_height"]["VALUE"]) > 0)
+        ) :?>
+            <div class="catalog_item-block">
+                <div class="title-5 light">Спальное место</div>
+                <div flex-align="start" flex-wrap="wrap">
+                    <div class="catalog_item-footer-part">
+                        <small>длина</small>
+                        <span><?=$arOffer["PROPERTIES"]["sleep_size_length"]["VALUE"]?> см</span>
+                    </div>
+                    <div class="catalog_item-footer-part">
+                        <small>ширина</small>
+                        <span><?=$arOffer["PROPERTIES"]["sleep_size_width"]["VALUE"]?> см</span>
+                    </div>
+                    <div class="catalog_item-footer-part">
+                        <small>высота</small>
+                        <span><?=$arOffer["PROPERTIES"]["sleep_size_height"]["VALUE"]?> см</span>
+                    </div>
+                </div>
+            </div>
+        <?endif?>
         <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
             <a href="<?=$arOffer["DETAIL_PAGE_URL"]?>" class="btn col-lg-11" align="center">Узнать больше</a>
             <a

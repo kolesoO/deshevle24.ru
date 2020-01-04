@@ -417,7 +417,8 @@
         width: 440px;
     }
     .popup_content.product{
-        width: 80%;
+        width: 85%;
+        max-width: 1200px;
     }
     .popup_content-inner{
         padding: 50px 70px;
@@ -561,7 +562,7 @@
         height: 656px;
     }
     .product_preview .product_preview-img_big-item{
-        height: 535px;
+        height: 393px;
     }
     .catalog_color-item + .catalog_color-item{
         margin-left: 20px;

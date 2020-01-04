@@ -81,13 +81,11 @@ if ($arParams['DISPLAY_COMPARE']) {
             <div class="product_preview-img col-lg-24 col-md-24 col-xs-24" flex-align="stretch" flex-wrap="wrap" flex-text_align="space-between">
                 <?if (is_array($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) && count($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) > 0) :?>
                     <div
-                            class="product_preview-img_big col-lg-24"
-                            data-autoplay="true"
+                            class="product_preview-img_big js-slider col-lg-24"
+                            data-autoplay="false"
                             data-speed="1000"
                             data-arrows="false"
                             data-dots="false"
-                            data-centerMode="true"
-                            data-focusOnSelect="true"
                             data-asNavFor=".product_preview-nav"
                     >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $key => $arFileInfo) :?>
@@ -96,14 +94,15 @@ if ($arParams['DISPLAY_COMPARE']) {
                     </div>
                     <div class="col-lg-24" flex-align="start" flex-text_align="center">
                         <div
-                                class="product_preview-nav col-lg-21 hidden-xs"
-                                data-slidesToShow="3"
+                                class="product_preview-nav js-slider col-lg-21 hidden-xs"
+                                data-slidesToShow="10"
                                 data-autoplay="false"
                                 data-speed="1000"
-                                data-arrows="false"
+                                data-arrows="true"
                                 data-dots="false"
                                 data-asNavFor=".product_preview-img_big"
                                 data-focusOnSelect="true"
+                                data-centerMode="false"
                         >
                             <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
                                 <div class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></div>

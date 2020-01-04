@@ -78,7 +78,7 @@ class Catalog
                 "MAIN_BLOCK_OFFERS_PROPERTY_CODE" => array("COLOR_REF"),
                 "MAIN_BLOCK_PROPERTY_CODE" => array("MATERIAL"),
                 "MESSAGE_404" => "",
-                "MESS_BTN_ADD_TO_BASKET" => "В корзину",
+                "MESS_BTN_ADD_TO_BASKET" => "Купить",
                 "MESS_BTN_BUY" => "Купить",
                 "MESS_BTN_COMPARE" => "Сравнить",
                 "MESS_BTN_SUBSCRIBE" => "Подписаться",

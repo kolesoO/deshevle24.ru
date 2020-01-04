@@ -308,16 +308,7 @@
                     <a href="#" class="popup_content-close" data-popup-close>
                         <i class="icon icon-close"></i>
                     </a>
-                    <div id="fast-product-content popup_content-inner">
-                        <div class="product_preview-additional">
-                            <div class="">
-                                <div class="...-top" flex-align="end">
-                                    <a href="#" class="btn grey"><i class="icon icon-arrow"></i></a>
-                                </div>
-                                //form
-                            </div>
-                        </div>
-                    </div>
+                    <div id="fast-product-content" class="popup_content-inner"></div>
                 </div>
             </div>
         </div>

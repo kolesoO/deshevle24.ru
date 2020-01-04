@@ -144,6 +144,9 @@ hr.default_hr{
 .grey_link{
     color: #7f7f7f;
 }
+.light_grey_link{
+    color: #ccc;
+}
 .clearfix:after {
     display:table;
     content:" ";
@@ -438,7 +441,7 @@ ymaps .logo{
     background-size: contain;
     background-position: 50% 50%;
 }
-.catalog_item-price + .sale_label{
+* + .sale_label.inline{
     margin-left: 5px;
 }
 .sale_label + .catalog_item-price{
@@ -734,7 +737,7 @@ ymaps .logo{
 }
 .product_preview-description{
     position: relative;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 .product_preview-additional{
     position: absolute;

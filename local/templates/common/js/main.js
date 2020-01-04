@@ -274,29 +274,4 @@ $(document).ready(function(){
     });
     //end
 
-    //TODO убрать после доработки
-    $('.product_preview-img_big').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        dots: false,
-        asNavFor: '.product_preview-nav',
-        /*autoplay: false,
-        focusOnSelect: false,
-        infinite: false,
-        centerMode: true*/
-    });
-    $('.product_preview-nav').slick({
-        slidesToShow: 10,
-        slidesToScroll: 1,
-        arrows: true,
-        asNavFor: '.product_preview-img_big',
-        autoplay: false,
-        focusOnSelect: true,
-        centerMode: true,
-        nextArrow: '<a href="javascript:void(0)" class="arrow-left"></a>',
-        prevArrow: '<a href="javascript:void(0)" class="arrow-right"></a>'
-    });
-    //end
-
-})
+});
