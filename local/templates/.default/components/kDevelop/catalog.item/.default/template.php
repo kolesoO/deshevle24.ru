@@ -14,6 +14,18 @@
 $this->setFrameMode(true);
 
 $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELECTED"]];
+
+//параметры для js
+$jsParams = [
+    "OFFER_ID" => $arResult["OFFER"]["ID"],
+    "ITEM_ID" => $arResult["ITEM"]["ID"]
+];
+if ($arParams['DISPLAY_COMPARE']) {
+    $jsParams['compare'] = [
+        'COMPARE_PATH' => $arParams['COMPARE_PATH']
+    ];
+}
+//end
 ?>
 <div class="catalog_item-block">&nbsp;</div>
 <a
@@ -29,7 +41,9 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
     <?if (isset($arResult["ITEM"]["PARENT_SECTION"])) :?>
         <small><?=$arResult["ITEM"]["PARENT_SECTION"]["NAME"]?></small>
     <?endif?>
-    <a href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"><?=$arResult["OFFER"]["NAME"]?></a>
+    <div class="title-5 light">
+        <a href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"><?=$arResult["OFFER"]["NAME"]?></a>
+    </div>
 </div>
 <?if ($arPrice["PRICE"] > 0) :?>
     <div class="catalog_item-block">
@@ -52,7 +66,7 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
             <a
                     href="#"
                     data-popup-open="#fast-product"
-                    onclick="obAjax.getFastProduct('<?=$arResult["ITEM"]["ID"]?>')"
+                    onclick="obAjax.getFastProduct('<?=$arResult["ITEM"]["ID"]?>', '<?=$arResult["OFFER"]['ID']?>')"
                     flex-align="center"
                     class="icon_text"
             >
@@ -62,7 +76,7 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
         <?else:?>
             <span>&nbsp;</span>
         <?endif?>
-        <a href="#" class="pseudo_link">
+        <a href="#" class="pseudo_link" data-entity="favorite" data-id="<?=$arResult["ITEM"]["ID"]?>">
             <i class="icon icon-like"></i>
         </a>
     </div>
@@ -79,7 +93,9 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
         <?if (isset($arResult["ITEM"]["PARENT_SECTION"])) :?>
             <small><?=$arResult["ITEM"]["PARENT_SECTION"]["NAME"]?></small>
         <?endif?>
-        <a href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"><?=$arResult["OFFER"]["NAME"]?></a>
+        <div class="title-5 light">
+            <a href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"><?=$arResult["OFFER"]["NAME"]?></a>
+        </div>
     </div>
     <?if ($arPrice["PRICE"] > 0) :?>
         <div class="catalog_item-block">
@@ -153,3 +169,8 @@ $arPrice = $arResult["OFFER"]["ITEM_PRICES"][$arResult["OFFER"]["ITEM_PRICE_SELE
         </a>
     <?endif?>
 </div>
+<script>
+    if (typeof window.catalogElement == "function") {
+        var obCatalogElement_<?=$arResult["OFFER"]["ID"]?> = new window.catalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
+    }
+</script>

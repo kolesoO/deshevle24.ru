@@ -21,7 +21,8 @@ $arPrice = $arOffer["PRICES"][$arParams["PRICE_CODE"][0]];
 
 //параметры для js
 $jsParams = [
-    "OFFER_ID" => $arOffer["ID"]
+    "OFFER_ID" => $arOffer["ID"],
+    "ITEM_ID" => $arResult['ID']
 ];
 if ($arParams['DISPLAY_COMPARE']) {
     $jsParams['compare'] = array(
@@ -55,7 +56,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                         <span>(0)</span>
                     </div>
                     <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
-                        <i class="icon icon-favorite opacity"></i>
+                        <i class="icon icon-like opacity"></i>
                         <span>Мне нравится</span>
                     </a>
                 </div>
@@ -294,7 +295,9 @@ if ($arParams['DISPLAY_COMPARE']) {
                     <div class="articles_list" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
                         <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
                             <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')">
-                                <a href="#"><i class="icon icon-play"></i></a>
+                                <a href="#" data-popup-open="#video-popup" data-path="" onclick="obAjax.getVideo('video-popup-content', event)">
+                                    <i class="icon icon-play"></i>
+                                </a>
                             </div>
                             <div class="title-5 medium">Скандинавский стиль</div>
                             <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
@@ -507,5 +510,5 @@ if ($arParams['DISPLAY_COMPARE']) {
         BTN_MESSAGE_FAVORITE_REDIRECT: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_FAVORITE_REDIRECT')?>',
         FAVORITE_TITLE: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_FAVORITE_TITLE')?>'
     });
-    var obCatalogElementDetail = new window.catalogElementDetail(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
+    var obCatalogElement = new window.catalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
 </script>

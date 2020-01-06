@@ -36,21 +36,25 @@ if (is_array($arParams["IMAGE_SIZE"])) {
 
 //избавляемся от разделов 1ого уровня
 $newSections = [];
-foreach ($arResult["SECTIONS"] as $arSection) {
-    if ($arSection["DEPTH_LEVEL"] > 1) continue;
-    //пользовательские свойства
+foreach ($arResult["SECTIONS"] as &$arSection) {
     $arFields = $USER_FIELD_MANAGER->GetUserFields("IBLOCK_" . $arParams["IBLOCK_ID"] . "_SECTION", $arSection["ID"]);
+    //пользовательские свойства
     if (is_array($arFields)) {
         $arSection = array_merge($arSection, $arFields);
     }
     //end
     $newSections[$arSection["ID"]] = $arSection;
 }
+unset($arSection);
+
 foreach ($arResult["SECTIONS"] as $key => $arSection) {
     if ($arSection["IBLOCK_SECTION_ID"]) {
         if ($arSection["DEPTH_LEVEL"] > 2) {
             foreach ($newSections as $innerKey => $innerSection) {
                 if (in_array($arSection["IBLOCK_SECTION_ID"], array_column($innerSection['CHILD_SECTIONS'], 'ID'))) {
+                    if (isset($arSection["UF_SECTION_LABEL"]["VALUE"]) && strlen($arSection["UF_SECTION_LABEL"]["VALUE"]) > 0) {
+                        $arSection["NAME"] = $arSection["UF_SECTION_LABEL"]["VALUE"];
+                    }
                     $newSections[$innerKey]["CHILD_SECTIONS"][] = $arSection;
                     break;
                 }

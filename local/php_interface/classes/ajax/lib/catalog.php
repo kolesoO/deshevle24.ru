@@ -50,7 +50,7 @@ class Catalog
                 "DISPLAY_NAME" => "Y",
                 "DISPLAY_PREVIEW_TEXT_MODE" => "E",
                 "ELEMENT_CODE" => "",
-                "ELEMENT_ID" => $arParams["offerId"],
+                "ELEMENT_ID" => $arParams["itemId"],
                 "FB_USE" => "N",
                 "FILE_404" => "",
                 "GIFTS_DETAIL_BLOCK_TITLE" => "Выберите один из подарков",
@@ -158,6 +158,13 @@ class Catalog
                     "WIDTH" => 557,
                     "HEIGHT" => 366
                 ],
+                "COMPARE_STATUS" => isset($_SESSION['CATALOG_COMPARE_LIST'][IBLOCK_CATALOG_CATALOG])
+                    ? array_key_exists(
+                            $arParams["offerId"],
+                            $_SESSION['CATALOG_COMPARE_LIST'][IBLOCK_CATALOG_CATALOG]['ITEMS']
+                        )
+                    : false,
+                "FAVORITE_STATUS" => \kDevelop\Ajax\Favorite::isAdded($arParams["itemId"])
             )
         );
         $return = ob_get_contents();

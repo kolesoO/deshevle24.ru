@@ -80,10 +80,24 @@ if ($arParams['DISPLAY_COMPARE']) {
                 <i class="icon icon-star-gray-empty"></i>
                 <span>(0)</span>
             </div>
-            <a href="#" class="btn grey_white col-lg-11" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
-                <i class="icon icon-favorite opacity"></i>
-                <span>Мне нравится</span>
-            </a>
+            <?if ($arParams['FAVORITE_STATUS']) :?>
+                <a href="/favorite/" class="btn grey_white col-lg-11" align="center">
+                    <i class="icon icon-favorite-full"></i>
+                    <span>Мне нравится</span>
+                </a>
+            <?else:?>
+                <a
+                        href="#"
+                        class="btn grey_white col-lg-11"
+                        align="center"
+                        data-entity="favorite"
+                        data-id="<?=$arResult["ID"]?>"
+                        data-text
+                >
+                    <i class="icon icon-favorite opacity"></i>
+                    <span>Мне нравится</span>
+                </a>
+            <?endif?>
         </div>
         <div class="catalog_item-block">
             <?if (isset($arResult["PARENT_SECTION"])) :?>

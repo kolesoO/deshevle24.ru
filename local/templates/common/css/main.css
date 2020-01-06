@@ -872,7 +872,11 @@ ymaps .logo{
     margin-top: 15px;
 }
 .file_input input[type='file'] {
-    display: none;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
 }
 .basket-txt {
     background-color: #e7fcff;

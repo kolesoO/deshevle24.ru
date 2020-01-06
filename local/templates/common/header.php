@@ -111,33 +111,11 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     </a>
                     <?if ($isMainPage) :?>
                         <div class="logo">
-                            <?
-                            echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg');
-                            /*$APPLICATION->IncludeComponent(
-                                "bitrix:main.include",
-                                ".default",
-                                [
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_TEMPLATE_PATH . "/include/header/logo.php"
-                                ],
-                                false
-                            );*/
-                            ?>
+                            <?=file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg')?>
                         </div>
                     <?else:?>
                         <a href="<?=SITE_DIR?>" class="logo">
-                            <?
-                            echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg');
-                            /*$APPLICATION->IncludeComponent(
-                                "bitrix:main.include",
-                                ".default",
-                                [
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_TEMPLATE_PATH . "/include/header/logo.php"
-                                ],
-                                false
-                            );*/
-                            ?>
+                            <?=file_get_contents($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/images/logo.svg')?>
                         </a>
                     <?endif?>
                 </div>
@@ -152,11 +130,14 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                     </div>
                     <div class="header-col">
                         <a href="/favorite/">
-                            <i id="favorite-wrapper" class="icon icon-favorite opacity">
-                                <?if (\kDevelop\Ajax\Favorite::getCount() > 0) :?>
-                                    <span class="icon-inner"><?=\kDevelop\Ajax\Favorite::getCount()?></span>
-                                <?endif?>
-                            </i>
+                            <span class="icon-wrap">
+                                <i class="icon icon-favorite opacity"></i>
+                                <span id="favorite-wrapper">
+                                    <?if (\kDevelop\Ajax\Favorite::getCount() > 0) :?>
+                                        <span class="icon-inner"><?=\kDevelop\Ajax\Favorite::getCount()?></span>
+                                    <?endif?>
+                                </span>
+                            </span>
                         </a>
                     </div>
                     <?$APPLICATION->IncludeComponent(

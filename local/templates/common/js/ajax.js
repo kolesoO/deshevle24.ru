@@ -170,15 +170,16 @@ var obAjax = {
 
     /**
      *
+     * @param itemId
      * @param offerId
-     * @param event
      */
-    getFastProduct(offerId)
+    getFastProduct(itemId, offerId)
     {
         var ctx = this;
 
         ctx.setParams({
-            target_id: "fast-product-content"
+            target_id: "fast-product-content",
+            offer_id: offerId
         });
         ctx.doRequest(
             "POST",
@@ -187,6 +188,7 @@ var obAjax = {
                 class: "Catalog",
                 method: "getFastProduct",
                 params: {
+                    itemId: itemId,
                     offerId: offerId
                 }
             }),
@@ -206,6 +208,8 @@ var obAjax = {
         if (!!data.html && !!targetNode) {
             targetNode.innerHTML = data.html;
             obSlider.init('#' + this.params.target_id);
+            window['obCatalogElement_' + this.params.offer_id].initFavoriteNode();
+            window['obCatalogElement_' + this.params.offer_id].initFavorite(false);
         }
     },
 
@@ -250,6 +254,45 @@ var obAjax = {
         if (!!data.msg) {
             this.addPopupMessage("favorite-white", data.msg);
         }
+    },
+
+    /**
+     *
+     * @param targetId
+     * @param evt
+     */
+    getVideo: function(targetId, evt)
+    {
+        var path = evt.target.getAttribute('data-path');
+
+        if (!!path) {
+            alert('video loading');
+        }
+    },
+
+    /**
+     *
+     * @param form
+     */
+    createReview: function(form)
+    {
+        var ctx = this,
+            formData = new FormData(form);
+
+        formData.append('js_callback', 'createReviewCallback');
+        ctx.doRequest(
+            "POST",
+            location.href,
+            formData,
+            [
+                ["Content-type", "application/x-www-form-urlencoded"]
+            ]
+        );
+    },
+
+    createReviewCallback: function(data)
+    {
+        console.log(data);
     },
 
     /**

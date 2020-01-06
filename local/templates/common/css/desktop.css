@@ -266,6 +266,7 @@
     }
     .catalog_section-item{
         width: calc(100% / 6 - 30px);
+        height: 198px;
         margin-bottom: 15px;
     }
     [items-count] .catalog_item{
@@ -411,7 +412,7 @@
     }
     .popup_content {
         width: 660px;
-        max-height: 90%;
+        max-height: 95%;
     }
     .popup_content.small{
         width: 440px;
