@@ -28,21 +28,6 @@ if (isset($_SESSION["FAVORITE"]) && count($_SESSION["FAVORITE"]) > 0) {
     $arImageSize = ["WIDTH" => 175, "HEIGHT" => 116];
     //end
 
-    //сортировка и внешний вид
-    //TODO: сортировка не работает
-    $tmp = "catalog_controls";
-    if (DEVICE_TYPE != "DESKTOP") {
-        $tmp .= "-".strtolower($arParams["DEVICE_TYPE"]);
-    }
-    $APPLICATION->IncludeComponent(
-        "kDevelop:blank",
-        $tmp,
-        array(
-            "SORT" => $arSort
-        )
-    );
-    //end
-
     //каталог
     $GLOBALS["arrFilter"] = [
         "ID" => $_SESSION["FAVORITE"]

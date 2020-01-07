@@ -27,6 +27,7 @@ if ($arParams['DISPLAY_COMPARE']) {
 }
 //end
 ?>
+
 <div class="catalog_item-block">&nbsp;</div>
 <a
         href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"
@@ -76,9 +77,15 @@ if ($arParams['DISPLAY_COMPARE']) {
         <?else:?>
             <span>&nbsp;</span>
         <?endif?>
-        <a href="#" class="pseudo_link" data-entity="favorite" data-id="<?=$arResult["ITEM"]["ID"]?>">
-            <i class="icon icon-like"></i>
-        </a>
+        <?if (isset($arParams['FAVORITE_ITEM']) && $arParams['FAVORITE_ITEM'] == 'Y') :?>
+            <a href="#" onclick="obAjax.deleteFromFavorite('<?=$arResult["ITEM"]["ID"]?>', '<?=$arResult['WRAP_ID']?>', event)">
+                <i class="icon icon-close color"></i>
+            </a>
+        <?else:?>
+            <a href="#" class="pseudo_link" data-entity="favorite" data-id="<?=$arResult["ITEM"]["ID"]?>">
+                <i class="icon icon-like"></i>
+            </a>
+        <?endif?>
     </div>
     <a
             href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"

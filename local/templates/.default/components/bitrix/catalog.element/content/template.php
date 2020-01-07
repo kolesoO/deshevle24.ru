@@ -48,12 +48,8 @@ if ($arParams['DISPLAY_COMPARE']) {
             <div class="btn_list col-lg-16 col-md-24 col-xs-24" flex-align="center" flex-text_align="end" flex-wrap="wrap">
                 <div class="btn_list-block">
                     <div class="btn grey_white col-xs-24">
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <span>(0)</span>
+                        <?=\kDevelop\Content\Reviews::getMarkeredHtmlStars($arOffer['ID'])?>
+                        <span>(<?=\kDevelop\Content\Reviews::getMarkeredRating($arOffer['ID'])?>)</span>
                     </div>
                     <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
                         <i class="icon icon-like opacity"></i>
@@ -128,11 +124,13 @@ if ($arParams['DISPLAY_COMPARE']) {
             <a href="#" class="catalog_detail-tab-item" data-tab_target="#config">
                 <span class="title-5 light">Характеристики</span>
             </a>
-            <!--a href="#" class="catalog_detail-tab-item" data-tab_target="#reviews-old">
-                <span class="title-5 light">Отзывы (0)</span>
-            </a-->
-            <a href="#" class="catalog_detail-tab-item" data-tab_target="#reviews">
-                <span class="title-5 light">Отзывы (2)</span>
+            <a
+                    href="#"
+                    class="catalog_detail-tab-item"
+                    data-tab_target="#reviews"
+                    onclick="obAjax.getReviews('reviews-list', '<?=$arOffer['ID']?>')"
+            >
+                <span class="title-5 light">Отзывы (<?=\kDevelop\Content\Reviews::getMarkeredCount($arOffer['ID'])?>)</span>
             </a>
         </div>
         <div class="catalog_detail-tab-inner" data-tab_content>
@@ -292,77 +290,17 @@ if ($arParams['DISPLAY_COMPARE']) {
                             </div>
                         <?endif?>
                     </div>
-                    <div class="articles_list" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')">
-                                <a href="#" data-popup-open="#video-popup" data-path="" onclick="obAjax.getVideo('video-popup-content', event)">
-                                    <i class="icon icon-play"></i>
-                                </a>
-                            </div>
-                            <div class="title-5 medium">Скандинавский стиль</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
-                        </div>
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item2.png')"></div>
-                            <div class="title-5 medium">Практичный «пантограф»</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля.</div>
-                        </div>
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item3.png')"></div>
-                            <div class="title-5 medium">Мягкие валики</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой.</div>
-                        </div>
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item4.png')"></div>
-                            <div class="title-5 medium">Зарядное устройство USB</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках.</div>
-                        </div>
-                    </div>
+                    <?=kDevelop\Content\ProductArticles::getMarkeredId($arOffer['ID'])?>
                 </div>
             </div>
-            <!--div id="reviews-old" data-tab_item>
-                <div class="container">
-                    <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
-                        <div>
-                            <div class="title-5 light">Рейтинг (0)</div>
-                            <div>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <a href="#" class="btn color btn-arrow" flex-text_align="end" data-popup-open="#myfeedback">
-                                <span>Оставить отзыв</span>
-                                <i class="icon icon-arrow"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="feedback-list">
-                        <div class="feedback-empty" flex-align="center" flex-wrap="wrap" flex-text_align="center">
-                            <div align="center">
-                                <i class="icon icon-chat_msg"></i>
-                                <br><br><br>
-                                <div>Отзывов о данном товаре пока нет</div>
-                                <div class="title-5 medium">Оставь отзыв первым</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div-->
             <div id="reviews" data-tab_item>
                 <div class="container">
                     <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
                         <div>
-                            <div class="title-5 light">Рейтинг (0)</div>
+                            <div class="title-5 light">Рейтинг</div>
                             <div>
-                                <i class="icon icon-star"></i>
-                                <i class="icon icon-star"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
+                                <?=\kDevelop\Content\Reviews::getMarkeredHtmlStars($arOffer['ID'])?>
+                                <span>(<?=\kDevelop\Content\Reviews::getMarkeredRating($arOffer['ID'])?>)</span>
                             </div>
                         </div>
                         <div>
@@ -372,72 +310,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                             </a>
                         </div>
                     </div>
-                    <div class="feedback-list">
-                        <div id="bx_3218110189_891" class="feedback-list-item">
-                            <div class="user-info col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="title-5 medium">Иванов Максим3</div>
-                                <p>25.01.2019 10.01</p>
-                                <div class="feedback-stars col-lg-24">
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star-gray-empty"></i>
-                                </div>
-                                <div class="user-info-txt col-lg-24">
-                                    <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
-                                </div>
-                                <div class="feedback-like col-lg-24" flex-align="start">
-                                    <i class="icon icon-close static"></i>
-                                    <p>Я не рекомендую эту модель!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="bx_3218110189_890" class="feedback-list-item">
-                            <div class="user-info col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="title-5 medium">Иванов Максим2</div>
-                                <p>25.01.2019 10.01</p>
-                                <div class="feedback-stars col-lg-24">
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star-gray-empty"></i>
-                                    <i class="icon icon-star-gray-empty"></i>
-                                </div>
-                                <div class="user-info-txt col-lg-24">
-                                    <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
-                                </div>
-                                <div class="feedback-like col-lg-24" flex-align="start">
-                                    <i class="icon icon-like"></i>
-                                    <p>Да, я рекомендую эту модель!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="bx_3218110189_889" class="feedback-list-item">
-                            <div flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="user-info col-lg-18" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                    <div class="title-5 medium">Иванов Максим</div>
-                                    <p>25.01.2019 10.01</p>
-                                    <div class="feedback-stars col-lg-24">
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star-gray-empty"></i>
-                                        <i class="icon icon-star-gray-empty"></i>
-                                        <i class="icon icon-star-gray-empty"></i>
-                                    </div>
-                                    <div class="user-info-txt col-lg-24">Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую! Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</div>
-                                    <div class="feedback-like col-lg-24" flex-align="start">
-                                        <i class="icon icon-like"></i>
-                                        <p>Да, я рекомендую эту модель!</p>
-                                    </div>
-                                </div>
-                                <img src="/upload/iblock/f19/f1958654c5d01aca5ea50c063605575e.png" class="col-lg-5" alt="Иванов Максим">
-                            </div>
-                        </div>
-                    </div>
-                    <div flex-align="center" flex-text_align="center">
-                        <a href="#" class="title-5 medium btn" align="center" data-popup-open="#">Все отзывы</a>
-                    </div>
+                    <div id="reviews-list"></div>
                 </div>
             </div>
         </div>

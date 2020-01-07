@@ -166,6 +166,10 @@ a:hover .icon-like,
 .icon-close:not(.static):hover:after {
     transform: rotate(315deg);
 }
+.icon-close.color:before,
+.icon-close.color:after{
+    background-color: #f56d01;
+}
 .icon-close.static{
     width: 18px;
     height: 18px;

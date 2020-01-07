@@ -45,34 +45,6 @@ if (!isset($arSection)) {
     <div class="container">
         <div class="title-1"><?$APPLICATION->ShowTitle(false)?></div>
         <?=$arSection["DESCRIPTION"]?>
-        <?
-        //подразделы
-        /*$APPLICATION->IncludeComponent(
-            "bitrix:catalog.section.list",
-            "",
-            [
-                "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
-                "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                "SECTION_ID" => $arSection["ID"],
-                "SECTION_CODE" => $arSection["CODE"],
-                "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                "CACHE_TIME" => $arParams["CACHE_TIME"],
-                "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                "COUNT_ELEMENTS" => $arParams["SECTION_COUNT_ELEMENTS"],
-                "TOP_DEPTH" => $arParams["SECTION_TOP_DEPTH"],
-                "SECTION_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["section"],
-                "VIEW_MODE" => $arParams["SECTIONS_VIEW_MODE"],
-                "SHOW_PARENT_NAME" => $arParams["SECTIONS_SHOW_PARENT_NAME"],
-                "HIDE_SECTION_NAME" => (isset($arParams["SECTIONS_HIDE_SECTION_NAME"]) ? $arParams["SECTIONS_HIDE_SECTION_NAME"] : "N"),
-                "ADD_SECTIONS_CHAIN" => (isset($arParams["ADD_SECTIONS_CHAIN"]) ? $arParams["ADD_SECTIONS_CHAIN"] : ''),
-                "ITEMS_IN_ROW" => $arParams["SECTION_ITEMS_IN_ROW"],
-                "IMAGE_SIZE" => $arParams["SECTIONS_IMAGE_SIZE"]
-            ],
-            $component,
-            ["HIDE_ICONS" => "Y"]
-        );*/
-        //end
-        ?>
         <div flex-align="start" flex-wrap="wrap">
             <div class="col-lg-6 col-md-8 col-xs-24">
                 <?$APPLICATION->IncludeComponent(
@@ -153,7 +125,7 @@ if (!isset($arSection)) {
         </div>
         <div flex-align="start" flex-wrap="wrap" flex-text_align="end">
             <div class="catalog_list filter_inctive col-lg-24 col-md-16 col-xs-24">
-                <div id="comp_catalog-list-wrap">
+                <div id="comp_catalog-list-wrap" class="catalog_list-content">
                     <?
                     if (isset($_REQUEST["bxajaxid"])) {
                         $APPLICATION->RestartBuffer();

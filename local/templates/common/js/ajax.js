@@ -163,7 +163,7 @@ var obAjax = {
     addToBasketCallBack: function(data)
     {
         if (!!data.msg) {
-            this.addPopupMessage("basket-white", data.msg);
+            this.addPopupMessage("empty", data.msg);
         }
         BX.onCustomEvent('OnBasketChange');
     },
@@ -252,7 +252,57 @@ var obAjax = {
             }
         }
         if (!!data.msg) {
-            this.addPopupMessage("favorite-white", data.msg);
+            this.addPopupMessage("empty", data.msg);
+        }
+    },
+
+    /**
+     *
+     * @param id
+     * @param wrapId
+     * @param evt
+     */
+    deleteFromFavorite: function(id, wrapId, evt)
+    {
+        evt.preventDefault();
+
+        this.setParams({wrap_id: wrapId});
+        this.doRequest(
+            "POST",
+            location.href,
+            this.serializeData({
+                class: "Favorite",
+                method: "delete",
+                params: {
+                    id: id
+                }
+            }),
+            [
+                ["Content-type", "application/x-www-form-urlencoded"]
+            ]
+        );
+    },
+
+    /**
+     *
+     * @param data
+     */
+    deleteFromFavoriteCallBack: function(data)
+    {
+        var node = null;
+
+        if (!!data.msg) {
+            this.addPopupMessage("empty", data.msg);
+        }
+        if (typeof data.full_count != "undefined") {
+            var node = document.getElementById("favorite-wrapper");
+            if (!!node) {
+                node.innerHTML = (data.full_count > 0 ? '<span class="icon-inner">' + data.full_count + '</span>' : '');
+            }
+        }
+        var node = document.getElementById(this.params.wrap_id);
+        if (!!node) {
+            node.remove();
         }
     },
 
@@ -279,20 +329,64 @@ var obAjax = {
         var ctx = this,
             formData = new FormData(form);
 
-        formData.append('js_callback', 'createReviewCallback');
+        formData.append('params[js_callback]', 'createReviewCallback');
+        formData.append('params[msg_code]', 'REVIEW_CREATED_MSG');
         ctx.doRequest(
             "POST",
             location.href,
             formData,
+            []
+        );
+    },
+
+    /**
+     *
+     * @param data
+     */
+    createReviewCallback: function(data)
+    {
+        if (!!data.msg) {
+            this.addPopupMessage("empty", data.msg);
+        }
+    },
+
+    /**
+     *
+     * @param wrapId
+     * @param offerId
+     */
+    getReviews: function(wrapId, offerId)
+    {
+        var ctx = this;
+
+        ctx.setParams({
+            target_id: wrapId,
+        });
+        ctx.doRequest(
+            "POST",
+            location.href,
+            ctx.serializeData({
+                class: "Component",
+                method: "getReviews",
+                params: {
+                    offer_id: offerId
+                }
+            }),
             [
                 ["Content-type", "application/x-www-form-urlencoded"]
             ]
         );
     },
 
-    createReviewCallback: function(data)
+    /**
+     *
+     * @param data
+     */
+    getReviewsCallBack: function(data)
     {
-        console.log(data);
+        if (!!data.html) {
+            document.getElementById(this.params.target_id).innerHTML = data.html;
+        }
     },
 
     /**

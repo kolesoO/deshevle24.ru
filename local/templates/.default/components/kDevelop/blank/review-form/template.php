@@ -13,11 +13,11 @@
     </div>
     <br>
 <?endif?>
-<form class="def_form" onsubmit="obAjax.createReview(this);return false;" enctype="multipart/form-data" method="post">
+<form class="def_form" onsubmit="obAjax.createReview(this);return false;" enctype="multipart/form-data">
     <input type="hidden" name="class" value="Iblock">
     <input type="hidden" name="method" value="add">
     <input type="hidden" name="params[IBLOCK_ID]" value="<?=$arParams['IBLOCK_ID']?>">
-    <input type="hidden" name="params[PRODUCT_SKU_ID]" value="<?=$arParams['PRODUCT_SKU_ID']?>">
+    <input type="hidden" name="params[PROPERTIES][PRODUCT_SKU_ID]" value="<?=$arParams['PRODUCT_SKU_ID']?>">
     <div class="def_form-item">
         <input
                 type="text"
@@ -77,7 +77,7 @@
                 <?foreach ($arResult['RECOMMEND']['VALUE'] as $value) :?>
                     <label for="like-<?=$value['ID']?>" flex-align="center" class="list_block-item pseudo_link">
                         <span class="col-lg-2">
-                            <i class="icon icon-like"></i>
+                            <i class="icon <?=$value['XML_ID']?>"></i>
                         </span>
                         <span class="col-lg-22">
                             <span><?=$value['VALUE']?></span>
@@ -104,7 +104,7 @@
                 <input
                         id="file"
                         type="file"
-                        name="params[PREVIEW_PICTURE]"
+                        name="PREVIEW_PICTURE"
                 >
             </div>
         </div>

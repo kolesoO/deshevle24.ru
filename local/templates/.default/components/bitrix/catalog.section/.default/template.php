@@ -153,64 +153,62 @@ $arCatalogItemsParams = [
     var obCatalogItemsParams = <?=CUtil::PhpToJSObject($arCatalogItemsParams)?>;
 </script>
 
-<div class="catalog_list-content">
-    <?if ($arResult["ITEMS_COUNT"] > 0) :?>
-        <?foreach ($arResult["SECTIONS"] as $key => $arSection) :
-            $isSlider = $arSection['ITEMS_COUNT'] > $arParams["LINE_ELEMENT_COUNT"] + 1;
-            ?>
-            <?if ($key > 0) :?>
-                <hr class="section_hr">
-            <?endif?>
-            <div flex-align="center" flex-wrap="wrap" class="catalog_item-block">
-                <?if ($arSection["UF_MIN_PRICE"] > 0) :?>
-                    <div class="catalog_label">от <?=\CurrencyFormat($arSection["UF_MIN_PRICE"], $arParams["CURRENCY_ID"])?></div>
-                <?endif?>
-                <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
-            </div>
-            <div
-                    class="catalog_list-slider<?if ($isSlider) :?> js-slider<?endif?> clearfix"
-                    data-autoplay="false"
-                    data-autoplaySpeed="5000"
-                    data-infinite="false"
-                    data-speed="1000"
-                    data-arrows="true"
-                    data-dots="false"
-                    data-slidesToShow="<?=($arParams["LINE_ELEMENT_COUNT"] + 1)?>"
-                    style="z-index:<?=$arResult['SECTIONS_COUNT']?>"
-                    items-count
-            >
-                <?foreach ($arResult["ITEMS"] as $key => $arItem) :
-                    if($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) continue;
-                    $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
-                    $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
-                    ?>
-                    <div id="catalog-item-<?=$arItem["ID"]?>" class="catalog_item">
-                        <?$APPLICATION->IncludeComponent(
-                            "kDevelop:catalog.item",
-                            $arResult["INNER_TEMPLATE"],
-                            [
-                                "RESULT" => [
-                                    "ITEM" => $arItem,
-                                    "OFFER_KEY" => $arItem["OFFER_ID_SELECTED"],
-                                    "OFFERS_LIST" => $arItem["OFFERS"],
-                                    "WRAP_ID" => "catalog-item-".$arItem["ID"],
-                                    "AREA_ID" => $this->GetEditAreaId($arItem["ID"])
-                                ],
-                                "PARAMS" => $arParams
-                            ],
-                            $component,
-                            ['HIDE_ICONS' => 'Y']
-                        );?>
-                    </div>
-                <?endforeach;?>
-            </div>
-            <?
-            $arResult['SECTIONS_COUNT'] --;
-        endforeach;?>
-    <?else:?>
-        <p>Список товаров пуст</p>
+<?if ($arResult["ITEMS_COUNT"] > 0) :?>
+    <?foreach ($arResult["SECTIONS"] as $key => $arSection) :
+        $isSlider = $arSection['ITEMS_COUNT'] > $arParams["LINE_ELEMENT_COUNT"] + 1;
+        ?>
+        <?if ($key > 0) :?>
+        <hr class="section_hr">
     <?endif?>
-</div>
+        <div flex-align="center" flex-wrap="wrap" class="catalog_item-block">
+            <?if ($arSection["UF_MIN_PRICE"] > 0) :?>
+                <div class="catalog_label">от <?=\CurrencyFormat($arSection["UF_MIN_PRICE"], $arParams["CURRENCY_ID"])?></div>
+            <?endif?>
+            <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
+        </div>
+        <div
+                class="catalog_list-slider<?if ($isSlider) :?> js-slider<?endif?> clearfix"
+                data-autoplay="false"
+                data-autoplaySpeed="5000"
+                data-infinite="false"
+                data-speed="1000"
+                data-arrows="true"
+                data-dots="false"
+                data-slidesToShow="<?=($arParams["LINE_ELEMENT_COUNT"] + 1)?>"
+                style="z-index:<?=$arResult['SECTIONS_COUNT']?>"
+                items-count
+        >
+            <?foreach ($arResult["ITEMS"] as $key => $arItem) :
+                if($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) continue;
+                $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
+                $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+                ?>
+                <div id="catalog-item-<?=$arItem["ID"]?>" class="catalog_item">
+                    <?$APPLICATION->IncludeComponent(
+                        "kDevelop:catalog.item",
+                        $arResult["INNER_TEMPLATE"],
+                        [
+                            "RESULT" => [
+                                "ITEM" => $arItem,
+                                "OFFER_KEY" => $arItem["OFFER_ID_SELECTED"],
+                                "OFFERS_LIST" => $arItem["OFFERS"],
+                                "WRAP_ID" => "catalog-item-".$arItem["ID"],
+                                "AREA_ID" => $this->GetEditAreaId($arItem["ID"])
+                            ],
+                            "PARAMS" => $arParams
+                        ],
+                        $component,
+                        ['HIDE_ICONS' => 'Y']
+                    );?>
+                </div>
+            <?endforeach;?>
+        </div>
+        <?
+        $arResult['SECTIONS_COUNT'] --;
+    endforeach;?>
+<?else:?>
+    <p>Список товаров пуст</p>
+<?endif?>
 
 <?if ($showBottomPager) :?>
     <?=$arResult['NAV_STRING']?>
