@@ -1,41 +1,31 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
-<?
-if(count($arResult["PERSON_TYPE"]) > 1)
-{
-	?>
-	<div class="section">
-		<h4><?=GetMessage("SOA_TEMPL_PERSON_TYPE")?></h4>
-		<?foreach($arResult["PERSON_TYPE"] as $v):?>
-			<div class="label left">
-				<input type="radio" id="PERSON_TYPE_<?=$v["ID"]?>" name="PERSON_TYPE" value="<?=$v["ID"]?>"<?if ($v["CHECKED"]=="Y") echo " checked=\"checked\"";?> onClick="submitForm()"> <label for="PERSON_TYPE_<?=$v["ID"]?>"><?=$v["NAME"]?></label><br />
-			</div>
-			<?endforeach;?>
-		<div class="clear"></div>
-		<input type="hidden" name="PERSON_TYPE_OLD" value="<?=$arResult["USER_VALS"]["PERSON_TYPE_ID"]?>" />
-	</div>
-	<?
-}
-else
-{
-	if(IntVal($arResult["USER_VALS"]["PERSON_TYPE_ID"]) > 0)
-	{
-		//for IE 8, problems with input hidden after ajax
-		?>
-		<span style="display:none;">
-		<input type="text" name="PERSON_TYPE" value="<?=IntVal($arResult["USER_VALS"]["PERSON_TYPE_ID"])?>" />
-		<input type="text" name="PERSON_TYPE_OLD" value="<?=IntVal($arResult["USER_VALS"]["PERSON_TYPE_ID"])?>" />
-		</span>
-		<?
-	}
-	else
-	{
-		foreach($arResult["PERSON_TYPE"] as $v)
-		{
-			?>
-			<input type="hidden" id="PERSON_TYPE" name="PERSON_TYPE" value="<?=$v["ID"]?>" />
-			<input type="hidden" name="PERSON_TYPE_OLD" value="<?=$v["ID"]?>" />
-			<?
-		}
-	}
-}
-?>
+<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();?>
+
+<?if ($arResult["PERSON_TYPE_COUNT"] > 1) :?>
+    <div class="tumbler js-tumbler">
+        <div
+            class="tumbler-content"
+            data-content
+            data-target="#PERSON_TYPE_<?=implode(",#PERSON_TYPE_", array_column($arResult["PERSON_TYPE"], "ID"))?>"
+            data-positions="left,right"
+            data-value="#PERSON_TYPE_<?=$arResult["ACTIVE_PERSON_TYPE"]?>"
+            data-position="<?=$arResult["ACTIVE_PERSON_TYPE_KEY"] == 0 ? "left" : "right"?>"
+        ></div>
+        <?foreach($arResult["PERSON_TYPE"] as $v):?>
+            <input
+                id="PERSON_TYPE_<?=$v["ID"]?>"
+                type="radio"
+                name="PERSON_TYPE"
+                class="hidden-lg hidden-md hidden-xs"
+                value="<?=$v["ID"]?>"
+                onchange="BX.saleOrderAjax.submitForm();"
+                <?if ($v["CHECKED"]=="Y") :?> checked<?endif?>
+            >
+            <label class="tumbler-title"><?=$v["NAME"]?></label>
+        <?endforeach?>
+    </div>
+<?else:?>
+    <?foreach ($arResult["PERSON_TYPE"] as $v) :?>
+        <input type="hidden" id="PERSON_TYPE" name="PERSON_TYPE" value="<?=$v["ID"]?>" />
+        <input type="hidden" name="PERSON_TYPE_OLD" value="<?=$v["ID"]?>" />
+    <?endforeach?>
+<?endif?>

@@ -72,14 +72,14 @@ if ($arParams['DISPLAY_COMPARE']) {
     </div>
     <div class="product_preview-description col-lg-10">
         <div class="catalog_item-block" flex-align="start" flex-text_align="space-between">
-            <div class="btn grey_white col-lg-11" align="center">
-                <i class="icon icon-star-gray-empty"></i>
-                <i class="icon icon-star-gray-empty"></i>
-                <i class="icon icon-star-gray-empty"></i>
-                <i class="icon icon-star-gray-empty"></i>
-                <i class="icon icon-star-gray-empty"></i>
-                <span>(0)</span>
-            </div>
+            <?if (isset($arParams['RATING_VALUE']) && strlen($arParams['RATING_VALUE']) > 0) :?>
+                <div class="btn grey_white col-lg-11" align="center">
+                    <?=htmlspecialcharsback($arParams['RATING_HTML'])?>
+                    <?if (isset($arParams['RATING_VALUE']) && strlen($arParams['RATING_VALUE']) > 0) :?>
+                        <span>(<?=$arParams['RATING_VALUE']?>)</span>
+                    <?endif?>
+                </div>
+            <?endif?>
             <?if ($arParams['FAVORITE_STATUS']) :?>
                 <a href="/favorite/" class="btn grey_white col-lg-11" align="center">
                     <i class="icon icon-favorite-full"></i>

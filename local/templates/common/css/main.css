@@ -897,22 +897,15 @@ ymaps .logo{
 .basket-steps{
     border: 1px solid #ebebeb;
 }
-.basket-steps-item:first-child {
-    border-right: 1px solid #ebebeb;
-}
-.basket-steps-item:last-child {
-    border-top: 1px solid #ebebeb;
-}
 .step-label {
+    display: inline-block;
     background-color: #a0a0a0;
     color: #fff;
+    transition: background-color .3s;
 }
-.step-label.active {
+.basket-steps-item.active .step-label {
     background-color: #e7fcff;
     color: #000000;
-}
-.basket-icon:not(.active) {
-    opacity: 0.3;
 }
 .basket-txt-politic a {
     text-decoration: underline;
@@ -1208,4 +1201,27 @@ ymaps .logo{
 .noUi-horizontal .noUi-handle:after{
     right: calc(50% - 2px);
     left: auto;
+}
+.radio-wrapper{
+    position: relative;
+}
+.radio-wrapper + .radio-wrapper{
+    margin-left: 30px;
+}
+.radio-wrapper label{
+    cursor:pointer;
+}
+.basket-steps-item [type='radio']{
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.basket-steps-item [type='radio']:not([checked]) + label{
+    opacity: .3;
+}
+.radio-wrapper img {
+    margin-right: 15px;
 }

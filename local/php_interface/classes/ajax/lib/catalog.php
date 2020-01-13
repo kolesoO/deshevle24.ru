@@ -1,6 +1,8 @@
 <?
 namespace kDevelop\Ajax;
 
+use kDevelop\Content\Reviews;
+
 class Catalog
 {
     private static $arDefIbFields = ["ID", "IBLOCK_ID", "NAME"];
@@ -12,6 +14,28 @@ class Catalog
     public static function getFastProduct($arParams)
     {
         global $APPLICATION;
+
+        //reviews and rating data
+        $reviewsList = [];
+        $offerRating = 0;
+        $rs = \CIBlockElement::GetList(
+            [],
+            [
+                'IBLOCK_ID' => IBLOCK_CONTENT_REVIEWS,
+                'ACTIVE' => 'Y',
+                'PROPERTY_PRODUCT_SKU_ID' => $arParams['offerId']
+            ],
+            false,
+            false,
+            ['ID', 'IBLOCK_ID', 'PROPERTY_MARK', 'PROPERTY_PRODUCT_SKU_ID']
+        );
+        while ($item = $rs->fetch()) {
+            $reviewsList[$item['PROPERTY_PRODUCT_SKU_ID_VALUE']][] = $item;
+        }
+        $offerRating = Reviews::getRating(
+            Reviews::getMarkList($reviewsList, $arParams['offerId'])
+        );
+        //end
 
         ob_start();
         $APPLICATION->IncludeComponent(
@@ -164,7 +188,9 @@ class Catalog
                             $_SESSION['CATALOG_COMPARE_LIST'][IBLOCK_CATALOG_CATALOG]['ITEMS']
                         )
                     : false,
-                "FAVORITE_STATUS" => \kDevelop\Ajax\Favorite::isAdded($arParams["itemId"])
+                "FAVORITE_STATUS" => Favorite::isAdded($arParams["itemId"]),
+                "RATING_VALUE" => $offerRating,
+                "RATING_HTML" => Reviews::getHtmlStars($offerRating)
             )
         );
         $return = ob_get_contents();

@@ -665,6 +665,9 @@
         padding: 30px 70px;
         margin-top: 50px;
     }
+    .basket-txt.basket-txt-header{
+        margin-top: 0;
+    }
     .basket-txt .catalog_item-price > *:first-child {
         padding-right: 10px;
     }
@@ -672,15 +675,29 @@
         padding-left: 10px;
     }
     .basket-item {
-        padding: 100px;
+        padding: 60px 100px;
+    }
+    .basket-item + .basket-item{
+        margin-top: 20px;
     }
     .basket-steps {
         padding: 60px;
         margin-top: 70px;
     }
     .basket-steps-item {
-        margin-top: 20px;
         padding: 50px 100px;
+    }
+    .basket-steps-item:nth-child(2){
+        border-left: 1px solid #ebebeb;
+    }
+    .basket-steps-item:not(:last-child){
+        border-bottom: 1px solid #ebebeb;
+    }
+    .basket-steps-item:last-child {
+        margin-left: -60px;
+        margin-right: -60px;
+        padding: 50px 60px;
+        width: calc(100% + 120px);
     }
     .basket-steps-item .catalog_item-price {
         margin: 10px 0 30px 0;
@@ -689,14 +706,7 @@
         margin-top: 10px;
     }
     .step-label {
-        padding: 10px;
-    }
-    .basket-icon {
-        margin: 30px 50px 65px 0;
-    }
-    .basket-icon img {
-        width: 64px;
-        margin-right: 15px;
+        padding: 20px 22px;
     }
     .basket-payment {
         margin-bottom: 95px;
@@ -849,5 +859,30 @@
     }
     .btn_list-block .btn + .btn{
         margin-left: 18px;
+    }
+    .cart_buy-qnt{
+        border: 1px solid #f8f8f8;
+        height: 66px;
+        margin: 0!important;
+        text-align: center;
+    }
+    .cart_buy-qnt:not([type]){
+        width: 66px;
+        line-height: 66px;
+        color: #b2b2b2;
+        text-decoration: none;
+        transition-property: background-color, color, box-shadow;
+        transition-duration: .3s;
+    }
+    .cart_buy-qnt:not([type]):hover{
+        background-color: #f56d01;
+        border-color: #f56d01;
+        color: #fff!important;
+        box-shadow: 0 0 15px #e1e1e1;
+    }
+    .cart_buy-qnt[type]{
+        width: 100px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }

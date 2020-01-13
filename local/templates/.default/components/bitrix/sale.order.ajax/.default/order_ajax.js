@@ -49,14 +49,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		locations: {},
 		cleanLocations: {},
 		locationsTemplate: '',
-		pickUpMapInitialized: false,
+		pickUpMapFocused: false,
 		basketColumns: [],
 		options: {},
 		activeSectionId: '',
 		firstLoad: true,
 		initialized: {},
 		mapsReady: false,
-		maxWaitTimeExpired: false,
 		lastSelectedDelivery: 0,
 		deliveryLocationInfo: {},
 		deliveryPagination: {},
@@ -67,7 +66,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		pickUpPagination: {},
 		timeOut: {},
 		isMobile: BX.browser.IsMobile(),
-		isHttps: window.location.protocol == "https:",
+		isHttps: window.location.protocol === "https:",
+		orderSaveAllowed: false,
+		socServiceHiddenNode: false,
 
 		/**
 		 * Initialization of sale.order.ajax component js
@@ -143,6 +144,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			this.orderBlockNode.removeAttribute('style');
 			this.basketBlockScrollCheck();
+
+			if (this.params.USE_ENHANCED_ECOMMERCE === 'Y')
+			{
+				this.setAnalyticsDataLayer('checkout');
+			}
+
+			if (this.params.USER_CONSENT === 'Y')
+			{
+				this.initUserConsent();
+			}
 		},
 
 		/**
@@ -150,29 +161,33 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		 */
 		sendRequest: function(action, actionData)
 		{
-			var loaderTimer, form;
-			if (!(loaderTimer = this.startLoader()))
+			var form;
+
+			if (!this.startLoader())
 				return;
 
 			this.firstLoad = false;
-			action = BX.type.isString(action) ? action : 'refreshOrderAjax';
 
-			if (action == 'saveOrderAjax')
+			action = BX.type.isNotEmptyString(action) ? action : 'refreshOrderAjax';
+
+			if (action === 'saveOrderAjax')
 			{
 				form = BX('bx-soa-order-form');
 				if (form)
+				{
 					form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
+				}
 
 				BX.ajax.submit(BX('bx-soa-order-form'), BX.proxy(this.saveOrder, this));
 			}
 			else
+			{
 				BX.ajax({
-					timeout: 60,
 					method: 'POST',
 					dataType: 'json',
 					url: this.ajaxUrl,
 					data: this.getData(action, actionData),
-					onsuccess: BX.proxy(function(result) {
+					onsuccess: BX.delegate(function(result) {
 						if (result.redirect && result.redirect.length)
 							document.location.href = result.redirect;
 
@@ -187,33 +202,38 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 								this.refreshOrder(result);
 								break;
 							case 'enterCoupon':
-								if (result.order)
+								if (result && result.order)
 								{
 									this.deliveryCachedInfo = [];
 									this.refreshOrder(result);
 								}
 								else
+								{
 									this.addCoupon(result);
+								}
 
 								break;
 							case 'removeCoupon':
-								if (result.order)
+								if (result && result.order)
 								{
 									this.deliveryCachedInfo = [];
 									this.refreshOrder(result);
 								}
 								else
+								{
 									this.removeCoupon(result);
+								}
 
 								break;
 						}
 						BX.cleanNode(this.savedFilesBlockNode);
-						this.endLoader(loaderTimer);
+						this.endLoader();
 					}, this),
-					onfailure: BX.proxy(function(){
-						this.endLoader(loaderTimer);
+					onfailure: BX.delegate(function(){
+						this.endLoader();
 					}, this)
 				});
+			}
 		},
 
 		getData: function(action, actionData)
@@ -223,9 +243,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				sessid: BX.bitrix_sessid(),
 				via_ajax: 'Y',
 				SITE_ID: this.siteId,
-				action: action,
 				signedParamsString: this.signedParamsString
 			};
+
+			data[this.params.ACTION_VARIABLE] = action;
 
 			if (action === 'enterCoupon' || action === 'removeCoupon')
 				data.coupon = actionData;
@@ -240,8 +261,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				i;
 
 			for (i in prepared.data)
+			{
 				if (prepared.data.hasOwnProperty(i) && i == '')
+				{
 					delete prepared.data[i];
+				}
+			}
 
 			return !!prepared && prepared.data ? prepared.data : {};
 		},
@@ -277,7 +302,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				this.prepareLocations(result.locations);
 				this.locationsInitialized = false;
 				this.maxWaitTimeExpired = false;
-				this.pickUpMapInitialized = false;
+				this.pickUpMapFocused = false;
 				this.deliveryLocationInfo = {};
 				this.initialized = {};
 
@@ -292,6 +317,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 		saveOrder: function(result)
 		{
+			// safari mobile fix
+			result = result.replace(/<a href="\S*">(\S*)<\/a>/g, '$1');
+			
 			var res = BX.parseJSON(result), redirected = false;
 			if (res && res.order)
 			{
@@ -309,6 +337,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				{
 					if (result.REDIRECT_URL && result.REDIRECT_URL.length)
 					{
+						if (this.params.USE_ENHANCED_ECOMMERCE === 'Y')
+						{
+							this.setAnalyticsDataLayer('purchase', result.ID);
+						}
+
 						redirected = true;
 						document.location.href = result.REDIRECT_URL;
 					}
@@ -318,7 +351,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			if (!redirected)
+			{
 				this.endLoader();
+				this.disallowOrderSave();
+			}
 		},
 
 		/**
@@ -333,37 +369,41 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (!this.loadingScreen)
 			{
-				this.loadingScreen = new BX.PopupWindow("loading_screen", null, {
-					overlay: {backgroundColor: 'white', opacity: '80'},
+				this.loadingScreen = new BX.PopupWindow('loading_screen', null, {
+					overlay: {backgroundColor: 'white', opacity: 1},
 					events: {
-						onAfterPopupShow: BX.proxy(function(){
+						onAfterPopupShow: BX.delegate(function(){
 							BX.cleanNode(this.loadingScreen.popupContainer);
 							BX.removeClass(this.loadingScreen.popupContainer, 'popup-window');
 							this.loadingScreen.popupContainer.appendChild(
-								BX.create('IMG', {props: {src: this.templateFolder + "/images/loader.gif"}})
+								BX.create('IMG', {props: {src: this.templateFolder + '/images/loader.gif'}})
 							);
 							this.loadingScreen.popupContainer.removeAttribute('style');
 							this.loadingScreen.popupContainer.style.display = 'block';
 						}, this)
 					}
 				});
-				BX.addClass(this.loadingScreen.popupContainer, 'bx-step-opacity');
+				BX.addClass(this.loadingScreen.overlay.element, 'bx-step-opacity');
 			}
 
-			return setTimeout(BX.proxy(function(){this.loadingScreen.show()}, this), 100);
+			this.loadingScreen.overlay.element.style.opacity = '0';
+			this.loadingScreen.show();
+			this.loadingScreen.overlay.element.style.opacity = '0.6';
+
+			return true;
 		},
 
 		/**
 		 * Hiding loader image with overlay.
 		 */
-		endLoader: function(loaderTimer)
+		endLoader: function()
 		{
 			this.BXFormPosting = false;
 
 			if (this.loadingScreen && this.loadingScreen.isShown())
+			{
 				this.loadingScreen.close();
-
-			clearTimeout(loaderTimer);
+			}
 		},
 
 		htmlspecialcharsEx: function(str)
@@ -494,7 +534,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			var phrases, i, output = [];
 
 			text = text || '';
-			separator = separator || '<br />';
+			separator = separator || '<br>';
 
 			phrases = text.split(separator);
 			phrases = BX.util.array_unique(phrases);
@@ -535,7 +575,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		showError: function(node, msg, border)
 		{
 			if (BX.type.isArray(msg))
-				msg = msg.join('<br />');
+				msg = msg.join('<br>');
 
 			var errorContainer = node.querySelector('.alert.alert-danger'), animate;
 			if (errorContainer && msg.length)
@@ -839,9 +879,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				BX.addClass(this.deliveryBlockNode, 'bx-step-warning');
 
-				warningString = '<strong>' + BX.util.htmlspecialchars(this.params.MESS_DELIVERY_CALC_ERROR_TITLE) + '</strong>';
+				warningString = '<strong>' + this.params.MESS_DELIVERY_CALC_ERROR_TITLE + '</strong>';
 				if (this.params.MESS_DELIVERY_CALC_ERROR_TEXT.length)
-					warningString += '<br /><small>' + BX.util.htmlspecialchars(this.params.MESS_DELIVERY_CALC_ERROR_TEXT) + '</small>';
+					warningString += '<br><small>' + this.params.MESS_DELIVERY_CALC_ERROR_TEXT + '</small>';
 
 				this.showBlockWarning(this.deliveryBlockNode, warningString);
 				this.showBlockWarning(this.deliveryHiddenBlockNode, warningString);
@@ -867,32 +907,80 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					switch (k.toUpperCase())
 					{
 						case 'DELIVERY':
-							this.showBlockWarning(this.deliveryBlockNode, this.result.WARNING[k], true);
-							this.showBlockWarning(this.deliveryHiddenBlockNode, this.result.WARNING[k], true);
+							if (this.deliveryBlockNode.getAttribute('data-visited') === 'true')
+							{
+								this.showBlockWarning(this.deliveryBlockNode, this.result.WARNING[k], true);
+								this.showBlockWarning(this.deliveryHiddenBlockNode, this.result.WARNING[k], true);
+							}
+
 							break;
 						case 'PAY_SYSTEM':
-							this.showBlockWarning(this.paySystemBlockNode, this.result.WARNING[k], true);
-							this.showBlockWarning(this.paySystemHiddenBlockNode, this.result.WARNING[k], true);
+							if (this.paySystemBlockNode.getAttribute('data-visited') === 'true')
+							{
+								this.showBlockWarning(this.paySystemBlockNode, this.result.WARNING[k], true);
+								this.showBlockWarning(this.paySystemHiddenBlockNode, this.result.WARNING[k], true);
+							}
+
 							break;
 					}
 				}
 			}
 		},
 
+		notifyAboutWarnings: function(node)
+		{
+			if (!BX.type.isDomNode(node))
+				return;
+
+			switch (node.id)
+			{
+				case this.deliveryBlockNode.id:
+					this.showBlockWarning(this.deliveryBlockNode, this.result.WARNING.DELIVERY, true);
+					break;
+				case this.paySystemBlockNode.id:
+					this.showBlockWarning(this.paySystemBlockNode, this.result.WARNING.PAY_SYSTEM, true);
+					break;
+			}
+		},
+
 		showBlockWarning: function(node, warnings, hide)
 		{
 			var errorNode = node.querySelector('.alert.alert-danger'),
-				warnStr = '', i, warningNode;
+				warnStr = '',
+				i, warningNode, existedWarningNodes;
 
 			if (errorNode)
 			{
 				if (BX.type.isString(warnings))
+				{
 					warnStr = warnings;
+				}
 				else
 				{
 					for (i in warnings)
-						if (warnings.hasOwnProperty(i))
-							warnStr += warnings[i] + '<br />';
+					{
+						if (warnings.hasOwnProperty(i) && warnings[i])
+						{
+							warnStr += warnings[i] + '<br>';
+						}
+					}
+				}
+
+				if (!warnStr)
+				{
+					return;
+				}
+
+				existedWarningNodes = node.querySelectorAll('.alert.alert-warning');
+				for (i in existedWarningNodes)
+				{
+					if (existedWarningNodes.hasOwnProperty(i) && BX.type.isDomNode(existedWarningNodes[i]))
+					{
+						if (existedWarningNodes[i].innerHTML.indexOf(warnStr) !== -1)
+						{
+							return;
+						}
+					}
 				}
 
 				warningNode = BX.create('DIV', {
@@ -933,8 +1021,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						},
 						props: {className: 'bx-pag-prev'},
 						html: pagination.pageNumber == 1
-							? '<span>' + BX.util.htmlspecialchars(this.params.MESS_NAV_BACK) + '</span>'
-							: '<a href=""><span>' + BX.util.htmlspecialchars(this.params.MESS_NAV_BACK) + '</span></a>',
+							? '<span>' + this.params.MESS_NAV_BACK + '</span>'
+							: '<a href=""><span>' + this.params.MESS_NAV_BACK + '</span></a>',
 						events: {click: BX.proxy(this.doPagination, this)}
 					})
 				);
@@ -964,8 +1052,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						},
 						props: {className: 'bx-pag-next'},
 						html: pagination.pageNumber == pagination.pages.length
-							? '<span>' + BX.util.htmlspecialchars(this.params.MESS_NAV_FORWARD) + '</span>'
-							: '<a href=""><span>' + BX.util.htmlspecialchars(this.params.MESS_NAV_FORWARD) + '</span></a>',
+							? '<span>' + this.params.MESS_NAV_FORWARD + '</span>'
+							: '<a href=""><span>' + this.params.MESS_NAV_FORWARD + '</span></a>',
 						events: {click: BX.proxy(this.doPagination, this)}
 					})
 				);
@@ -1188,14 +1276,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		 */
 		bindEvents: function()
 		{
-			BX.bind(this.orderSaveBlockNode.querySelector('a'), 'click', BX.proxy(this.clickOrderSaveAction, this));
+			BX.bind(this.orderSaveBlockNode.querySelector('[data-save-button]'), 'click', BX.proxy(this.clickOrderSaveAction, this));
 			BX.bind(window, 'scroll', BX.proxy(this.totalBlockScrollCheck, this));
 			BX.bind(window, 'resize', BX.throttle(function(){
 				this.totalBlockResizeCheck();
 				this.alignBasketColumns();
 				this.basketBlockScrollCheck();
-				if (this.mapsReady)
-					this.resizeMapContainers();
+				this.mapsReady && this.resizeMapContainers();
 			}, 50, this));
 			BX.addCustomEvent('onDeliveryExtraServiceValueChange', BX.proxy(this.sendRequest, this));
 		},
@@ -1221,21 +1308,26 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			this.initPagination();
 
+			this.options.showPreviewPicInBasket = false;
+			this.options.showDetailPicInBasket = false;
+			this.options.showPropsInBasket = false;
+			this.options.showPriceNotesInBasket = false;
+
 			if (this.result.GRID && this.result.GRID.HEADERS)
 			{
 				headers = this.result.GRID.HEADERS;
 				for (i = 0; i < headers.length; i++)
 				{
-					if (headers[i].id == 'PREVIEW_PICTURE')
+					if (headers[i].id === 'PREVIEW_PICTURE')
 						this.options.showPreviewPicInBasket = true;
 
-					if (headers[i].id == 'DETAIL_PICTURE')
+					if (headers[i].id === 'DETAIL_PICTURE')
 						this.options.showDetailPicInBasket = true;
 
-					if (headers[i].id == 'PROPS')
+					if (headers[i].id === 'PROPS')
 						this.options.showPropsInBasket = true;
 
-					if (headers[i].id == 'NOTES')
+					if (headers[i].id === 'NOTES')
 						this.options.showPriceNotesInBasket = true;
 				}
 			}
@@ -1415,7 +1507,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				for (i = 0; i < this.result.DELIVERY.length; i++)
 				{
-					if (this.result.DELIVERY[i].CHECKED == 'Y')
+					if (this.result.DELIVERY[i].CHECKED === 'Y' && this.result.DELIVERY[i].STORE_MAIN)
 					{
 						usePickUp = this.result.DELIVERY[i].STORE_MAIN.length > 0;
 						usePickUpPagination = this.result.DELIVERY[i].STORE_MAIN.length > this.options.pickUpsPerPage;
@@ -1495,7 +1587,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							temporaryLocations.push({
 								output: BX.processHTML(output[k], false),
 								showAlt: locations[i].showAlt,
-								lastValue: locations[i].lastValue
+								lastValue: locations[i].lastValue,
+								coordinates: locations[i].coordinates || false
 							});
 						}
 					}
@@ -1562,7 +1655,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			if (this.firstLoad && this.result.IS_AUTHORIZED && typeof this.result.LAST_ORDER_DATA.FAIL === 'undefined')
+			{
 				this.showActualBlock();
+			}
+			else if (!this.result.SHOW_AUTH)
+			{
+				this.changeVisibleContent();
+			}
 
 			this.checkNotifications();
 
@@ -1598,12 +1697,30 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		 */
 		clickOrderSaveAction: function(event)
 		{
-			this.reachGoal('order');
-
 			if (this.isValidForm())
-				this.sendRequest('saveOrderAjax');
+			{
+				this.allowOrderSave();
+
+				if (this.params.USER_CONSENT === 'Y' && BX.UserConsent)
+				{
+					BX.onCustomEvent('bx-soa-order-save', []);
+				}
+				else
+				{
+					this.doSaveAction();
+				}
+			}
 
 			return BX.PreventDefault(event);
+		},
+
+		doSaveAction: function()
+		{
+			if (this.isOrderSaveAllowed())
+			{
+				this.reachGoal('order');
+				this.sendRequest('saveOrderAjax');
+			}
 		},
 
 		/**
@@ -1651,7 +1768,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			this.fade(actionSection);
 			this.show(section.next);
-			this.animateScrollTo(section.next, 500);
+			this.animateScrollTo(section.next, 800);
 			return BX.PreventDefault(event);
 		},
 
@@ -1666,8 +1783,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			if (!showNode || BX.hasClass(showNode, 'bx-selected'))
 				return;
 
-			this.show(showNode);
 			fadeNode && this.fade(fadeNode);
+			this.show(showNode);
 		},
 
 		/**
@@ -1684,6 +1801,40 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		},
 
 		/**
+		 * Checks possibility to skip section
+		 */
+		shouldSkipSection: function(section)
+		{
+			var skip = false;
+
+			if (this.params.SKIP_USELESS_BLOCK === 'Y')
+			{
+				if (section.id === this.pickUpBlockNode.id)
+				{
+					var delivery = this.getSelectedDelivery();
+					if (delivery)
+					{
+						skip = this.getPickUpInfoArray(delivery.STORE).length === 1;
+					}
+				}
+
+				if (section.id === this.deliveryBlockNode.id)
+				{
+					skip = this.result.DELIVERY && this.result.DELIVERY.length === 1
+						&& this.result.DELIVERY[0].EXTRA_SERVICES.length === 0
+						&& !this.result.DELIVERY[0].CALCULATE_ERRORS;
+				}
+
+				if (section.id === this.paySystemBlockNode.id)
+				{
+					skip = this.result.PAY_SYSTEM && this.result.PAY_SYSTEM.length === 1 && this.result.PAY_FROM_ACCOUNT !== 'Y';
+				}
+			}
+
+			return skip;
+		},
+
+		/**
 		 * Returns next available block node (node skipped while have one pay system, delivery or pick up)
 		 */
 		getNextSection: function(actionSection, skippedSection)
@@ -1692,55 +1843,19 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				return {};
 
 			var allSections = this.orderBlockNode.querySelectorAll('.bx-soa-section.bx-active'),
-				nextSection, i, onePickUp, oneDelivery, onePaySystem, delivery, titleNode;
+				nextSection, i;
 
 			for (i = 0; i < allSections.length; i++)
 			{
-				if (allSections[i].id == actionSection.id && allSections[i + 1])
+				if (allSections[i].id === actionSection.id && allSections[i + 1])
 				{
 					nextSection = allSections[i + 1];
-					onePickUp = false;
-					oneDelivery = false;
-					onePaySystem = false;
 
-					if (this.params.SKIP_USELESS_BLOCK == 'Y')
+					if (this.shouldSkipSection(nextSection))
 					{
-						if (nextSection.id == this.pickUpBlockNode.id)
-						{
-							if (delivery = this.getSelectedDelivery())
-								onePickUp = this.getPickUpInfoArray(delivery.STORE).length == 1;
-						}
+						this.markSectionAsCompleted(nextSection);
 
-						if (nextSection.id == this.deliveryBlockNode.id)
-						{
-							oneDelivery = this.result.DELIVERY
-								&& this.result.DELIVERY.length == 1 && this.result.DELIVERY[0].EXTRA_SERVICES.length === 0
-								&& !this.result.DELIVERY[0].CALCULATE_ERRORS;
-						}
-
-						if (nextSection.id == this.paySystemBlockNode.id)
-						{
-							onePaySystem = this.result.PAY_SYSTEM
-								&& this.result.PAY_SYSTEM.length == 1
-								&& this.result.PAY_FROM_ACCOUNT != 'Y';
-						}
-
-						if (onePickUp || oneDelivery || onePaySystem)
-						{
-							if (
-								(!this.result.IS_AUTHORIZED || typeof this.result.LAST_ORDER_DATA.FAIL !== 'undefined')
-								&& nextSection.getAttribute('data-visited') == 'false'
-							)
-							{
-								this.changeVisibleSection(nextSection, true);
-								titleNode = nextSection.querySelector('.bx-soa-section-title-container');
-								BX.bind(titleNode, 'click', BX.proxy(this.showByClick, this));
-							}
-
-							nextSection.setAttribute('data-visited', 'true');
-							BX.addClass(nextSection, 'bx-step-completed');
-							return this.getNextSection(nextSection, nextSection);
-						}
+						return this.getNextSection(nextSection, nextSection);
 					}
 
 					return {
@@ -1750,6 +1865,28 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					};
 				}
 			}
+
+			return {next: actionSection};
+		},
+
+		markSectionAsCompleted: function(section)
+		{
+			var titleNode;
+
+			if (
+				(!this.result.IS_AUTHORIZED || typeof this.result.LAST_ORDER_DATA.FAIL !== 'undefined')
+				&& section.getAttribute('data-visited') === 'false'
+			)
+			{
+				this.changeVisibleSection(section, true);
+				titleNode = section.querySelector('.bx-soa-section-title-container');
+				BX.bind(titleNode, 'click', BX.proxy(this.showByClick, this));
+			}
+
+			section.setAttribute('data-visited', 'true');
+			BX.addClass(section, 'bx-step-completed');
+			BX.remove(section.querySelector('.alert.alert-warning.alert-hide'));
+			this.checkBlockErrors(section);
 		},
 
 		/**
@@ -1758,33 +1895,21 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		getPrevSection: function(actionSection)
 		{
 			if (!this.orderBlockNode || !actionSection)
-				return;
+				return {};
 
 			var allSections = this.orderBlockNode.querySelectorAll('.bx-soa-section.bx-active'),
-				prevSection, i, onePickUp, delivery;
+				prevSection, i;
 
 			for (i = 0; i < allSections.length; i++)
-				if (allSections[i].id == actionSection.id && allSections[i - 1])
+			{
+				if (allSections[i].id === actionSection.id && allSections[i - 1])
 				{
-					onePickUp = false;
 					prevSection = allSections[i - 1];
-					if (prevSection.id == this.pickUpBlockNode.id)
-					{
-						if (delivery = this.getSelectedDelivery())
-							onePickUp = this.getPickUpInfoArray(delivery.STORE).length == 1;
-					}
 
-					if (
-						(prevSection.id == this.deliveryBlockNode.id
-							&& this.result.DELIVERY.length == 1 && this.result.DELIVERY[0].EXTRA_SERVICES.length === 0
-							&& !this.result.DELIVERY[0].CALCULATE_ERRORS)
-						|| (prevSection.id == this.paySystemBlockNode.id && this.result.PAY_SYSTEM.length == 1
-							&& this.result.PAY_FROM_ACCOUNT != 'Y')
-						|| (prevSection.id == this.pickUpBlockNode.id && onePickUp)
-					)
+					if (this.shouldSkipSection(prevSection))
 					{
-						prevSection.setAttribute('data-visited', 'true');
-						BX.addClass(prevSection, 'bx-step-completed');
+						this.markSectionAsCompleted(prevSection);
+
 						return this.getPrevSection(prevSection);
 					}
 
@@ -1793,6 +1918,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						next: prevSection
 					};
 				}
+			}
+
+			return {next: actionSection};
 		},
 
 		addAnimationEffect: function(node, className, timeout)
@@ -1810,7 +1938,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			this.timeOut[node.id] = {
 				className: className,
 				timer: setTimeout(
-					BX.proxy(function(){
+					BX.delegate(function(){
 						BX.removeClass(node, className);
 						delete this.timeOut[node.id];
 					}, this),
@@ -1823,7 +1951,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		 */
 		fade: function(node, nextSection)
 		{
-			if (!node || !node.id)
+			if (!node || !node.id || this.activeSectionId != node.id)
 				return;
 
 			this.hasErrorSection[node.id] = false;
@@ -1902,7 +2030,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			new BX.easing({
-				duration: nextSection ? 1000 : 600,
+				duration: nextSection ? 800 : 600,
 				start: {height: objHeightOrig, scrollTop: windowScrollTop},
 				finish: {height: objHeight, scrollTop: scrollTo},
 				transition: BX.easing.makeEaseOut(BX.easing.transitions.quad),
@@ -1958,7 +2086,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			if (node.getAttribute('data-visited') === 'false')
+			{
 				this.showBlockErrors(node);
+				this.notifyAboutWarnings(node);
+			}
 
 			node.setAttribute('data-visited', 'true');
 			BX.addClass(node, 'bx-selected');
@@ -1977,10 +2108,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			this.reachGoal('edit', showNode);
 
-			this.show(showNode);
 			fadeNode && this.fade(fadeNode);
+			this.show(showNode);
 
-			setTimeout(BX.proxy(function(){
+			setTimeout(BX.delegate(function(){
 				if (BX.pos(showNode).top < scrollTop)
 					this.animateScrollTo(showNode, 300);
 			}, this), 320);
@@ -1998,15 +2129,20 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			while (allSections[i])
 			{
-				if (allSections[i].id == this.regionBlockNode.id)
+				if (allSections[i].id === this.regionBlockNode.id)
 					this.isValidRegionBlock();
 
-				if (allSections[i].id == this.propsBlockNode.id)
+				if (allSections[i].id === this.propsBlockNode.id)
 					this.isValidPropertiesBlock();
 
 				if (!this.checkBlockErrors(allSections[i]) || !this.checkPreload(allSections[i]))
 				{
-					this.show(allSections[i]);
+					if (this.activeSectionId !== allSections[i].id)
+					{
+						BX(this.activeSectionId) && this.fade(BX(this.activeSectionId));
+						this.show(allSections[i]);
+					}
+
 					break;
 				}
 
@@ -2033,10 +2169,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				buttons.push(
 					BX.create('A', {
 						props: {
-							href: '',
+							href: 'javascript:void(0)',
 							className: 'pull-left btn btn-default btn-md'
 						},
-						text: this.params.MESS_BACK,
+						html: this.params.MESS_BACK,
 						events: {
 							click: BX.proxy(this.clickPrevAction, this)
 						}
@@ -2051,8 +2187,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				buttons.push(
 					BX.create('A', {
-						props: {href: '', className: 'pull-right btn btn-default btn-md'},
-						text: this.params.MESS_FURTHER,
+						props: {href: 'javascript:void(0)', className: 'pull-right btn btn-default btn-md'},
+						html: this.params.MESS_FURTHER,
 						events: {click: BX.proxy(this.clickNextAction, this)}
 					})
 				);
@@ -2170,26 +2306,45 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		 */
 		changeVisibleContent: function()
 		{
-			var sections = this.orderBlockNode.querySelectorAll('.bx-soa-section[data-visited]'),
+			var sections = this.orderBlockNode.querySelectorAll('.bx-soa-section.bx-active'),
 				i, state;
 
-			var isAuthorized = !!this.result.IS_AUTHORIZED,
-				orderDataLoaded = this.result.LAST_ORDER_DATA.FAIL !== true;
+			var orderDataLoaded = !!this.result.IS_AUTHORIZED && this.params.USE_PRELOAD === 'Y' && this.result.LAST_ORDER_DATA.FAIL !== true,
+				skipFlag = true;
 
 			for (i = 0; i < sections.length; i++)
 			{
-				state = false;
-
-				if (this.firstLoad)
-					state = isAuthorized && orderDataLoaded && this.params.USE_PRELOAD === 'Y'
-
+				state = this.firstLoad && orderDataLoaded;
 				state = state || this.shouldBeSectionVisible(sections, i);
+
 				this.changeVisibleSection(sections[i], state);
+
+				if (this.firstLoad && skipFlag)
+				{
+					if (
+						state
+						&& sections[i + 1]
+						&& this.checkBlockErrors(sections[i])
+						&& (
+							(orderDataLoaded && this.checkPreload(sections[i]))
+							|| (!orderDataLoaded && this.shouldSkipSection(sections[i]))
+						)
+					)
+					{
+						this.fade(sections[i]);
+						this.markSectionAsCompleted(sections[i]);
+						this.show(sections[i + 1]);
+					}
+					else
+					{
+						skipFlag = false;
+					}
+				}
 			}
 
 			if (
 				(!this.result.IS_AUTHORIZED || typeof this.result.LAST_ORDER_DATA.FAIL !== 'undefined')
-				&& this.params.SHOW_ORDER_BUTTON == 'final_step'
+				&& this.params.SHOW_ORDER_BUTTON === 'final_step'
 			)
 			{
 				this.switchOrderSaveButtons(this.shouldBeSectionVisible(sections, sections.length - 1));
@@ -2242,14 +2397,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			var sections = this.orderBlockNode.querySelectorAll('.bx-soa-section.bx-active'), i;
 			for (i in sections)
+			{
 				if (sections.hasOwnProperty(i))
+				{
 					this.editSection(sections[i]);
+				}
+			}
 
 			this.editTotalBlock();
 			this.totalBlockFixFont();
-
-			if (!this.result.SHOW_AUTH)
-				this.changeVisibleContent();
 
 			this.showErrors(this.result.ERROR, false);
 			this.showWarnings();
@@ -2275,7 +2431,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			BX.unbindAll(titleNode);
 			if (this.result.SHOW_AUTH)
 			{
-				BX.bind(titleNode, 'click', BX.proxy(function(){
+				BX.bind(titleNode, 'click', BX.delegate(function(){
 					this.animateScrollTo(this.authBlockNode);
 					this.addAnimationEffect(this.authBlockNode, 'bx-step-good');
 				}, this));
@@ -2438,7 +2594,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							value: BX.message('STOF_ENTER')
 						},
 						events: {
-							click: BX.proxy(function(e){
+							click: BX.delegate(function(e){
 								BX('do_authorize').value = 'Y';
 								this.sendRequest('showAuthForm');
 								return BX.PreventDefault(e);
@@ -2557,7 +2713,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							BX.message('STOF_MY_PASSWORD')
 						],
 						events: {
-							change: BX.proxy(function(){
+							change: BX.delegate(function(){
 								var generated = this.authBlockNode.querySelector('.generated');
 								generated.style.display = '';
 								this.authGenerateUser = false;
@@ -2582,7 +2738,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							BX.message('STOF_SYS_PASSWORD')
 						],
 						events: {
-							change: BX.proxy(function(){
+							change: BX.delegate(function(){
 								var generated = this.authBlockNode.querySelector('.generated');
 								generated.style.display = 'none';
 								this.authGenerateUser = true;
@@ -2711,7 +2867,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 								value: BX.message('STOF_REGISTER')
 							},
 							events: {
-								click: BX.proxy(function(e){
+								click: BX.delegate(function(e){
 									BX('do_register').value = 'Y';
 									this.sendRequest('showAuthForm');
 									return BX.PreventDefault(e);
@@ -2722,7 +2878,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							props: {className: 'btn btn-link', href: ''},
 							text: BX.message('STOF_DO_AUTHORIZE'),
 							events: {
-								click: BX.proxy(function(e){
+								click: BX.delegate(function(e){
 									this.toggleAuthForm(e);
 									return BX.PreventDefault(e);
 								}, this)
@@ -2750,32 +2906,38 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (socServiceHiddenNode)
 			{
+				if (this.socServiceHiddenNode === false)
+				{
+					this.socServiceHiddenNode = socServiceHiddenNode.innerHTML;
+					BX.remove(socServiceHiddenNode);
+				}
+
 				nodes.push(BX.create('DIV', {
-						props: {className: 'bx-authform-social'},
-						children: [
-							BX.create('H3', {props: {className: 'bx-title'}, text: BX.message('SOA_DO_SOC_SERV')}),
-							socServiceHiddenNode.cloneNode(true)
-						]
-					})
-				);
+					props: {className: 'bx-authform-social'},
+					html: '<h3 class="bx-title">' + BX.message('SOA_DO_SOC_SERV') + '</h3>' + this.socServiceHiddenNode,
+				}));
 				nodes.push(BX.create('hr', {props: {className: 'bxe-light'}}));
 			}
-			nodes.push(BX.create('DIV', {
-				props: {className: 'bx-soa-reg-block'},
-				children: [
-					BX.create('P', {text: this.params.MESS_REGISTRATION_REFERENCE}),
-					BX.create('A', {
-						props: {className: 'btn btn-default btn-lg'},
-						text: BX.message('STOF_DO_REGISTER'),
-						events: {
-							click: BX.proxy(function(e){
-								this.toggleAuthForm(e);
-								return BX.PreventDefault(e);
-							}, this)
-						}
-					})
-				]
-			}));
+
+			if (this.result.AUTH.new_user_registration === 'Y')
+			{
+				nodes.push(BX.create('DIV', {
+					props: {className: 'bx-soa-reg-block'},
+					children: [
+						BX.create('P', {html: this.params.MESS_REGISTRATION_REFERENCE}),
+						BX.create('A', {
+							props: {className: 'btn btn-default btn-lg'},
+							text: BX.message('STOF_DO_REGISTER'),
+							events: {
+								click: BX.delegate(function(e){
+									this.toggleAuthForm(e);
+									return BX.PreventDefault(e);
+								}, this)
+							}
+						})
+					]
+				}));
+			}
 
 			authContent.appendChild(BX.create('DIV', {props: {className: 'col-md-6'}, children: nodes}));
 		},
@@ -2789,11 +2951,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						BX.create('DIV', {
 							props: {className: 'bx-soa-reference col-xs-12'},
 							children: [
-								BX.util.htmlspecialchars(this.params.MESS_AUTH_REFERENCE_1),
+								this.params.MESS_AUTH_REFERENCE_1,
 								BX.create('BR'),
-								BX.util.htmlspecialchars(this.params.MESS_AUTH_REFERENCE_2),
+								this.params.MESS_AUTH_REFERENCE_2,
 								BX.create('BR'),
-								BX.util.htmlspecialchars(this.params.MESS_AUTH_REFERENCE_3)
+								this.params.MESS_AUTH_REFERENCE_3
 							]
 						})
 					]
@@ -2829,7 +2991,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					children: [
 						BX.create('h2', {
 							props: {className: 'bx-soa-section-title col-xs-7 col-sm-9'},
-							text: BX.hasClass(insertContainer, 'reg') ? this.params.MESS_REG_BLOCK_NAME : this.params.MESS_AUTH_BLOCK_NAME
+							html: BX.hasClass(insertContainer, 'reg') ? this.params.MESS_REG_BLOCK_NAME : this.params.MESS_AUTH_BLOCK_NAME
 						})
 					]
 				})
@@ -2942,7 +3104,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					node.appendChild(basketContent);
 				}
 				else
+				{
 					BX.cleanNode(basketContent);
+				}
 
 				this.editBasketItems(basketTable, true);
 
@@ -2958,8 +3122,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					})
 				);
 
-				if (this.params.SHOW_COUPONS_BASKET == 'Y')
+				if (this.params.SHOW_COUPONS_BASKET === 'Y')
+				{
 					this.editCoupons(basketContent);
+				}
 
 				this.getBlockFooter(basketContent);
 
@@ -3002,8 +3168,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					})
 				);
 
-				if (this.params.SHOW_COUPONS_BASKET == 'Y')
+				if (this.params.SHOW_COUPONS_BASKET === 'Y')
+				{
 					this.editCouponsFade(newContent);
+				}
 
 				node.appendChild(newContent);
 				this.alignBasketColumns();
@@ -3026,12 +3194,18 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			var index = 0, i;
 
-			if (this.params.SHOW_BASKET_HEADERS == 'Y')
+			if (this.params.SHOW_BASKET_HEADERS === 'Y')
+			{
 				this.editBasketItemsHeader(basketItemsNode);
+			}
 
 			for (i in this.result.GRID.ROWS)
+			{
 				if (this.result.GRID.ROWS.hasOwnProperty(i))
+				{
 					this.createBasketItem(basketItemsNode, this.result.GRID.ROWS[i], index++, !!active);
+				}
+			}
 		},
 
 		editBasketItemsHeader: function(basketItemsNode)
@@ -3057,7 +3231,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				column = this.result.GRID.HEADERS[i];
 
-				if (column.id == 'NAME' || column.id == 'PREVIEW_PICTURE' || column.id == 'PROPS' || column.id == 'NOTES')
+				if (column.id === 'NAME' || column.id === 'PREVIEW_PICTURE' || column.id === 'PROPS' || column.id === 'NOTES')
+					continue;
+
+				if (column.id === 'DETAIL_PICTURE' && !this.options.showPreviewPicInBasket)
 					continue;
 
 				toRight = BX.util.in_array(column.id, ["QUANTITY", "PRICE_FORMATED", "DISCOUNT_PRICE_PERCENT_FORMATED", "SUM"]);
@@ -3107,7 +3284,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				currentColumn = this.result.GRID.HEADERS[i];
 
-				if (currentColumn.id == 'NAME' || currentColumn.id == 'PREVIEW_PICTURE' || currentColumn.id == 'PROPS' || currentColumn.id == 'NOTES')
+				if (currentColumn.id === 'NAME' || currentColumn.id === 'PREVIEW_PICTURE' || currentColumn.id === 'PROPS' || currentColumn.id === 'NOTES')
+					continue;
+
+				if (currentColumn.id === 'DETAIL_PICTURE' && !this.options.showPreviewPicInBasket)
 					continue;
 
 				otherColumns.push(this.createBasketItemColumn(currentColumn, item, active));
@@ -3148,7 +3328,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			basketItemsNode.appendChild(
 				BX.create('DIV', {
 					props: {className: 'bx-soa-item-tr bx-soa-basket-info' + (index == 0 ? ' bx-soa-item-tr-first' : '')},
-					children: cols})
+					children: cols
+				})
 			);
 
 			if (hiddenColumns.length)
@@ -3162,7 +3343,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 								children: [
 									BX.create('A', {
 										props: {href: '', className: 'bx-soa-info-shower'},
-										text: this.params.MESS_ADDITIONAL_PROPS,
+										html: this.params.MESS_ADDITIONAL_PROPS,
 										events: {
 											click: BX.proxy(this.showAdditionalProperties, this)
 										}
@@ -3265,11 +3446,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				logoNode.setAttribute('style', 'background-image: url(' + logotype + ');');
 			}
 
-			if (data.DETAIL_PAGE_URL && data.DETAIL_PAGE_URL.length)
+			if (this.params.HIDE_DETAIL_PAGE_URL !== 'Y' && data.DETAIL_PAGE_URL && data.DETAIL_PAGE_URL.length)
+			{
 				logoNode = BX.create('A', {
 					props: {href: data.DETAIL_PAGE_URL},
 					children: [logoNode]
 				});
+			}
 
 			return BX.create('DIV', {
 				props: {className: 'bx-soa-item-img-block'},
@@ -3284,8 +3467,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				props = data.PROPS || [],
 				propsNodes = [];
 
-			if (data.DETAIL_PAGE_URL && data.DETAIL_PAGE_URL.length)
+			if (this.params.HIDE_DETAIL_PAGE_URL !== 'Y' && data.DETAIL_PAGE_URL && data.DETAIL_PAGE_URL.length)
+			{
 				titleHtml = '<a href="' + data.DETAIL_PAGE_URL + '">' + titleHtml + '</a>';
+			}
 
 			if (this.options.showPropsInBasket && props.length)
 			{
@@ -3333,10 +3518,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			var data = allData.columns[column.id] ? allData.columns : allData.data,
 				toRight = BX.util.in_array(column.id, ["QUANTITY", "PRICE_FORMATED", "DISCOUNT_PRICE_PERCENT_FORMATED", "SUM"]),
 				textNode = BX.create('DIV', {props: {className: 'bx-soa-item-td-text'}}),
-				logotype = this.getImageSources(allData.data, 'DETAIL_PICTURE'),
-				img;
+				logotype, img;
 
-			if (column.id == 'PRICE_FORMATED')
+			if (column.id === 'PRICE_FORMATED')
 			{
 				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price'}, html: data.PRICE_FORMATED}));
 				if (parseFloat(data.DISCOUNT_PRICE) > 0)
@@ -3354,7 +3538,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					textNode.appendChild(BX.create('SMALL', {text: data.NOTES}));
 				}
 			}
-			else if (column.id == 'SUM')
+			else if (column.id === 'SUM')
 			{
 				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price all'}, html: data.SUM}));
 				if (parseFloat(data.DISCOUNT_PRICE) > 0)
@@ -3366,21 +3550,37 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					}));
 				}
 			}
-			else if (column.id == 'DISCOUNT')
-				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price'}, text: data.DISCOUNT_PRICE_PERCENT_FORMATED}));
-			else if (column.id == 'DETAIL_PICTURE' && this.options.showPreviewPicInBasket)
+			else if (column.id === 'DISCOUNT')
 			{
+				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price'}, text: data.DISCOUNT_PRICE_PERCENT_FORMATED}));
+			}
+			else if (column.id === 'DETAIL_PICTURE')
+			{
+				logotype = this.getImageSources(allData.data, column.id),
 				img = BX.create('IMG', {props: {src: logotype && logotype.src_1x || this.defaultBasketItemLogo}});
 
 				if (logotype && logotype.src_1x && logotype.src_orig)
-					BX.bind(img, 'click', BX.delegate(function(e){
-						this.popupShow(e, logotype.src_orig);
-					}, this));
+				{
+					BX.bind(img, 'click', BX.delegate(function(e){this.popupShow(e, logotype.src_orig);}, this));
+				}
 
 				textNode.appendChild(img);
 			}
 			else if (BX.util.in_array(column.id, ["QUANTITY", "WEIGHT_FORMATED", "DISCOUNT_PRICE_PERCENT_FORMATED"]))
+			{
 				textNode.appendChild(BX.create('SPAN', {html: data[column.id]}));
+			}
+			else if (column.id === 'PREVIEW_TEXT')
+			{
+				if (data['PREVIEW_TEXT_TYPE'] === 'html')
+				{
+					textNode.appendChild(BX.create('SPAN', {html: data['PREVIEW_TEXT'] || ''}));
+				}
+				else
+				{
+					textNode.appendChild(BX.create('SPAN', {text: data['PREVIEW_TEXT'] || ''}));
+				}
+			}
 			else
 			{
 				var columnData = data[column.id], val = [];
@@ -3416,7 +3616,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					}
 				}
 				else if (columnData)
+				{
 					textNode.appendChild(BX.create('SPAN', {html: BX.util.htmlspecialchars(columnData)}));
+				}
 			}
 
 			return BX.create('DIV', {
@@ -3438,10 +3640,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			var data = allData.columns[column.id] ? allData.columns : allData.data,
 				textNode = BX.create('TD', {props: {className: 'bx-soa-info-text'}}),
-				logotype = this.getImageSources(allData.data, 'DETAIL_PICTURE'),
-				img, i;
+				logotype, img, i;
 
-			if (column.id == 'PROPS')
+			if (column.id === 'PROPS')
 			{
 				var propsNodes = [], props = allData.data.PROPS;
 				if (props && props.length)
@@ -3472,7 +3673,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				}
 				else return;
 			}
-			else if (column.id == 'PRICE_FORMATED')
+			else if (column.id === 'PRICE_FORMATED')
 			{
 				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price'}, html: data.PRICE_FORMATED}));
 				if (parseFloat(data.DISCOUNT_PRICE) > 0)
@@ -3484,23 +3685,37 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					}));
 				}
 			}
-			else if (column.id == 'SUM')
+			else if (column.id === 'SUM')
 				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price all'}, text: data.SUM}));
-			else if (column.id == 'DISCOUNT')
+			else if (column.id === 'DISCOUNT')
 				textNode.appendChild(BX.create('STRONG', {props: {className: 'bx-price'}, text: data.DISCOUNT_PRICE_PERCENT_FORMATED}));
-			else if (column.id == 'DETAIL_PICTURE' || column.id == 'PREVIEW_PICTURE')
+			else if (column.id === 'DETAIL_PICTURE' || column.id === 'PREVIEW_PICTURE')
 			{
+				logotype = this.getImageSources(allData.data, column.id),
 				img = BX.create('IMG', {props: {src: logotype && logotype.src_1x || this.defaultBasketItemLogo}, style: {maxWidth: '50%'}});
 
 				if (logotype && logotype.src_1x && logotype.src_orig)
-					BX.bind(img, 'click', BX.delegate(function(e){
-						this.popupShow(e, logotype.src_orig);
-					}, this));
+				{
+					BX.bind(img, 'click', BX.delegate(function(e){this.popupShow(e, logotype.src_orig);}, this));
+				}
 
 				textNode.appendChild(img);
 			}
 			else if (BX.util.in_array(column.id, ["QUANTITY", "WEIGHT_FORMATED", "DISCOUNT_PRICE_PERCENT_FORMATED"]))
+			{
 				textNode.appendChild(BX.create('SPAN', {html: data[column.id]}));
+			}
+			else if (column.id === 'PREVIEW_TEXT')
+			{
+				if (data['PREVIEW_TEXT_TYPE'] === 'html')
+				{
+					textNode.appendChild(BX.create('SPAN', {html: data['PREVIEW_TEXT'] || ''}));
+				}
+				else
+				{
+					textNode.appendChild(BX.create('SPAN', {text: data['PREVIEW_TEXT'] || ''}));
+				}
+			}
 			else
 			{
 				var columnData = data[column.id], val = [];
@@ -3538,8 +3753,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 				}
 				else if (columnData)
+				{
 					textNode.appendChild(BX.create('SPAN', {html: BX.util.htmlspecialchars(columnData)}));
-				else return;
+				}
+				else
+				{
+					return;
+				}
 			}
 
 			return BX.create('TR', {
@@ -3656,15 +3876,17 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							children: [
 								BX.create('INPUT', {
 									props: {
-										id: 'coupon',
 										className: 'form-control bx-ios-fix',
 										type: 'text'
 									},
 									events: {
-										change: BX.proxy(function(){
-											var newCoupon = BX('coupon');
+										change: BX.delegate(function(event){
+											var newCoupon = BX.getEventTarget(event);
 											if (newCoupon && newCoupon.value)
+											{
 												this.sendRequest('enterCoupon', newCoupon.value);
+												newCoupon.value = '';
+											}
 										}, this)
 									}
 								})
@@ -3765,11 +3987,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					BX.create('SPAN', {
 						props: {className: 'bx-soa-coupon-remove'},
 						events: {
-							click: BX.proxy(function(e){
+							click: BX.delegate(function(e){
 								var target = e.target || e.srcElement,
 									coupon = BX.findParent(target, {tagName: 'STRONG'});
+
 								if (coupon && coupon.getAttribute('data-coupon'))
+								{
 									this.sendRequest('removeCoupon', coupon.getAttribute('data-coupon'))
+								}
 							}, this)
 						}
 					}),
@@ -3791,30 +4016,35 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			return BX.create('DIV', {
 				props: {className: 'bx-soa-coupon-label'},
 				children: active
-						? [BX.create('LABEL', {attr: {'for': 'coupon'}, text: this.params.MESS_USE_COUPON + ':'})]
-						: [BX.util.htmlspecialchars(this.params.MESS_COUPON) + ':']
+					? [BX.create('LABEL', {html: this.params.MESS_USE_COUPON + ':'})]
+					: [this.params.MESS_COUPON + ':']
 			});
 		},
 
 		addCoupon: function(coupon)
 		{
-			var couponListNodes = this.orderBlockNode.querySelectorAll('.bx-soa-coupon:not(.bx-soa-coupon-item-fixed) .bx-soa-coupon-item'),
-				couponInput = BX('coupon'), i;
+			var couponListNodes = this.orderBlockNode.querySelectorAll('.bx-soa-coupon:not(.bx-soa-coupon-item-fixed) .bx-soa-coupon-item');
 
-			for (i = 0; i < couponListNodes.length; i++)
+			for (var i = 0; i < couponListNodes.length; i++)
+			{
+				if (couponListNodes[i].querySelector('[data-coupon="' + BX.util.htmlspecialchars(coupon) + '"]'))
+					break;
+
 				couponListNodes[i].appendChild(this.getCouponNode({text: coupon}, true, 'bx-soa-coupon-item-danger'));
-
-			if (couponInput)
-				couponInput.value = '';
+			}
 		},
 
 		removeCoupon: function(coupon)
 		{
-			var couponNodes = this.orderBlockNode.querySelectorAll('[data-coupon="' + coupon + '"]'), i;
+			var couponNodes = this.orderBlockNode.querySelectorAll('[data-coupon="' + BX.util.htmlspecialchars(coupon) + '"]'), i;
 
 			for (i in couponNodes)
+			{
 				if (couponNodes.hasOwnProperty(i))
+				{
 					BX.remove(couponNodes[i]);
+				}
+			}
 		},
 
 		editRegionBlock: function(active)
@@ -3923,8 +4153,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			if (errorNode)
 				node.appendChild(errorNode.cloneNode(true));
 
-			if (selectedPersonType && selectedPersonType.NAME && BX.util.object_keys(this.result.PERSON_TYPE).length > 1)
-				addedHtml += '<strong>' + BX.util.htmlspecialchars(this.params.MESS_PERSON_TYPE) + ':</strong> ' + selectedPersonType.NAME + '<br />';
+			if (selectedPersonType && selectedPersonType.NAME && this.result.PERSON_TYPE.length > 1)
+			{
+				addedHtml += '<strong>' + this.params.MESS_PERSON_TYPE + ':</strong> '
+					+ BX.util.htmlspecialchars(selectedPersonType.NAME) + '<br>';
+			}
 
 			if (selectedPersonType)
 			{
@@ -3960,10 +4193,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			locationString = this.getLocationString(this.regionHiddenBlockNode);
 			if (locationProperty && locationString.length)
-				addedHtml += '<strong>' + BX.util.htmlspecialchars(locationProperty.NAME) + ':</strong> ' + locationString + '<br />';
+				addedHtml += '<strong>' + BX.util.htmlspecialchars(locationProperty.NAME) + ':</strong> '
+					+ BX.util.htmlspecialchars(locationString) + '<br>';
 
 			if (zipProperty && zipValue.length)
-				addedHtml += '<strong>' + BX.util.htmlspecialchars(zipProperty.NAME) + ':</strong> ' + zipValue;
+				addedHtml += '<strong>' + BX.util.htmlspecialchars(zipProperty.NAME) + ':</strong> '
+					+ BX.util.htmlspecialchars(zipValue);
 
 			node.innerHTML += addedHtml;
 
@@ -3987,7 +4222,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		getSelectedPersonType: function()
 		{
 			var personTypeInput, currentPersonType, personTypeId, i,
-				personTypeLength = BX.util.object_keys(this.result.PERSON_TYPE).length;
+				personTypeLength = this.result.PERSON_TYPE.length;
 
 			if (personTypeLength == 1)
 			{
@@ -4050,7 +4285,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				this.regionBlockNotEmpty = true;
 
-				labelHtml = '<label class="bx-soa-custom-label" for="soa-property-' + locationId + '">'
+				labelHtml = '<label class="bx-soa-custom-label" for="soa-property-' + parseInt(locationId) + '">'
 					+ (currentProperty.REQUIRED == 'Y' ? '<span class="bx-authform-starrequired">*</span> ' : '')
 					+ BX.util.htmlspecialchars(currentProperty.NAME)
 					+ (currentProperty.DESCRIPTION.length ? ' <small>(' + BX.util.htmlspecialchars(currentProperty.DESCRIPTION) + ')</small>' : '')
@@ -4131,7 +4366,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				node.appendChild(
 					BX.create('DIV', {
 						props: {className: 'bx-soa-reference'},
-						text: this.params.MESS_REGION_REFERENCE
+						html: this.params.MESS_REGION_REFERENCE
 					})
 				);
 			}
@@ -4221,9 +4456,34 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				propsItemNode.appendChild(label);
 				propsItemNode.appendChild(input);
 				node.appendChild(propsItemNode);
+				node.appendChild(
+					BX.create('input', {
+						props: {
+							id: 'ZIP_PROPERTY_CHANGED',
+							name: 'ZIP_PROPERTY_CHANGED',
+							type: 'hidden',
+							value: this.result.ZIP_PROPERTY_CHANGED || 'N'
+						}
+					})
+				);
 
 				this.bindValidation(zipProperty.ID, propsItemNode);
 			}
+		},
+
+		getPersonTypeSortedArray: function(objPersonType)
+		{
+			var personTypes = [], k;
+
+			for (k in objPersonType)
+			{
+				if (objPersonType.hasOwnProperty(k))
+				{
+					personTypes.push(objPersonType[k]);
+				}
+			}
+
+			return personTypes.sort(function(a, b){return parseInt(a.SORT) - parseInt(b.SORT)});
 		},
 
 		getPersonTypeControl: function(node)
@@ -4231,7 +4491,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			if (!this.result.PERSON_TYPE)
 				return;
 
-			var personTypesCount = BX.util.object_keys(this.result.PERSON_TYPE).length,
+			this.result.PERSON_TYPE = this.getPersonTypeSortedArray(this.result.PERSON_TYPE);
+
+			var personTypesCount = this.result.PERSON_TYPE.length,
 				currentType, oldPersonTypeId, i,
 				input, options = [], label, delimiter = false;
 
@@ -4240,7 +4502,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				input = BX.create('DIV', {
 					props: {className: 'form-group'},
 					children: [
-						BX.create('LABEL', {props: {className: 'bx-soa-custom-label'}, text: this.params.MESS_PERSON_TYPE}),
+						BX.create('LABEL', {props: {className: 'bx-soa-custom-label'}, html: this.params.MESS_PERSON_TYPE}),
 						BX.create('BR')
 					]
 				});
@@ -4289,7 +4551,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 									attrs: {checked: currentType.CHECKED == 'Y'},
 									props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID}
 								}),
-								currentType.NAME
+								BX.util.htmlspecialchars(currentType.NAME)
 							],
 							events: {change: BX.proxy(this.sendRequest, this)}
 						});
@@ -4337,72 +4599,76 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (profilesLength)
 			{
-				if (this.params.ALLOW_USER_PROFILES == 'Y')
+				if (
+					this.params.ALLOW_USER_PROFILES === 'Y'
+					&& (profilesLength > 1 || this.params.ALLOW_NEW_PROFILE === 'Y')
+				)
 				{
 					this.regionBlockNotEmpty = true;
 
-					if (profilesLength > 1 || this.params.ALLOW_NEW_PROFILE == 'Y')
+					label = BX.create('LABEL', {props: {className: 'bx-soa-custom-label'}, html: this.params.MESS_SELECT_PROFILE});
+
+					for (i in this.result.USER_PROFILES)
 					{
-						label = BX.create('LABEL', {props: {className: 'bx-soa-custom-label'}, text: this.params.MESS_SELECT_PROFILE});
-
-						for (i in this.result.USER_PROFILES)
+						if (this.result.USER_PROFILES.hasOwnProperty(i))
 						{
-							if (this.result.USER_PROFILES.hasOwnProperty(i))
-							{
-								options.unshift(
-									BX.create('OPTION', {
-										props: {
-											value: this.result.USER_PROFILES[i].ID,
-											selected: this.result.USER_PROFILES[i].CHECKED == 'Y'
-										},
-										html: this.result.USER_PROFILES[i].NAME
-									})
-								);
-							}
+							options.unshift(
+								BX.create('OPTION', {
+									props: {
+										value: this.result.USER_PROFILES[i].ID,
+										selected: this.result.USER_PROFILES[i].CHECKED === 'Y'
+									},
+									html: this.result.USER_PROFILES[i].NAME
+								})
+							);
 						}
-
-						if (this.params.ALLOW_NEW_PROFILE == 'Y')
-							options.unshift(BX.create('OPTION', {props: {value: 0}, text: BX.message('SOA_PROP_NEW_PROFILE')}));
-
-						profileChangeInput = BX.create('INPUT', {
-							props: {
-								type: 'hidden',
-								value: 'N',
-								id: 'profile_change',
-								name: 'profile_change'
-							}
-						});
-						input = BX.create('SELECT', {
-							props: {className: 'form-control', name: 'PROFILE_ID'},
-							children: options,
-							events:{
-								change: BX.proxy(function(){
-									BX('profile_change').value = 'Y';
-									this.sendRequest();
-								}, this)
-							}
-						});
-
-						node.appendChild(
-							BX.create('DIV', {
-								props: {className: "form-group bx-soa-location-input-container"},
-								children: [label, profileChangeInput, input]
-							})
-						);
 					}
+
+					if (this.params.ALLOW_NEW_PROFILE === 'Y')
+					{
+						options.unshift(BX.create('OPTION', {props: {value: 0}, text: BX.message('SOA_PROP_NEW_PROFILE')}));
+					}
+
+					profileChangeInput = BX.create('INPUT', {
+						props: {
+							type: 'hidden',
+							value: 'N',
+							id: 'profile_change',
+							name: 'profile_change'
+						}
+					});
+					input = BX.create('SELECT', {
+						props: {className: 'form-control', name: 'PROFILE_ID'},
+						children: options,
+						events:{
+							change: BX.delegate(function(){
+								BX('profile_change').value = 'Y';
+								this.sendRequest();
+							}, this)
+						}
+					});
+
+					node.appendChild(
+						BX.create('DIV', {
+							props: {className: 'form-group bx-soa-location-input-container'},
+							children: [label, profileChangeInput, input]
+						})
+					);
 				}
 				else
 				{
 					for (i in this.result.USER_PROFILES)
 					{
-						if (this.result.USER_PROFILES.hasOwnProperty(i)
-							&& this.result.USER_PROFILES[i].CHECKED == 'Y')
+						if (
+							this.result.USER_PROFILES.hasOwnProperty(i)
+							&& this.result.USER_PROFILES[i].CHECKED === 'Y'
+						)
 						{
 							node.appendChild(
 								BX.create('INPUT', {
 									props: {
 										name: 'PROFILE_ID',
-										type: "hidden",
+										type: 'hidden',
 										value: this.result.USER_PROFILES[i].ID}
 								})
 							);
@@ -4541,10 +4807,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			});
 
 			if (this.params.SHOW_PAY_SYSTEM_LIST_NAMES == 'Y')
-				title = BX.create('DIV', {props: {className: 'bx-soa-pp-company-smalltitle'}, html: item.PSA_NAME});
+			{
+				title = BX.create('DIV', {props: {className: 'bx-soa-pp-company-smalltitle'}, text: item.NAME});
+			}
 
 			itemNode = BX.create('DIV', {
-				props: {className: 'bx-soa-pp-company col-lg-3 col-sm-4 col-xs-6'},
+				props: {className: 'bx-soa-pp-company col-lg-4 col-sm-4 col-xs-6'},
 				children: [label, title],
 				events: {
 					click: BX.proxy(this.selectPaySystem, this)
@@ -4594,7 +4862,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				}
 
 				if (this.params.SHOW_PAY_SYSTEM_INFO_NAME == 'Y')
-					subTitle = BX.create('DIV', {props: {className: 'bx-soa-pp-company-subTitle'}, html: currentPaySystem.PSA_NAME});
+				{
+					subTitle = BX.create('DIV', {
+						props: {className: 'bx-soa-pp-company-subTitle'},
+						text: currentPaySystem.NAME
+					});
+				}
 
 				label = BX.create('DIV', {
 					props: {className: 'bx-soa-pp-company-logo'},
@@ -4618,7 +4891,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						children: [
 							BX.create('LI', {
 								children: [
-									BX.create('DIV', {props: {className: 'bx-soa-pp-list-termin'}, text: this.params.MESS_PRICE + ':'}),
+									BX.create('DIV', {props: {className: 'bx-soa-pp-list-termin'}, html: this.params.MESS_PRICE + ':'}),
 									BX.create('DIV', {props: {className: 'bx-soa-pp-list-description'}, text: '~' + currentPaySystem.PRICE_FORMATTED})
 								]
 							})
@@ -4714,8 +4987,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				}
 			});
 
-			htmlString = BX.util.htmlspecialchars(this.params.MESS_INNER_PS_BALANCE) + ' <b class="wsnw">' + this.result.CURRENT_BUDGET_FORMATED
-				+ '</b><br />' + (accountOnly ? BX.message('SOA_PAY_ACCOUNT3') : '');
+			htmlString = this.params.MESS_INNER_PS_BALANCE + ' <b class="wsnw">' + this.result.CURRENT_BUDGET_FORMATED
+				+ '</b><br>' + (accountOnly ? BX.message('SOA_PAY_ACCOUNT3') : '');
 			innerPsDesc = BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: htmlString});
 
 			return BX.create('DIV', {
@@ -4746,18 +5019,18 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 				addedHtml += '<div class="bx-soa-pp-company-selected">';
 				addedHtml += '<img src="' + imgSrc + '" style="height:18px;" alt="">';
-				addedHtml += '<strong>' + this.result.INNER_PAY_SYSTEM.NAME + '</strong><br />';
+				addedHtml += '<strong>' + this.result.INNER_PAY_SYSTEM.NAME + '</strong><br>';
 				addedHtml += '</div>';
 			}
 
-			if (selectedPaySystem && selectedPaySystem.PSA_NAME)
+			if (selectedPaySystem && selectedPaySystem.NAME)
 			{
 				logotype = this.getImageSources(selectedPaySystem, 'PSA_LOGOTIP');
 				imgSrc = logotype && logotype.src_1x || this.defaultPaySystemLogo;
 
 				addedHtml += '<div class="bx-soa-pp-company-selected">';
 				addedHtml += '<img src="' + imgSrc + '" style="height:18px;" alt="">';
-				addedHtml += '<strong>' + selectedPaySystem.PSA_NAME + '</strong>';
+				addedHtml += '<strong>' + BX.util.htmlspecialchars(selectedPaySystem.NAME) + '</strong>';
 				addedHtml += '</div>';
 			}
 
@@ -4984,7 +5257,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			});
 			title = BX.create('DIV', {
 				props: {className: 'bx-soa-pp-company-block'},
-				children: [BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: currentDelivery.DESCRIPTION})]
+				children: [
+					BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: currentDelivery.DESCRIPTION}),
+					currentDelivery.CALCULATE_DESCRIPTION
+						? BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: currentDelivery.CALCULATE_DESCRIPTION})
+						: null
+				]
 			});
 
 			if (currentDelivery.PRICE >= 0)
@@ -4993,7 +5271,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					children: [
 						BX.create('DIV', {
 							props: {className: 'bx-soa-pp-list-termin'},
-							text: this.params.MESS_PRICE + ':'
+							html: this.params.MESS_PRICE + ':'
 						}),
 						BX.create('DIV', {
 							props: {className: 'bx-soa-pp-list-description'},
@@ -5007,7 +5285,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				period = BX.create('LI', {
 					children: [
-						BX.create('DIV', {props: {className: 'bx-soa-pp-list-termin'}, text: this.params.MESS_PERIOD + ':'}),
+						BX.create('DIV', {props: {className: 'bx-soa-pp-list-termin'}, html: this.params.MESS_PERIOD + ':'}),
 						BX.create('DIV', {props: {className: 'bx-soa-pp-list-description'}, html: currentDelivery.PERIOD_TEXT})
 					]
 				});
@@ -5089,7 +5367,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					serviceNode = BX.create('DIV', {
 						props: {className: 'form-group bx-soa-pp-field'},
 						html: currentService.editControl
-						+ (currentService.description.length
+						+ (currentService.description && currentService.description.length
 							? '<div class="bx-soa-service-small">' + BX.util.htmlspecialchars(currentService.description) + '</div>'
 							: '')
 					});
@@ -5110,7 +5388,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 							BX.create('LABEL', {
 								html: currentService.editControl + BX.util.htmlspecialchars(currentService.name)
 								+ (currentService.price ? ' (' + currentService.priceFormatted + ')' : '')
-								+ (currentService.description.length
+								+ (currentService.description && currentService.description.length
 									? '<div class="bx-soa-service-small">' + BX.util.htmlspecialchars(currentService.description) + '</div>'
 									: '')
 							})
@@ -5221,7 +5499,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			itemNode = BX.create('DIV', {
-				props: {className: 'bx-soa-pp-company col-lg-3 col-sm-4 col-xs-6'},
+				props: {className: 'bx-soa-pp-company col-lg-4 col-sm-4 col-xs-6'},
 				children: [label, title],
 				events: {click: BX.proxy(this.selectDelivery, this)}
 			});
@@ -5363,7 +5641,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			this.pickUpBlockNode.style.display = '';
 			this.pickUpBlockNode.querySelector('h2.bx-soa-section-title').innerHTML =
-				'<span class="bx-soa-section-title-count"></span>' + deliveryName;
+				'<span class="bx-soa-section-title-count"></span>' + BX.util.htmlspecialchars(deliveryName);
 
 			if (BX.hasClass(this.pickUpBlockNode, 'bx-active'))
 				return;
@@ -5402,45 +5680,30 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		editActivePickUpBlock: function(activeNodeMode)
 		{
 			var node = activeNodeMode ? this.pickUpBlockNode : this.pickUpHiddenBlockNode,
-				pickUpContent, pickUpContentCol, pickUpContentRow;
+				pickUpContent, pickUpContentCol;
 
 			if (this.initialized.pickup)
 			{
 				BX.remove(BX.lastChild(node));
 				node.appendChild(BX.firstChild(this.pickUpHiddenBlockNode));
 
-				if (this.params.SHOW_NEAREST_PICKUP == 'Y' && !this.maxWaitTimeExpired)
+				if (
+					this.params.SHOW_NEAREST_PICKUP === 'Y'
+					&& this.maps
+					&& !this.maps.maxWaitTimeExpired
+				)
 				{
-					this.maxWaitTimeExpired = true;
+					this.maps.maxWaitTimeExpired = true;
 					this.initPickUpPagination();
 					this.editPickUpList(true);
 					this.pickUpFinalAction();
 				}
 
-				setTimeout(BX.proxy(function(){
-					var bounds, diff0, diff1;
-
-					if (this.pickUpMap && this.pickUpMap.geoObjects)
-					{
-						bounds = this.pickUpMap.geoObjects.getBounds();
-						if (bounds && bounds.length)
-						{
-							diff0 = bounds[1][0] - bounds[0][0];
-							diff1 = bounds[1][1] - bounds[0][1];
-
-							bounds[0][0] -= diff0/10;
-							bounds[0][1] -= diff1/10;
-							bounds[1][0] += diff0/10;
-							bounds[1][1] += diff1/10;
-
-							if (!this.pickUpMapInitialized)
-							{
-								this.pickUpMap.setBounds(bounds, {checkZoomRange: true});
-								this.pickUpMapInitialized = true;
-							}
-						}
-					}
-				}, this), 200);
+				if (this.maps && !this.pickUpMapFocused)
+				{
+					this.pickUpMapFocused = true;
+					setTimeout(BX.proxy(this.maps.pickUpMapFocusWaiter, this.maps), 200);
+				}
 			}
 			else
 			{
@@ -5453,12 +5716,17 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				BX.cleanNode(pickUpContent);
 
 				pickUpContentCol = BX.create('DIV', {props: {className: 'col-xs-12'}});
-				pickUpContentRow = BX.create('DIV', {props: {className: 'bx_soa_pickup row'}, children: [pickUpContentCol]});
-
 				this.editPickUpMap(pickUpContentCol);
-				pickUpContent.appendChild(pickUpContentRow);
+				this.editPickUpLoader(pickUpContentCol);
 
-				if (this.params.SHOW_NEAREST_PICKUP != 'Y')
+				pickUpContent.appendChild(
+					BX.create('DIV', {
+						props: {className: 'bx_soa_pickup row'},
+						children: [pickUpContentCol]
+					})
+				);
+
+				if (this.params.SHOW_PICKUP_MAP != 'Y' || this.params.SHOW_NEAREST_PICKUP != 'Y')
 				{
 					this.initPickUpPagination();
 					this.editPickUpList(true);
@@ -5505,16 +5773,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 				html += '<strong>' + BX.util.htmlspecialchars(selectedPickUp.TITLE) + '</strong>';
 				if (selectedPickUp.ADDRESS)
-					html += '<br /><strong>' + BX.message('SOA_PICKUP_ADDRESS') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.ADDRESS);
+					html += '<br><strong>' + BX.message('SOA_PICKUP_ADDRESS') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.ADDRESS);
 
 				if (selectedPickUp.PHONE)
-					html += '<br /><strong>' + BX.message('SOA_PICKUP_PHONE') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.PHONE);
+					html += '<br><strong>' + BX.message('SOA_PICKUP_PHONE') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.PHONE);
 
 				if (selectedPickUp.SCHEDULE)
-					html += '<br /><strong>' + BX.message('SOA_PICKUP_WORK') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.SCHEDULE);
+					html += '<br><strong>' + BX.message('SOA_PICKUP_WORK') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.SCHEDULE);
 
 				if (selectedPickUp.DESCRIPTION)
-					html += '<br /><strong>' + BX.message('SOA_PICKUP_DESC') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.DESCRIPTION);
+					html += '<br><strong>' + BX.message('SOA_PICKUP_DESC') + ':</strong> ' + BX.util.htmlspecialchars(selectedPickUp.DESCRIPTION);
 
 				pickUpContainer.innerHTML = html;
 
@@ -5592,22 +5860,33 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				this.editSection(this.pickUpBlockNode);
 			}
 			else
+			{
 				this.deactivatePickUp();
+			}
 		},
 
-		geoLocationSuccessCallback: function(result, currentDelivery)
+		geoLocationSuccessCallback: function(result)
 		{
-			var activeStores;
-
-			result.geoObjects.options.set('preset', 'islands#darkGreenCircleDotIcon');
-			this.pickUpMap.geoObjects.add(result.geoObjects);
+			var activeStores,
+				currentDelivery = this.getSelectedDelivery();
 
 			if (currentDelivery && currentDelivery.STORE)
+			{
 				activeStores = this.getPickUpInfoArray(currentDelivery.STORE);
+			}
 
-			if (activeStores.length >= this.options.pickUpMap.minToShowNearestBlock)
+			if (activeStores && activeStores.length >= this.options.pickUpMap.minToShowNearestBlock)
+			{
 				this.editPickUpRecommendList(result.geoObjects.get(0));
+			}
 
+			this.initPickUpPagination();
+			this.editPickUpList(true);
+			this.pickUpFinalAction();
+		},
+
+		geoLocationFailCallback: function()
+		{
 			this.initPickUpPagination();
 			this.editPickUpList(true);
 			this.pickUpFinalAction();
@@ -5615,159 +5894,75 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 		initMaps: function()
 		{
-			this.mapsReady = true;
-
-			var that = this,
-				currentDelivery = this.getSelectedDelivery(),
-				pickUpInput = BX('BUYER_STORE'),
-				pickUpDefaults, geoLocation, provider, maxTime,
-				i, storeInfoHtml, geoObj, propertyDefaults, activeStores;
-
-			this.resizeMapContainers();
-
-			if (currentDelivery && currentDelivery.STORE && currentDelivery.STORE.length)
-				activeStores = this.getPickUpInfoArray(currentDelivery.STORE);
-
-			if (activeStores && activeStores.length)
+			this.maps = BX.Sale.OrderAjaxComponent.Maps.init(this);
+			if (this.maps)
 			{
-				pickUpDefaults = this.options.pickUpMap.defaultMapPosition;
-				this.pickUpMap = new ymaps.Map("pickUpMap", {
-					center: [pickUpDefaults.lat, pickUpDefaults.lon],
-					zoom: pickUpDefaults.zoom
-				});
-				this.pickUpMap.behaviors.disable('scrollZoom');
-				this.pickUpMap.events.add('click', BX.proxy(function(){
-					if (this.pickUpMap.balloon.isOpen())
-						this.pickUpMap.balloon.close();
-				}, this));
+				this.mapsReady = true;
+				this.resizeMapContainers();
 
-				if (this.params.SHOW_NEAREST_PICKUP == 'Y')
+				if (this.params.SHOW_PICKUP_MAP === 'Y' && BX('pickUpMap'))
 				{
-					geoLocation = ymaps.geolocation;
-					provider = this.options.pickUpMap.secureGeoLocation && BX.browser.IsChrome() && !this.isHttps ? 'yandex' : 'auto';
-					maxTime = this.options.pickUpMap.geoLocationMaxTime || 5000;
-
-					geoLocation.get({
-						provider: provider,
-						timeOut: maxTime
-					}).then(BX.proxy(function(result) {
-						if (!this.maxWaitTimeExpired)
-						{
-							this.maxWaitTimeExpired = true;
-							this.geoLocationSuccessCallback(result, currentDelivery);
-						}
-					}, this), BX.proxy(function() {
-						if (!this.maxWaitTimeExpired)
-						{
-							this.maxWaitTimeExpired = true;
-							this.initPickUpPagination();
-							this.editPickUpList(true);
-							this.pickUpFinalAction();
-						}
-					}, this));
-				}
-
-				this.pickUpPointsJSON = [];
-				for (i = 0; i < activeStores.length; i++)
-				{
-					storeInfoHtml = this.getStoreInfoHtml(activeStores[i]);
-
-					this.pickUpPointsJSON.push({
-						type: 'Feature',
-						geometry: {type: 'Point', coordinates: [activeStores[i].GPS_N, activeStores[i].GPS_S]},
-						properties: {storeId: activeStores[i].ID}
-					});
-
-					geoObj = new ymaps.Placemark([activeStores[i].GPS_N, activeStores[i].GPS_S], {
-						hintContent: BX.util.htmlspecialchars(activeStores[i].TITLE) + '<br />' + BX.util.htmlspecialchars(activeStores[i].ADDRESS),
-						storeTitle: activeStores[i].TITLE,
-						storeBody: storeInfoHtml,
-						id: activeStores[i].ID,
-						text: this.params.MESS_SELECT_PICKUP
-					}, {
-						balloonContentLayout: ymaps.templateLayoutFactory.createClass(
-							'<h3>{{ properties.storeTitle }}</h3>' +
-							'{{ properties.storeBody|raw }}' +
-							'<br /><a class="btn btn-sm btn-default" data-store="{{ properties.id }}">{{ properties.text }}</a>',
-							{
-								build: function() {
-									this.constructor.superclass.build.call(this);
-
-									var button = document.querySelector('a[data-store]');
-									if (button)
-										BX.bind(button, 'click', this.selectStoreByClick);
-								},
-								clear: function() {
-									var button = document.querySelector('a[data-store]');
-									if (button)
-										BX.unbind(button, 'click', this.selectStoreByClick);
-
-									this.constructor.superclass.clear.call(this);
-								},
-								selectStoreByClick: function(e) {
-									var target = e.target || e.srcElement;
-
-									if (BX.Sale.OrderAjaxComponent.pickUpMap.container.isFullscreen())
-										BX.Sale.OrderAjaxComponent.pickUpMap.container.exitFullscreen();
-
-									that.selectStore(target.getAttribute('data-store'));
-									that.clickNextAction(e);
-									that.pickUpMap.balloon.close();
-								}
-							}
-						)
-					});
-
-					if (pickUpInput.value == activeStores[i].ID)
-						geoObj.options.set('preset', 'islands#redDotIcon');
-
-					this.pickUpMap.geoObjects.add(geoObj);
-				}
-			}
-
-			if (this.params.SHOW_MAP_IN_PROPS == 'Y' && BX('propsMap'))
-			{
-				propertyDefaults = this.options.propertyMap.defaultMapPosition;
-				this.propsMap = new ymaps.Map("propsMap", {
-					center: [propertyDefaults.lat, propertyDefaults.lon],
-					zoom: propertyDefaults.zoom
-				});
-				this.propsMap.behaviors.disable('scrollZoom');
-
-				this.propsMap.events.add('click', BX.proxy(function(e){
-					var coordinates = e.get('coords'), placeMark;
-
-					if (this.propsMap.geoObjects.getLength() == 0)
+					var currentDelivery = this.getSelectedDelivery();
+					if (currentDelivery && currentDelivery.STORE && currentDelivery.STORE.length)
 					{
-						placeMark = new ymaps.Placemark([coordinates[0], coordinates[1]], {}, {
-							draggable:true,
-							preset: 'islands#redDotIcon'
-						});
-						placeMark.events.add(['parentchange', 'geometrychange'], function() {
-							var orderDesc = BX('orderDescription'),
-								coordinates = placeMark.geometry.getCoordinates(),
-								ind, before, after, string;
-
-							if (orderDesc)
-							{
-								ind = orderDesc.value.indexOf(BX.message('SOA_MAP_COORDS') + ':');
-								if (ind == -1)
-									orderDesc.value = BX.message('SOA_MAP_COORDS') + ': ' + coordinates[0] + ', ' + coordinates[1] + '\r\n' + orderDesc.value;
-								else
-								{
-									string = BX.message('SOA_MAP_COORDS') + ': ' + coordinates[0] + ', ' + coordinates[1];
-									before = orderDesc.value.substring(0, ind);
-									after = orderDesc.value.substring(ind + string.length);
-									orderDesc.value = before + string + after;
-								}
-							}
-						});
-						this.propsMap.geoObjects.add(placeMark);
+						var activeStores = this.getPickUpInfoArray(currentDelivery.STORE);
 					}
-					else
-						this.propsMap.geoObjects.get(0).geometry.setCoordinates([coordinates[0], coordinates[1]]);
-				}, this));
+
+					if (activeStores && activeStores.length)
+					{
+						var selected = this.getSelectedPickUp();
+						this.maps.initializePickUpMap(selected);
+
+						if (this.params.SHOW_NEAREST_PICKUP === 'Y')
+						{
+							this.maps.showNearestPickups(BX.proxy(this.geoLocationSuccessCallback, this), BX.proxy(this.geoLocationFailCallback, this));
+						}
+
+						this.maps.buildBalloons(activeStores);
+					}
+				}
+
+				if (this.params.SHOW_MAP_IN_PROPS === 'Y' && BX('propsMap'))
+				{
+					var propsMapData = this.getPropertyMapData();
+					this.maps.initializePropsMap(propsMapData);
+				}
 			}
+		},
+
+		getPropertyMapData: function()
+		{
+			var currentProperty, locationId, k;
+			var data = this.options.propertyMap.defaultMapPosition;
+
+			for (k in this.result.ORDER_PROP.properties)
+			{
+				if (this.result.ORDER_PROP.properties.hasOwnProperty(k))
+				{
+					currentProperty = this.result.ORDER_PROP.properties[k];
+					if (currentProperty.IS_LOCATION == 'Y')
+					{
+						locationId = currentProperty.ID;
+						break;
+					}
+				}
+			}
+
+			if (this.locations[locationId] && this.locations[locationId][0] && this.locations[locationId][0].coordinates)
+			{
+				currentProperty = this.locations[locationId][0].coordinates;
+
+				var long = parseFloat(currentProperty.LONGITUDE),
+					lat = parseFloat(currentProperty.LATITUDE);
+
+				if (!isNaN(long) && !isNaN(lat) && long != 0 && lat != 0)
+				{
+					data.lon = long;
+					data.lat = lat;
+				}
+			}
+
+			return data;
 		},
 
 		resizeMapContainers: function()
@@ -5782,11 +5977,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				width = resizeBy.clientWidth;
 				height = parseInt(width / 16 * 9);
 
-				if (pickUpMapContainer)
+				if (this.params.SHOW_PICKUP_MAP === 'Y' && pickUpMapContainer)
+				{
 					pickUpMapContainer.style.height = height + 'px';
+				}
 
-				if (propertyMapContainer)
+				if (this.params.SHOW_MAP_IN_PROPS === 'Y' && propertyMapContainer)
+				{
 					propertyMapContainer.style.height = height + 'px';
+				}
 			}
 		},
 
@@ -5798,10 +5997,22 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}));
 		},
 
+		editPickUpLoader: function(pickUpContent)
+		{
+			pickUpContent.appendChild(
+				BX.create('DIV', {
+					props: {id: 'pickUpLoader', className: 'text-center'},
+					children: [BX.create('IMG', {props: {src: this.templateFolder + '/images/loader.gif'}})]
+				})
+			);
+		},
+
 		editPickUpList: function(isNew)
 		{
 			if (!this.pickUpPagination.currentPage || !this.pickUpPagination.currentPage.length)
 				return;
+
+			BX.remove(BX('pickUpLoader'));
 
 			var pickUpList = BX.create('DIV', {props: {className: 'bx-soa-pickup-list main'}}),
 				buyerStoreInput = BX('BUYER_STORE'),
@@ -5852,7 +6063,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				container.appendChild(
 					BX.create('DIV', {
 						props: {className: 'bx-soa-pickup-subTitle'},
-						text: this.params.MESS_PICKUP_LIST
+						html: this.params.MESS_PICKUP_LIST
 					})
 				);
 				container.appendChild(pickUpList);
@@ -5870,7 +6081,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		pickUpFinalAction: function()
 		{
 			var selectedDelivery = this.getSelectedDelivery(),
-				deliveryChanged, buyerStoreInput = BX('BUYER_STORE');
+				deliveryChanged;
 
 			if (selectedDelivery)
 			{
@@ -5879,20 +6090,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			if (deliveryChanged && this.pickUpBlockNode.id !== this.activeSectionId)
-				this.editFadePickUpContent(BX.lastChild(this.pickUpBlockNode));
-
-			if (deliveryChanged)
-				BX.removeClass(this.pickUpBlockNode, 'bx-step-completed');
-
-			if (this.pickUpMap && this.pickUpMap.geoObjects)
 			{
-				this.pickUpMap.geoObjects.each(function(geoObject){
-					if (geoObject.properties.get('id') == buyerStoreInput.value)
-						geoObject.options.set({preset: 'islands#redDotIcon'});
-					else if (parseInt(geoObject.properties.get('id')) > 0)
-						geoObject.options.unset('preset');
-				});
+				if (this.pickUpBlockNode.id !== this.activeSectionId)
+				{
+					this.editFadePickUpContent(BX.lastChild(this.pickUpBlockNode));
+				}
+
+				BX.removeClass(this.pickUpBlockNode, 'bx-step-completed');
 			}
+
+			this.maps && this.maps.pickUpFinalAction();
 		},
 
 		getStoreInfoHtml: function(currentStore)
@@ -5900,16 +6107,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			var html = '';
 
 			if (currentStore.ADDRESS)
-				html += BX.message('SOA_PICKUP_ADDRESS') + ': ' + BX.util.htmlspecialchars(currentStore.ADDRESS) + '<br />';
+				html += BX.message('SOA_PICKUP_ADDRESS') + ': ' + BX.util.htmlspecialchars(currentStore.ADDRESS) + '<br>';
 
 			if (currentStore.PHONE)
-				html += BX.message('SOA_PICKUP_PHONE') + ': ' + BX.util.htmlspecialchars(currentStore.PHONE) + '<br />';
+				html += BX.message('SOA_PICKUP_PHONE') + ': ' + BX.util.htmlspecialchars(currentStore.PHONE) + '<br>';
 
 			if (currentStore.SCHEDULE)
-				html += BX.message('SOA_PICKUP_WORK') + ': ' + BX.util.htmlspecialchars(currentStore.SCHEDULE) + '<br />';
+				html += BX.message('SOA_PICKUP_WORK') + ': ' + BX.util.htmlspecialchars(currentStore.SCHEDULE) + '<br>';
 
 			if (currentStore.DESCRIPTION)
-				html += BX.message('SOA_PICKUP_DESC') + ': ' + BX.util.htmlspecialchars(currentStore.DESCRIPTION) + '<br />';
+				html += BX.message('SOA_PICKUP_DESC') + ': ' + BX.util.htmlspecialchars(currentStore.DESCRIPTION) + '<br>';
 
 			return html;
 		},
@@ -5922,7 +6129,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				buttonClassName = 'bx-soa-pickup-l-item-btn',
 				logoNode, logotype, html, storeNode, imgSrc;
 
-			if (this.params.SHOW_STORES_IMAGES == 'Y')
+			if (this.params.SHOW_STORES_IMAGES === 'Y')
 			{
 				logotype = this.getImageSources(currentStore, 'IMAGE_ID');
 				imgSrc = logotype && logotype.src_1x || this.defaultStoreLogo;
@@ -5968,9 +6175,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						children: [
 							BX.create('A', {
 								props: {href: '', className: 'btn btn-sm btn-default'},
-								text: this.params.MESS_SELECT_PICKUP,
+								html: this.params.MESS_SELECT_PICKUP,
 								events: {
-									click: BX.proxy(function(event){
+									click: BX.delegate(function(event){
 										this.selectStore(event);
 										this.clickNextAction(event)
 									}, this)
@@ -5992,49 +6199,53 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 		editPickUpRecommendList: function(geoLocation)
 		{
-			if (!this.pickUpPointsJSON || !this.pickUpPointsJSON.length || !geoLocation)
+			if (!this.maps || !this.maps.canUseRecommendList() || !geoLocation)
+			{
 				return;
+			}
+
+			BX.remove(BX('pickUpLoader'));
 
 			var recommendList = BX.create('DIV', {props: {className: 'bx-soa-pickup-list recommend'}}),
 				buyerStoreInput = BX('BUYER_STORE'),
-				selectedDelivery = this.getSelectedDelivery(),
-				length = this.pickUpPointsJSON.length < this.options.pickUpMap.nearestPickUpsToShow ? this.pickUpPointsJSON.length : this.options.pickUpMap.nearestPickUpsToShow,
-				i, pointsGeoQuery, res, storeId, currentStore,
-				distance, storeNode, container;
+				selectedDelivery = this.getSelectedDelivery();
 
-			for (i = 0; i < length; i++)
+			var i, currentStore, currentStoreId, distance, storeNode, container;
+
+			var recommendedStoreIds = this.maps.getRecommendedStoreIds(geoLocation);
+			for (i = 0; i < recommendedStoreIds.length; i++)
 			{
-				pointsGeoQuery = ymaps.geoQuery({
-					type: 'FeatureCollection',
-					features: this.pickUpPointsJSON
-				});
-				res = pointsGeoQuery.getClosestTo(geoLocation);
-				storeId = res.properties.get('storeId');
-				currentStore = this.getPickUpInfoArray([storeId])[0];
+				currentStoreId = recommendedStoreIds[i];
+				currentStore = this.getPickUpInfoArray([currentStoreId])[0];
 
-				if (i == 0 && parseInt(selectedDelivery.ID) !== this.lastSelectedDelivery)
-					buyerStoreInput.value = parseInt(currentStore.ID);
+				if (i === 0 && parseInt(selectedDelivery.ID) !== this.lastSelectedDelivery)
+				{
+					buyerStoreInput.value = parseInt(currentStoreId);
+				}
 
-				distance = ymaps.coordSystem.geo.getDistance(geoLocation.geometry.getCoordinates(), res.geometry.getCoordinates());
-				distance = Math.round(distance / 100) / 10;
+				distance = this.maps.getDistance(geoLocation, currentStoreId);
 				storeNode = this.createPickUpItem(currentStore, {
-					selected: buyerStoreInput.value == currentStore.ID,
+					selected: buyerStoreInput.value === currentStoreId,
 					distance: distance
 				});
 				recommendList.appendChild(storeNode);
 
-				selectedDelivery.STORE_MAIN.splice(selectedDelivery.STORE_MAIN.indexOf(storeId), 1);
-				this.pickUpPointsJSON.splice(pointsGeoQuery.indexOf(res), 1);
+				if (selectedDelivery.STORE_MAIN)
+				{
+					selectedDelivery.STORE_MAIN.splice(selectedDelivery.STORE_MAIN.indexOf(currentStoreId), 1);
+				}
 			}
 
 			container = this.pickUpHiddenBlockNode.querySelector('.bx_soa_pickup>.col-xs-12');
 			if (!container)
+			{
 				container = this.pickUpBlockNode.querySelector('.bx_soa_pickup>.col-xs-12');
+			}
 
 			container.appendChild(
 				BX.create('DIV', {
 					props: {className: 'bx-soa-pickup-subTitle'},
-					text: this.params.MESS_NEAREST_PICKUP_LIST
+					html: this.params.MESS_NEAREST_PICKUP_LIST
 				})
 			);
 			container.appendChild(recommendList);
@@ -6105,42 +6316,48 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				}).animate();
 
 				storeInput.setAttribute('value', storeItemId);
-
-				if (this.pickUpMap && this.pickUpMap.geoObjects)
-				{
-					this.pickUpMap.geoObjects.each(BX.proxy(function(placeMark){
-						if (placeMark.properties.get('id'))
-							placeMark.options.unset('preset');
-
-						if (placeMark.properties.get('id') == storeItemId)
-						{
-							placeMark.options.set({preset: 'islands#redDotIcon'});
-							this.pickUpMap.panTo([placeMark.geometry.getCoordinates()])
-						}
-					}, this));
-				}
+				this.maps && this.maps.selectBalloon(storeItemId);
 			}
 		},
 
 		getDeliverySortedArray: function(objDelivery)
 		{
-			var arDelivery = [], k;
+			var deliveries = [],
+				problemDeliveries = [],
+				sortFunc = function(a, b){
+					var sort = parseInt(a.SORT) - parseInt(b.SORT);
+					if (sort === 0)
+					{
+						return a.OWN_NAME.toLowerCase() > b.OWN_NAME.toLowerCase()
+							? 1
+							: (a.OWN_NAME.toLowerCase() < b.OWN_NAME.toLowerCase() ? -1 : 0);
+					}
+					else
+					{
+						return sort;
+					}
+				},
+				k;
 
 			for (k in objDelivery)
 			{
 				if (objDelivery.hasOwnProperty(k))
-					arDelivery.push(objDelivery[k]);
+				{
+					if (this.params.SHOW_NOT_CALCULATED_DELIVERIES === 'L' && objDelivery[k].CALCULATE_ERRORS)
+					{
+						problemDeliveries.push(objDelivery[k]);
+					}
+					else
+					{
+						deliveries.push(objDelivery[k]);
+					}
+				}
 			}
 
-			arDelivery.sort(function(a, b) {
-				var sort = parseInt(a.SORT) - parseInt(b.SORT);
-				if (sort === 0)
-					return a.OWN_NAME.toLowerCase() > b.OWN_NAME.toLowerCase() ? 1 : (a.OWN_NAME.toLowerCase() < b.OWN_NAME.toLowerCase() ? -1 : 0);
-				else
-					return sort;
-			});
+			deliveries.sort(sortFunc);
+			problemDeliveries.sort(sortFunc);
 
-			return arDelivery;
+			return deliveries.concat(problemDeliveries);
 		},
 
 		editPropsBlock: function(active)
@@ -6165,6 +6382,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				BX.remove(BX.lastChild(node));
 				node.appendChild(BX.firstChild(this.propsHiddenBlockNode));
+				this.maps && setTimeout(BX.proxy(this.maps.propsMapFocusWaiter, this.maps), 200);
 			}
 			else
 			{
@@ -6182,11 +6400,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				propsNode = BX.create('DIV', {props: {className: 'row'}});
 				selectedDelivery = this.getSelectedDelivery();
 
-				if (selectedDelivery && this.params.SHOW_MAP_IN_PROPS == 'Y' && this.params.SHOW_MAP_FOR_DELIVERIES && this.params.SHOW_MAP_FOR_DELIVERIES.length)
+				if (
+					selectedDelivery && this.params.SHOW_MAP_IN_PROPS === 'Y'
+					&& this.params.SHOW_MAP_FOR_DELIVERIES && this.params.SHOW_MAP_FOR_DELIVERIES.length
+				)
 				{
 					for (i = 0; i < this.params.SHOW_MAP_FOR_DELIVERIES.length; i++)
 					{
-						if (parseInt(selectedDelivery.ID) == parseInt(this.params.SHOW_MAP_FOR_DELIVERIES[i]))
+						if (parseInt(selectedDelivery.ID) === parseInt(this.params.SHOW_MAP_FOR_DELIVERIES[i]))
 						{
 							showPropMap = true;
 							break;
@@ -6196,11 +6417,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 				this.editPropsItems(propsNode);
 				showPropMap && this.editPropsMap(propsNode);
-				this.editPropsComment(propsNode);
+
+				if (this.params.HIDE_ORDER_DESCRIPTION !== 'Y')
+				{
+					this.editPropsComment(propsNode);
+				}
+
 				propsContent.appendChild(propsNode);
 				this.getBlockFooter(propsContent);
 
-				if (this.propsBlockNode.getAttribute('data-visited') == 'true')
+				if (this.propsBlockNode.getAttribute('data-visited') === 'true')
 				{
 					validationErrors = this.isValidPropertiesBlock(true);
 					if (validationErrors.length)
@@ -6252,7 +6478,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				props = this.params[fadeParamName];
 			}
 
-			if (!props || props.length == 0)
+			if (!props || props.length === 0)
 			{
 				node.innerHTML += '<strong>' + BX.message('SOA_ORDER_PROPS') + '</strong>';
 			}
@@ -6271,7 +6497,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				}
 			}
 
-			if (this.propsBlockNode.getAttribute('data-visited') == 'true')
+			if (this.propsBlockNode.getAttribute('data-visited') === 'true')
 			{
 				validPropsErrors = this.isValidPropertiesBlock();
 				if (validPropsErrors.length)
@@ -6298,9 +6524,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				propsIterator =  group.getIterator();
 				while (property = propsIterator())
 				{
-					if (this.deliveryLocationInfo.loc == property.getId()
+					if (
+						this.deliveryLocationInfo.loc == property.getId()
 						|| this.deliveryLocationInfo.zip == property.getId()
-						|| this.deliveryLocationInfo.city == property.getId())
+						|| this.deliveryLocationInfo.city == property.getId()
+					)
 						continue;
 
 					this.getPropertyRowNode(property, propsItemsContainer, false);
@@ -6384,10 +6612,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						for (i = 0; i < propNodes.length; i++)
 						{
 							locationString = this.getLocationString(propNodes[i]);
-							values.push(locationString.length ? locationString : BX.message('SOA_NOT_SELECTED'));
+							values.push(locationString.length ? BX.util.htmlspecialchars(locationString) : BX.message('SOA_NOT_SELECTED'));
 						}
 					}
-					propsItemNode.innerHTML += values.join('<br />');
+					propsItemNode.innerHTML += values.join('<br>');
 				}
 				else
 				{
@@ -6515,6 +6743,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					this.alterDateProperty(property.getSettings(), inputText[i]);
 
 				this.alterProperty(property.getSettings(), propContainer);
+				this.bindValidation(property.getId(), propContainer);
 			}
 		},
 
@@ -6697,7 +6926,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 		{
 			var str = values.join(', ');
 
-			return str.length ? str : BX.message('SOA_NOT_SELECTED');
+			return str.length ? BX.util.htmlspecialchars(str) : BX.message('SOA_NOT_SELECTED');
 		},
 
 		alterProperty: function(settings, propContainer)
@@ -6706,8 +6935,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				i, textNode, inputs, del, add,
 				fileInputs, accepts, fileTitles;
 
-			for (i = 0; i < divs.length; i++)
-				divs[i].style.margin = '5px 0';
+			if (divs && divs.length)
+			{
+				for (i = 0; i < divs.length; i++)
+				{
+					divs[i].style.margin = '5px 0';
+				}
+			}
 
 			textNode = propContainer.querySelector('input[type=text]');
 			if (!textNode)
@@ -6727,10 +6961,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 				if (settings.PATTERN && settings.PATTERN.length)
 				{
-					if (settings.MULTIPLE == 'Y' || settings.PATTERN.lastIndexOf(settings.PATTERN[0]) - 1 === -1)
-						textNode.removeAttribute('pattern');
-					else
-						textNode.setAttribute('pattern', settings.PATTERN.substr(1, settings.PATTERN.lastIndexOf(settings.PATTERN[0]) - 1));
+					textNode.removeAttribute('pattern');
 				}
 			}
 
@@ -6758,7 +6989,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (settings.TYPE == 'FILE')
 			{
-				if (settings.ACCEPT.length)
+				if (settings.ACCEPT && settings.ACCEPT.length)
 				{
 					fileInputs = propContainer.querySelectorAll('input[type=file]');
 					accepts = this.getFileAccepts(settings.ACCEPT);
@@ -6797,7 +7028,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			if (add.length)
 			{
 				add = add[add.length - 1];
-				BX.bind(add, 'click', BX.proxy(function(e){
+				BX.bind(add, 'click', BX.delegate(function(e){
 					var target = e.target || e.srcElement,
 						targetContainer = BX.findParent(target, {tagName: 'div', className: 'soa-property-container'}),
 						del = targetContainer.querySelector('label'),
@@ -6808,8 +7039,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 					var i, fileTitles, fileInputs, accepts;
 
-					for (i = 0; i < divs.length; i++)
-						divs[i].style.margin = '5px 0';
+					if (divs && divs.length)
+					{
+						for (i = 0; i < divs.length; i++)
+						{
+							divs[i].style.margin = '5px 0';
+						}
+					}
 
 					this.bindValidation(settings.ID, targetContainer);
 
@@ -6840,7 +7076,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 					if (settings.TYPE == 'FILE')
 					{
-						if (settings.ACCEPT.length)
+						if (settings.ACCEPT && settings.ACCEPT.length)
 						{
 							fileInputs = propContainer.querySelectorAll('input[type=file]');
 							accepts = this.getFileAccepts(settings.ACCEPT);
@@ -6997,7 +7233,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				inputErrors = data.func(data.inputs[i], !!fieldName);
 				if (inputErrors.length)
-					propErrors[i] = inputErrors.join('<br />');
+					propErrors[i] = inputErrors.join('<br>');
 			}
 
 			this.showValidationResult(data.inputs, propErrors);
@@ -7019,12 +7255,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				for (i = 0; i < data.inputs.length; i++)
 				{
 					if (BX.type.isElementNode(data.inputs[i]))
-						BX.bind(data.inputs[i], data.action, BX.proxy(function(){
+						BX.bind(data.inputs[i], data.action, BX.delegate(function(){
 							this.isValidProperty(data);
 						}, this));
 					else
 						for (k = 0; k < data.inputs[i].length; k++)
-							BX.bind(data.inputs[i][k], data.action, BX.proxy(function(){
+							BX.bind(data.inputs[i][k], data.action, BX.delegate(function(){
 								this.isValidProperty(data);
 							}, this));
 				}
@@ -7042,7 +7278,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			{
 				case 'STRING':
 					data.action = 'change';
-					data.func = BX.proxy(function(input, fieldName){
+					data.func = BX.delegate(function(input, fieldName){
 						return this.validateString(input, arProperty, fieldName);
 					}, this);
 
@@ -7057,7 +7293,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						data.inputs = inputs;
 					break;
 				case 'LOCATION':
-					data.func = BX.proxy(function(input, fieldName){
+					data.func = BX.delegate(function(input, fieldName){
 						return this.validateLocation(input, arProperty, fieldName);
 					}, this);
 
@@ -7077,14 +7313,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				case 'Y/N':
 					data.inputs = propContainer.querySelectorAll('input[type=checkbox]');
 					data.action = 'change';
-					data.func = BX.proxy(function(input, fieldName){
+					data.func = BX.delegate(function(input, fieldName){
 						return this.validateCheckbox(input, arProperty, fieldName);
 					}, this);
 					break;
 				case 'NUMBER':
 					data.inputs = propContainer.querySelectorAll('input[type=text]');
 					data.action = 'blur';
-					data.func = BX.proxy(function(input, fieldName){
+					data.func = BX.delegate(function(input, fieldName){
 						return this.validateNumber(input, arProperty, fieldName);
 					}, this);
 					break;
@@ -7097,7 +7333,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					{
 						data.inputs = [inputs];
 						data.action = 'change';
-						data.func = BX.proxy(function(input, fieldName){
+						data.func = BX.delegate(function(input, fieldName){
 							return this.validateEnum(input, arProperty, fieldName);
 						}, this);
 						break;
@@ -7108,7 +7344,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					{
 						data.inputs = [inputs];
 						data.action = 'click';
-						data.func = BX.proxy(function(input, fieldName){
+						data.func = BX.delegate(function(input, fieldName){
 							return this.validateSelect(input, arProperty, fieldName);
 						}, this);
 					}
@@ -7116,8 +7352,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				case 'FILE':
 					data.inputs = propContainer.querySelectorAll('input[type=file]');
 					data.action = 'change';
-					data.func = BX.proxy(function(input, fieldName){
+					data.func = BX.delegate(function(input, fieldName){
 						return this.validateFile(input, arProperty, fieldName);
+					}, this);
+					break;
+				case 'DATE':
+					data.inputs = propContainer.querySelectorAll('input[type=text]');
+					data.action = 'change';
+					data.func = BX.delegate(function(input, fieldName){
+						return this.validateDate(input, arProperty, fieldName);
 					}, this);
 					break;
 			}
@@ -7133,7 +7376,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			var tooltip = BX('tooltip-' + tooltipId),
 				tooltipInner, quickLocation;
 
-			text = this.uniqueText(text, '<br />');
+			text = this.uniqueText(text, '<br>');
 
 			if (tooltip)
 			{
@@ -7225,7 +7468,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			}
 
 			if (errors.length)
-				this.showErrorTooltip(tooltipId, label, errors.join('<br />'));
+				this.showErrorTooltip(tooltipId, label, errors.join('<br>'));
 			else
 				this.closeErrorTooltip(tooltipId);
 		},
@@ -7241,13 +7484,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				field = !!fieldName ? BX.message('SOA_FIELD') + ' "' + name + '"' : BX.message('SOA_FIELD'),
 				re;
 
-			if (arProperty.MULTIPLE == 'Y')
+			if (arProperty.MULTIPLE === 'Y')
 				return errors;
 
-			if (arProperty.REQUIRED == 'Y' && value.length == 0)
+			if (arProperty.REQUIRED === 'Y' && value.length === 0)
 				errors.push(field + ' ' + BX.message('SOA_REQUIRED'));
 
-			if (value.length > 0)
+			if (value.length)
 			{
 				if (arProperty.MINLENGTH && arProperty.MINLENGTH > value.length)
 					errors.push(BX.message('SOA_MIN_LENGTH') + ' "' + name + '" ' + BX.message('SOA_LESS') + ' ' + arProperty.MINLENGTH + ' ' + BX.message('SOA_SYMBOLS'));
@@ -7255,16 +7498,22 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				if (arProperty.MAXLENGTH && arProperty.MAXLENGTH < value.length)
 					errors.push(BX.message('SOA_MAX_LENGTH') + ' "' + name + '" ' + BX.message('SOA_MORE') + ' ' + arProperty.MAXLENGTH + ' ' + BX.message('SOA_SYMBOLS'));
 
-				if (value.length > 0 && arProperty.IS_EMAIL == 'Y')
+				if (arProperty.IS_EMAIL === 'Y')
 				{
-					re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-					if (!re.test(value))
-						errors.push(BX.message('SOA_INVALID_EMAIL'));
+					input.value = value = BX.util.trim(value);
+					if (value.length)
+					{
+						re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+						if (!re.test(value))
+						{
+							errors.push(BX.message('SOA_INVALID_EMAIL'));
+						}
+					}
 				}
 
 				if (value.length > 0 && arProperty.PATTERN && arProperty.PATTERN.length)
 				{
-					re = new RegExp(input.pattern);
+					re = new RegExp(arProperty.PATTERN);
 					if (!re.test(value))
 						errors.push(field + ' ' + BX.message('SOA_INVALID_PATTERN'));
 				}
@@ -7405,8 +7654,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			if (arProperty.MULTIPLE == 'Y')
 				return errors;
 
-			if (arProperty.REQUIRED == 'Y' && files.length == 0 && defaultValue == '' && !arProperty.DEFAULT_VALUE.length)
+			if (
+				arProperty.REQUIRED == 'Y' && files.length == 0 && defaultValue == ''
+				&& (!arProperty.DEFAULT_VALUE || !arProperty.DEFAULT_VALUE.length)
+			)
+			{
 				errors.push(field + ' ' + BX.message('SOA_REQUIRED'));
+			}
 			else
 			{
 				for (i = 0; i < files.length; i++)
@@ -7423,6 +7677,25 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 						errors.push(BX.message('SOA_MAX_SIZE') + ' "' + fileName + '" (' + this.getSizeString(arProperty.MAXSIZE, 1) + ')');
 				}
 			}
+
+			return errors;
+		},
+
+		validateDate: function(input, arProperty, fieldName)
+		{
+			if (!input || !arProperty)
+				return [];
+
+			var value = input.value,
+				errors = [],
+				name = BX.util.htmlspecialchars(arProperty.NAME),
+				field = !!fieldName ? BX.message('SOA_FIELD') + ' "' + name + '"' : BX.message('SOA_FIELD');
+
+			if (arProperty.MULTIPLE == 'Y')
+				return errors;
+
+			if (arProperty.REQUIRED == 'Y' && value.length == 0)
+				errors.push(field + ' ' + BX.message('SOA_REQUIRED'));
 
 			return errors;
 		},
@@ -7444,7 +7717,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 			label = BX.create('LABEL', {
 				attrs: {for: 'orderDescription'},
 				props: {className: 'bx-soa-customer-label'},
-				text: this.params.MESS_ORDER_DESC
+				html: this.params.MESS_ORDER_DESC
 			});
 			input = BX.create('TEXTAREA', {
 				props: {
@@ -7452,7 +7725,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 					cols: '4',
 					className: 'form-control bx-soa-customer-textarea bx-ios-fix',
 					name: 'ORDER_DESCRIPTION'
-				}
+				},
+				text: this.result.ORDER_DESCRIPTION ? this.result.ORDER_DESCRIPTION : ''
 			});
 			div = BX.create('DIV', {
 				props: {className: 'form-group bx-soa-customer-field'},
@@ -7469,28 +7743,33 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				return;
 
 			var total = this.result.TOTAL,
-				priceHtml = total.ORDER_PRICE_FORMATED,
+				priceHtml, params = {},
 				discText, valFormatted, i,
 				curDelivery, deliveryError, deliveryValue,
-				showOrderButton = this.params.SHOW_TOTAL_ORDER_BUTTON == 'Y';
+				showOrderButton = this.params.SHOW_TOTAL_ORDER_BUTTON === 'Y';
 
 			BX.cleanNode(this.totalInfoBlockNode);
 
-			if (this.options.showPriceWithoutDiscount)
-				priceHtml += '<br /><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
+			if (parseFloat(total.ORDER_PRICE) === 0)
+			{
+				priceHtml = this.params.MESS_PRICE_FREE;
+				params.free = true;
+			}
+			else
+			{
+				priceHtml = total.ORDER_PRICE_FORMATED;
+			}
 
-			this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_SUMMARY'), priceHtml));
+			if (this.options.showPriceWithoutDiscount)
+			{
+				priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
+			}
+
+			this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_SUMMARY'), priceHtml, params));
 
 			if (this.options.showOrderWeight)
-				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED));
-
-			if (this.options.showDiscountPrice)
 			{
-				discText = BX.message('SOA_SUM_DISCOUNT');
-				if (total.DISCOUNT_PERCENT_FORMATED && parseFloat(total.DISCOUNT_PERCENT_FORMATED) > 0)
-					discText += total.DISCOUNT_PERCENT_FORMATED;
-
-				this.totalInfoBlockNode.appendChild(this.createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED));
+				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED));
 			}
 
 			if (this.options.showTaxList)
@@ -7507,12 +7786,49 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				}
 			}
 
+			params = {};
 			curDelivery = this.getSelectedDelivery();
 			deliveryError = curDelivery && curDelivery.CALCULATE_ERRORS && curDelivery.CALCULATE_ERRORS.length;
-			deliveryValue = deliveryError ? BX.message('SOA_NOT_CALCULATED') : total.DELIVERY_PRICE_FORMATED;
 
-			if (parseFloat(total.DELIVERY_PRICE) >= 0 && this.result.DELIVERY.length)
-				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue, {error: deliveryError}));
+			if (deliveryError)
+			{
+				deliveryValue = BX.message('SOA_NOT_CALCULATED');
+				params.error = deliveryError;
+			}
+			else
+			{
+				if (parseFloat(total.DELIVERY_PRICE) === 0)
+				{
+					deliveryValue = this.params.MESS_PRICE_FREE;
+					params.free = true;
+				}
+				else
+				{
+					deliveryValue = total.DELIVERY_PRICE_FORMATED;
+				}
+
+				if (
+					curDelivery && typeof curDelivery.DELIVERY_DISCOUNT_PRICE !== 'undefined'
+					&& parseFloat(curDelivery.PRICE) > parseFloat(curDelivery.DELIVERY_DISCOUNT_PRICE)
+				)
+				{
+					deliveryValue += '<br><span class="bx-price-old">' + curDelivery.PRICE_FORMATED + '</span>';
+				}
+			}
+
+			if (this.result.DELIVERY.length)
+			{
+				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue, params));
+			}
+
+			if (this.options.showDiscountPrice)
+			{
+				discText = this.params.MESS_ECONOMY;
+				if (total.DISCOUNT_PERCENT_FORMATED && parseFloat(total.DISCOUNT_PERCENT_FORMATED) > 0)
+					discText += total.DISCOUNT_PERCENT_FORMATED;
+
+				this.totalInfoBlockNode.appendChild(this.createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED, {highlighted: true}));
+			}
 
 			if (this.options.showPayedFromInnerBudget)
 			{
@@ -7521,10 +7837,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_LEFT_TO_PAY'), total.ORDER_TOTAL_LEFT_TO_PAY_FORMATED, {total: true}));
 			}
 			else
+			{
 				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED, {total: true}));
+			}
 
 			if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && this.result.DELIVERY.length)
+			{
 				this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'), '~' + total.PAY_SYSTEM_PRICE_FORMATTED));
+			}
 
 			if (!this.result.SHOW_AUTH)
 			{
@@ -7537,7 +7857,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 									href: 'javascript:void(0)',
 									className: 'btn btn-default btn-lg btn-order-save'
 								},
-								text: this.params.MESS_ORDER,
+								html: this.params.MESS_ORDER,
 								events: {
 									click: BX.proxy(this.clickOrderSaveAction, this)
 								}
@@ -7560,7 +7880,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			BX.cleanNode(this.mobileTotalBlockNode);
 			this.mobileTotalBlockNode.appendChild(this.totalInfoBlockNode.cloneNode(true));
-			BX.bind(this.mobileTotalBlockNode.querySelector('a.bx-soa-price-not-calc'), 'click', BX.proxy(function(){
+			BX.bind(this.mobileTotalBlockNode.querySelector('a.bx-soa-price-not-calc'), 'click', BX.delegate(function(){
 				this.animateScrollTo(this.deliveryBlockNode);
 			}, this));
 			BX.bind(this.mobileTotalBlockNode.querySelector('a.btn-order-save'), 'click', BX.proxy(this.clickOrderSaveAction, this));
@@ -7568,29 +7888,48 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 		createTotalUnit: function(name, value, params)
 		{
-			var totalValue;
+			var totalValue, className = 'bx-soa-cart-total-line';
 
 			name = name || '';
 			value = value || '';
 			params = params || {};
 
-			if (!!params.error)
+			if (params.error)
 			{
 				totalValue = [BX.create('A', {
 					props: {className: 'bx-soa-price-not-calc'},
-					text: value,
+					html: value,
 					events: {
-						click: BX.proxy(function(){
+						click: BX.delegate(function(){
 							this.animateScrollTo(this.deliveryBlockNode);
 						}, this)
 					}
-				})]
+				})];
+			}
+			else if (params.free)
+			{
+				totalValue = [BX.create('SPAN', {
+					props: {className: 'bx-soa-price-free'},
+					html: value
+				})];
 			}
 			else
+			{
 				totalValue = [value];
+			}
+
+			if (params.total)
+			{
+				className += ' bx-soa-cart-total-line-total';
+			}
+
+			if (params.highlighted)
+			{
+				className += ' bx-soa-cart-total-line-highlighted';
+			}
 
 			return BX.create('DIV', {
-				props: {className: 'bx-soa-cart-total-line' + (!!params.total ? ' bx-soa-cart-total-line-total' : '')},
+				props: {className: className},
 				children: [
 					BX.create('SPAN', {props: {className: 'bx-soa-cart-t'}, text: name}),
 					BX.create('SPAN', {
@@ -7730,6 +8069,99 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 			if (objList.length)
 				BX.FixFontSize.init({objList: objList, onAdaptiveResize: true});
+		},
+
+		setAnalyticsDataLayer: function(action, id)
+		{
+			if (!this.params.DATA_LAYER_NAME)
+				return;
+
+			var info, i;
+			var products = [],
+				dataVariant, item;
+
+			for (i in this.result.GRID.ROWS)
+			{
+				if (this.result.GRID.ROWS.hasOwnProperty(i))
+				{
+					item = this.result.GRID.ROWS[i];
+					dataVariant = [];
+
+					for (i = 0; i < item.data.PROPS.length; i++)
+					{
+						dataVariant.push(item.data.PROPS[i].VALUE);
+					}
+
+					products.push({
+						'id': item.data.ID,
+						'name': item.data.NAME,
+						'price': item.data.PRICE,
+						'brand': (item.data[this.params.BRAND_PROPERTY + '_VALUE'] || '').split(', ').join('/'),
+						'variant': dataVariant.join('/'),
+						'quantity': item.data.QUANTITY
+					});
+				}
+			}
+
+			switch (action)
+			{
+				case 'checkout':
+					info = {
+						'event': 'checkout',
+						'ecommerce': {
+							'checkout': {
+								'products': products
+							}
+						}
+					};
+					break;
+				case 'purchase':
+					info = {
+						'event': 'purchase',
+						'ecommerce': {
+							'purchase': {
+								'actionField': {
+									'id': id,
+									'revenue': this.result.TOTAL.ORDER_TOTAL_PRICE,
+									'tax': this.result.TOTAL.TAX_PRICE,
+									'shipping': this.result.TOTAL.DELIVERY_PRICE
+								},
+								'products': products
+							}
+						}
+					};
+					break;
+			}
+
+			window[this.params.DATA_LAYER_NAME] = window[this.params.DATA_LAYER_NAME] || [];
+			window[this.params.DATA_LAYER_NAME].push(info);
+		},
+
+		isOrderSaveAllowed: function()
+		{
+			return this.orderSaveAllowed === true;
+		},
+
+		allowOrderSave: function()
+		{
+			this.orderSaveAllowed = true;
+		},
+
+		disallowOrderSave: function()
+		{
+			this.orderSaveAllowed = false;
+		},
+
+		initUserConsent: function()
+		{
+			BX.ready(BX.delegate(function(){
+				var control = BX.UserConsent && BX.UserConsent.load(this.orderBlockNode);
+				if (control)
+				{
+					BX.addCustomEvent(control, BX.UserConsent.events.save, BX.proxy(this.doSaveAction, this));
+					BX.addCustomEvent(control, BX.UserConsent.events.refused, BX.proxy(this.disallowOrderSave, this));
+				}
+			}, this));
 		}
 	};
 })();

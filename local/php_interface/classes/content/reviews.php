@@ -41,7 +41,7 @@ class Reviews
      * @param $rating
      * @return string
      */
-    protected static function getHtmlStars($rating)
+    public static function getHtmlStars($rating)
     {
         $result = '';
         for ($counter = 0; $counter < 5; $counter ++) {
@@ -55,11 +55,23 @@ class Reviews
      * @param array $values
      * @return false|float
      */
-    protected static function getRating(array $values)
+    public static function getRating(array $values)
     {
         $result = round(array_sum($values) / count($values));
 
         return $result <= 5 ? $result : 5;
+    }
+
+    /**
+     * @param array $data
+     * @param $offerId
+     * @return array
+     */
+    public static function getMarkList(array $data, $offerId)
+    {
+        return isset($data[$offerId])
+            ? array_column($data[$offerId], 'PROPERTY_MARK_VALUE')
+            : [0];
     }
 
     /**
@@ -103,23 +115,21 @@ class Reviews
             $content = str_replace(self::getMarkeredCount($offerId), count($reviewsList[$offerId]), $content);
         }
         foreach ($ratingMatches[1] as $offerId) {
-            $markList = isset($reviewsList[$offerId])
-                ? array_column($reviewsList[$offerId], 'PROPERTY_MARK_VALUE')
-                : [0];
             $content = str_replace(
                 self::getMarkeredRating($offerId),
-                self::getRating($markList),
+                self::getRating(
+                    self::getMarkList($reviewsList, $offerId)
+                ),
                 $content
             );
         }
         foreach ($htmlStarsMatches[1] as $offerId) {
-            $markList = isset($reviewsList[$offerId])
-                ? array_column($reviewsList[$offerId], 'PROPERTY_MARK_VALUE')
-                : [0];
             $content = str_replace(
                 self::getMarkeredHtmlStars($offerId),
                 self::getHtmlStars(
-                    self::getRating($markList)
+                    self::getRating(
+                        self::getMarkList($reviewsList, $offerId)
+                    )
                 ),
                 $content
             );

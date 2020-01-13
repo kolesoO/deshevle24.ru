@@ -250,6 +250,13 @@ $(document).ready(function(){
     });
     //end
 
+    $('body').on('click', '.js-basket-step input', function() {
+        var $rootWrap = $(this).closest('.js-basket-step').parent();
+
+        $rootWrap.find('.js-basket-step').removeClass('active');
+        $(this).closest('.js-basket-step').addClass('active');
+    });
+
     //modules
     if(typeof(obSlider) == "object"){
         obSlider.init();

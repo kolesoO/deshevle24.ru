@@ -9,6 +9,11 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 	modes: {},
 	properties: {},
 
+	BXFormPosting: false,
+	orderFormId: "bx-soa-order-form",
+	orderFormContent: "bx-soa-order-form-content",
+	isSubmit: false,
+
 	// called once, on component load
 	init: function(options)
 	{
@@ -124,16 +129,19 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 						if(locPropId !== false){
 							BX.bindDebouncedChange(input, function(value){
 
+								var zipChangedNode = BX('ZIP_PROPERTY_CHANGED');
+								zipChangedNode && (zipChangedNode.value = 'Y');
+
 								input = null;
 								row = null;
 
 								if(BX.type.isNotEmptyString(value) && /^\s*\d+\s*$/.test(value) && value.length > 3){
 
-									ctx.getLocationByZip(value, function(locationId){
-										ctx.properties[locPropId].control.setValueByLocationId(locationId);
+									ctx.getLocationsByZip(value, function(locationsData){
+										ctx.properties[locPropId].control.setValueByLocationIds(locationsData);
 									}, function(){
 										try{
-											ctx.properties[locPropId].control.clearSelected(locationId);
+											// ctx.properties[locPropId].control.clearSelected();
 										}catch(e){}
 									});
 								}
@@ -184,8 +192,8 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 									if(typeof controlInApater.vars.cache.nodes['other'] == 'undefined')
 									{
 										controlInApater.fillCache([{
-											CODE:		'other', 
-											DISPLAY:	ctx.options.messages.otherLocation, 
+											CODE:		'other',
+											DISPLAY:	ctx.options.messages.otherLocation,
 											IS_PARENT:	false,
 											VALUE:		'other'
 										}], {
@@ -402,7 +410,8 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 
 		return false;
 	},
-	getLocationByZip: function(value, successCallback, notFoundCallback)
+
+	getLocationsByZip: function(value, successCallback, notFoundCallback)
 	{
 		if(typeof this.indexCache[value] != 'undefined')
 		{
@@ -410,14 +419,9 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 			return;
 		}
 
-		var loader;
-		if (!(loader = BX.Sale.OrderAjaxComponent.startLoader()))
-			return;
-
 		var ctx = this;
 
 		BX.ajax({
-
 			url: this.options.source,
 			method: 'post',
 			dataType: 'json',
@@ -425,26 +429,163 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 			processData: true,
 			emulateOnload: true,
 			start: true,
-			data: {'ACT': 'GET_LOC_BY_ZIP', 'ZIP': value},
+			data: {'ACT': 'GET_LOCS_BY_ZIP', 'ZIP': value},
 			//cache: true,
 			onsuccess: function(result){
-				BX.Sale.OrderAjaxComponent.endLoader(loader);
-
 				if(result.result)
 				{
-					ctx.indexCache[value] = result.data.ID;
-					successCallback.apply(ctx, [result.data.ID]);
+					ctx.indexCache[value] = result.data;
+					successCallback.apply(ctx, [result.data]);
 				}
 				else
+				{
 					notFoundCallback.call(ctx);
-
+				}
 			},
 			onfailure: function(type, e){
-				BX.Sale.OrderAjaxComponent.endLoader(loader);
 				// on error do nothing
 			}
-
 		});
-	}
+	},
 
-}
+	getAddress: function(self, parentId)
+	{
+		var ctx = this,
+			parentValue = "";
+
+		if ($(self).val().length > 3) {
+			if (!!parentId) {
+				parentValue = $("#" + parentId).val();
+			}
+			$.ajax({
+				url: location.href,
+				data: {
+					class: "Address",
+					method: "getList",
+					params: {
+						query: $(self).val(),
+						type: $(self).attr("data-type"),
+						parent: parentValue
+					}
+				},
+				success: function(response) {
+					ctx.renderAddressList(self, response.answer);
+				}
+			})
+		}
+	},
+
+	setAddress: function(targetId, self, evt)
+	{
+		evt.preventDefault();
+
+		var $target = $($("#" + targetId).attr("data-target")),
+			targetValue = [];
+
+		$("#" + targetId).val($(self).text());
+		$("#" + targetId).attr("value", $(self).text());
+
+		$("[data-target='" + $("#" + targetId).attr("data-target") + "']").each(function() {
+			targetValue.push($(this).val());
+		});
+
+		$target.val(targetValue);
+		$target.attr("value", targetValue);
+
+		$target.change();
+	},
+
+	renderAddressList: function(self, list)
+	{
+		var $parent = $(self).parent(),
+			$node = $('<div class="tooltip"></div>'),
+			innerNode = null,
+			selfId = $(self).attr("id");
+
+		if ($parent.length > 0) {
+			list.forEach(function(item) {
+				innerNode = document.createElement("a");
+				innerNode.href = "#";
+				innerNode.classList.add("link");
+				innerNode.innerText = item.name;
+				innerNode.addEventListener("click", function() {
+					BX.saleOrderAjax.setAddress(selfId, this, event);
+				});
+				$node.append(innerNode);
+			});
+			$parent.find(".tooltip").remove();
+			$parent.append($node);
+		}
+	},
+
+	updateAddress: function(self)
+	{
+		var targetSelector = $(self).attr("data-target"),
+			arNewValues = [];
+
+		if ($(targetSelector).length > 0) {
+			$("[data-target='" + targetSelector + "']").each(function() {
+				arNewValues.push($(this).val());
+			})
+		}
+		if (arNewValues.length > 0) {
+			$(targetSelector).val(arNewValues.join(", "));
+			$(targetSelector).attr("value", arNewValues.join(", "));
+			$(targetSelector).trigger("change");
+		}
+	},
+
+	submitForm: function(val)
+	{
+		var orderForm;
+
+		if (this.BXFormPosting === true) return true;
+		this.BXFormPosting = true;
+		if(val != 'Y') {
+			BX('confirmorder').value = 'N';
+			this.isSubmit = false;
+		} else {
+			BX('confirmorder').value = 'Y';
+			this.isSubmit = true;
+		}
+		orderForm = BX(this.orderFormId);
+		BX.showWait(this.orderFormId);
+		BX.ajax.submit(orderForm, this.ajaxResult);
+
+		return true;
+	},
+
+	ajaxResult: function(res)
+	{
+		var orderForm = BX(BX.saleOrderAjax.orderFormId),
+			json;
+		try {
+			json = JSON.parse(res);
+			if (json.error) {
+				BX.saleOrderAjax.BXFormPosting = false;
+				return;
+			} else if (json.redirect) {
+				window.top.location.href = json.redirect;
+			}
+		} catch (e) {
+			// json parse failed, so it is a simple chunk of html
+			BX.saleOrderAjax.BXFormPosting = false;
+			BX(BX.saleOrderAjax.orderFormContent).innerHTML = res;
+			if (BX.saleOrderAjax.isSubmit) {
+				BX.scrollToNode(BX.saleOrderAjax.orderFormId);
+			}
+			if(typeof obAnimateInput == "object"){
+				obAnimateInput.init();
+			}
+		}
+		BX.closeWait(BX.saleOrderAjax.orderFormId);
+		BX.onCustomEvent(orderForm, 'onAjaxSuccess');
+	}
+};
+
+$(document).ready(function(e) {
+	$("#bx-soa-order-form-content").on("click", function(e) {
+		if ($(e.target).closest(".tooltip").length > 0) return;
+		$("#bx-soa-order-form-content .tooltip").remove();
+	})
+});

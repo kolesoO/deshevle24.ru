@@ -20,6 +20,8 @@ $rsResult = new \kDevelop\Ajax\Result("json");
 $rsResult->setData($rsAjax->callMethod());
 $rsResult->setError($rsAjax->getErrors());
 
+ob_start();
 header("Content-type:application/json");
 echo $rsResult->getAnser();
+echo ob_get_clean();
 die();

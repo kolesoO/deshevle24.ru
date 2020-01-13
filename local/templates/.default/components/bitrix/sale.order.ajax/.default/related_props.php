@@ -1,10 +1,17 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-include($_SERVER["DOCUMENT_ROOT"].$templateFolder."/props_format.php");
+<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();?>
 
-$style = (is_array($arResult["ORDER_PROP"]["RELATED"]) && count($arResult["ORDER_PROP"]["RELATED"])) ? "" : "display:none";
-?>
-<div class="bx_section" style="<?=$style?>">
-	<h4><?=GetMessage("SOA_TEMPL_RELATED_PROPS")?></h4>
-	<br />
-	<?=PrintPropsForm($arResult["ORDER_PROP"]["RELATED"], $arParams["TEMPLATE_LOCATION"])?>
-</div>
+<?foreach ($arResult["ORDER_PROP"]["RELATED"] as $arProp) :
+    //name
+    $name = $arProp["NAME"].($arProp["REQUIRED"] == "Y" ? "*" : "");
+    //end
+    ?>
+    <div class="def_form-item">
+        <input
+            type="text"
+            name="<?=$arProp["FIELD_NAME"]?>"
+            class="col-lg-24 col-md-24 col-xs-24"
+            placeholder="<?=$name?>"
+            value="<?=$arProp["VALUE"]?>"
+        >
+    </div>
+<?endforeach;?>
