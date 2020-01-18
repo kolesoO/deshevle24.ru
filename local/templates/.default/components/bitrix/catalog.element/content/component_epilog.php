@@ -55,13 +55,13 @@ if (!empty($templateData['TEMPLATE_LIBRARY']))
 
 // check compared state
 if ($arParams['DISPLAY_COMPARE']) :?>
-    <script>obCatalogElement.initCompare(<?=array_key_exists($arOffer['ID'], $_SESSION[$arParams['COMPARE_NAME']][$arParams['IBLOCK_ID']]['ITEMS']) ? "true" : "false"?>);</script>
+    <script>obCatalogElement_<?=$arOffer["ID"]?>.initCompare(<?=array_key_exists($arOffer['ID'], $_SESSION[$arParams['COMPARE_NAME']][$arParams['IBLOCK_ID']]['ITEMS']) ? "true" : "false"?>);</script>
 <?endif;
 //end
 
 // check favorite
 ?>
-<script>obCatalogElement.initFavorite(<?=\kDevelop\Ajax\Favorite::isAdded($arResult["ID"]) ? "true" : "false"?>);</script>
+<script>obCatalogElement_<?=$arOffer["ID"]?>.initFavorite(<?=\kDevelop\Ajax\Favorite::isAdded($arOffer["ID"]) ? "true" : "false"?>);</script>
 
 <?
 //с этим товаром покупают

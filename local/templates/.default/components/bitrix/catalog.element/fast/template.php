@@ -81,7 +81,13 @@ if ($arParams['DISPLAY_COMPARE']) {
                 </div>
             <?endif?>
             <?if ($arParams['FAVORITE_STATUS']) :?>
-                <a href="/favorite/" class="btn grey_white col-lg-11" align="center">
+                <a
+                        href="#"
+                        class="btn grey_white col-lg-11"
+                        align="center"
+                        data-popup-open="#favorite-list"
+                        onclick="obAjax.getFavoriteList('favorites')"
+                >
                     <i class="icon icon-favorite-full"></i>
                     <span>Мне нравится</span>
                 </a>
@@ -91,7 +97,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                         class="btn grey_white col-lg-11"
                         align="center"
                         data-entity="favorite"
-                        data-id="<?=$arResult["ID"]?>"
+                        data-id="<?=$arOffer["ID"]?>"
                         data-text
                 >
                     <i class="icon icon-favorite opacity"></i>

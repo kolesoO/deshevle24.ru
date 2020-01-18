@@ -28,10 +28,10 @@ $rsSection = CIBlockSection::GetList(
         "ACTIVE" => "Y",
         "SECTION_ID" => array_column($arResult["SECTIONS"], "ID")
     ],
-    false,
-    ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "UF_*", "NAME", "SECTION_PAGE_URL", "PICTURE"]
+    $arParams["COUNT_ELEMENTS"],
+    ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "UF_*", "NAME", "CODE", "SECTION_PAGE_URL", "PICTURE"]
 );
-while ($section = $rsSection->fetch()) {
+while ($section = $rsSection->GetNext()) {
     $sectionId[] = $section["ID"];
     $section["NAME"] = $section["UF_SECTION_LABEL"] ? $section["UF_SECTION_LABEL"] : $section["NAME"];
     $section["PICTURE"] = CFile::GetFileArray($section["PICTURE"]);
@@ -46,10 +46,10 @@ while ($section = $rsSection->fetch()) {
                 "ACTIVE" => "Y",
                 "SECTION_ID" => $section["ID"]
             ],
-            false,
+            $arParams["COUNT_ELEMENTS"],
             ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "UF_*", "NAME", "SECTION_PAGE_URL", "PICTURE"]
         );
-        while ($sectionInner = $rsSectionInner->fetch()) {
+        while ($sectionInner = $rsSectionInner->GetNext()) {
             $sectionInner["NAME"] = $sectionInner["UF_SECTION_LABEL"] ? $sectionInner["UF_SECTION_LABEL"] : $sectionInner["NAME"];
             $sectionInner["PICTURE"] = CFile::GetFileArray($sectionInner["PICTURE"]);
             $arResult["SECTIONS"][] = $sectionInner;

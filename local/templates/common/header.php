@@ -26,6 +26,7 @@ if (DEVICE_TYPE == "MOBILE") {
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/jquery1.12.4.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/slick.1.8.1.min.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/noUiSlider-14.1.0/nouislider.min.js');
+$rsAsset->addJs(SITE_TEMPLATE_PATH.'/libs/jquery.maskedinput/jquery.maskedinput.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/slider/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/modules/tabs/script.js');
 $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/functions.js');
@@ -129,7 +130,11 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                         </form>
                     </div>
                     <div class="header-col">
-                        <a href="/favorite/">
+                        <a
+                                href="#"
+                                data-popup-open="#favorite-list"
+                                onclick="obAjax.getFavoriteList('favorites')"
+                        >
                             <span class="icon-wrap">
                                 <i class="icon icon-favorite opacity"></i>
                                 <span id="favorite-wrapper">
@@ -184,7 +189,7 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                 "SECTION_URL" => "",
                 "COUNT_ELEMENTS" => "N",
                 "TOP_DEPTH" => "2",
-                "SECTION_FIELDS" => "",
+                "SECTION_FIELDS" => ['ID'],
                 "SECTION_USER_FIELDS" => ["UF_*"],
                 "ADD_SECTIONS_CHAIN" => "N",
                 "CACHE_TYPE" => "A",

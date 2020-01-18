@@ -51,7 +51,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                         <?=\kDevelop\Content\Reviews::getMarkeredHtmlStars($arOffer['ID'])?>
                         <span>(<?=\kDevelop\Content\Reviews::getMarkeredRating($arOffer['ID'])?>)</span>
                     </div>
-                    <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
+                    <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arOffer["ID"]?>">
                         <i class="icon icon-like opacity"></i>
                         <span>Мне нравится</span>
                     </a>
@@ -383,5 +383,5 @@ if ($arParams['DISPLAY_COMPARE']) {
         BTN_MESSAGE_FAVORITE_REDIRECT: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_FAVORITE_REDIRECT')?>',
         FAVORITE_TITLE: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_FAVORITE_TITLE')?>'
     });
-    var obCatalogElement = new window.catalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
+    var obCatalogElement_<?=$arOffer["ID"]?> = new window.catalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
 </script>

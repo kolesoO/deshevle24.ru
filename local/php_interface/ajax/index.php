@@ -15,13 +15,15 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_befo
     "\kDevelop\Ajax\Favorite" => "/local/php_interface/classes/ajax/lib/favorite.php"
 ]);
 
-$rsAjax = new \kDevelop\Ajax\General($_REQUEST["class"], $_REQUEST["method"], $_REQUEST["params"]);
+$rsAjax = new \kDevelop\Ajax\General(
+    $_REQUEST["class"],
+    $_REQUEST["method"],
+    is_array($_REQUEST["params"]) ? $_REQUEST["params"] : []
+);
 $rsResult = new \kDevelop\Ajax\Result("json");
 $rsResult->setData($rsAjax->callMethod());
 $rsResult->setError($rsAjax->getErrors());
 
-ob_start();
 header("Content-type:application/json");
-echo $rsResult->getAnser();
-echo ob_get_clean();
+echo $rsResult->getAnswer();
 die();

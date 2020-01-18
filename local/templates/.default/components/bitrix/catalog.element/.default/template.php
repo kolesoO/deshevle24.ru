@@ -54,7 +54,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                         <i class="icon icon-star-gray-empty"></i>
                         <span class="title-5 light">(0)</span>
                     </div>
-                    <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arResult["ID"]?>">
+                    <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arOffer["ID"]?>">
                         <i class="icon icon-favorite opacity"></i>
                         <span>Мне нравится</span>
                     </a>

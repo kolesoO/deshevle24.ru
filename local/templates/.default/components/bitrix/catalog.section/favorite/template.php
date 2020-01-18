@@ -121,98 +121,33 @@ $arCatalogItemsParams = [
 ];
 ?>
 
-<script>
-    BX.message({
-        BTN_MESSAGE_BASKET_REDIRECT: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_BASKET_REDIRECT')?>',
-        BASKET_URL: '<?=$arParams['BASKET_URL']?>',
-        ADD_TO_BASKET_OK: '<?=GetMessageJS('ADD_TO_BASKET_OK')?>',
-        TITLE_ERROR: '<?=GetMessageJS('CT_BCS_CATALOG_TITLE_ERROR')?>',
-        TITLE_BASKET_PROPS: '<?=GetMessageJS('CT_BCS_CATALOG_TITLE_BASKET_PROPS')?>',
-        TITLE_SUCCESSFUL: '<?=GetMessageJS('ADD_TO_BASKET_OK')?>',
-        BASKET_UNKNOWN_ERROR: '<?=GetMessageJS('CT_BCS_CATALOG_BASKET_UNKNOWN_ERROR')?>',
-        BTN_MESSAGE_SEND_PROPS: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_SEND_PROPS')?>',
-        BTN_MESSAGE_CLOSE: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_CLOSE')?>',
-        BTN_MESSAGE_CLOSE_POPUP: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_CLOSE_POPUP')?>',
-        COMPARE_MESSAGE_OK: '<?=GetMessageJS('CT_BCS_CATALOG_MESS_COMPARE_OK')?>',
-        COMPARE_UNKNOWN_ERROR: '<?=GetMessageJS('CT_BCS_CATALOG_MESS_COMPARE_UNKNOWN_ERROR')?>',
-        COMPARE_TITLE: '<?=GetMessageJS('CT_BCS_CATALOG_MESS_COMPARE_TITLE')?>',
-        PRICE_TOTAL_PREFIX: '<?=GetMessageJS('CT_BCS_CATALOG_PRICE_TOTAL_PREFIX')?>',
-        RELATIVE_QUANTITY_MANY: '<?=CUtil::JSEscape($arParams['MESS_RELATIVE_QUANTITY_MANY'])?>',
-        RELATIVE_QUANTITY_FEW: '<?=CUtil::JSEscape($arParams['MESS_RELATIVE_QUANTITY_FEW'])?>',
-        BTN_MESSAGE_COMPARE_REDIRECT: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_COMPARE_REDIRECT')?>',
-        BTN_MESSAGE_LAZY_LOAD: '<?=CUtil::JSEscape($arParams['MESS_BTN_LAZY_LOAD'])?>',
-        BTN_MESSAGE_LAZY_LOAD_WAITER: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_LAZY_LOAD_WAITER')?>',
-        BTN_MESSAGE_FAVORITE_REDIRECT: '<?=GetMessageJS('CT_BCS_CATALOG_BTN_MESSAGE_FAVORITE_REDIRECT')?>',
-        FAVORITE_TITLE: '<?=GetMessageJS('CT_BCS_CATALOG_MESS_FAVORITE_TITLE')?>',
-        SITE_ID: '<?=CUtil::JSEscape($component->getSiteId())?>'
-    });
-    var obCatalogItemsParams = <?=CUtil::PhpToJSObject($arCatalogItemsParams)?>;
-</script>
-
-<?if ($showTopPager) :?>
-    <?=$arResult['NAV_STRING']?>
-<?endif?>
-
 <?if ($arResult["ITEMS_COUNT"] > 0) :?>
-    <?foreach ($arResult["SECTIONS"] as $key => $arSection) :
-        $isSlider = $arSection['ITEMS_COUNT'] > $arParams["LINE_ELEMENT_COUNT"] + 1;
+    <?foreach ($arResult["ITEMS"] as $key => $arItem) :
+        $itemId = 'catalog-item-' . rand(0, 1000);
+        $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
+        $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
         ?>
-        <?if ($key > 0) :?>
-            <hr class="section_hr">
-        <?endif?>
-        <?if ($arSection['ID'] != $arResult['ID']) :?>
-            <div flex-align="center" flex-wrap="wrap" class="catalog_item-block">
-                <?if ($arSection["UF_MIN_PRICE"] > 0) :?>
-                    <div class="catalog_label">от <?=\CurrencyFormat($arSection["UF_MIN_PRICE"], $arParams["CURRENCY_ID"])?></div>
-                <?endif?>
-                <div class="title-2 light col-xs-24"><?=$arSection["NAME"]?></div>
-            </div>
-        <?endif?>
-        <div
-                class="catalog_list-slider<?if ($isSlider) :?> js-slider<?endif?> clearfix"
-                data-autoplay="false"
-                data-autoplaySpeed="5000"
-                data-infinite="false"
-                data-speed="1000"
-                data-arrows="true"
-                data-dots="false"
-                data-slidesToShow="<?=($arParams["LINE_ELEMENT_COUNT"] + 1)?>"
-                style="z-index:<?=$arResult['SECTIONS_COUNT']?>"
-                items-count
-        >
-            <?foreach ($arResult["ITEMS"] as $key => $arItem) :
-                if($arItem["~IBLOCK_SECTION_ID"] != $arSection["ID"]) continue;
-                $itemId = 'catalog-item-' . rand(0, 1000);
-                $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
-                $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
-                ?>
-                <div id="<?=$itemId?>" class="catalog_item">
-                    <?$APPLICATION->IncludeComponent(
-                        "kDevelop:catalog.item",
-                        $arResult["INNER_TEMPLATE"],
-                        [
-                            "RESULT" => [
-                                "ITEM" => $arItem,
-                                "OFFER_KEY" => $arItem["OFFER_ID_SELECTED"],
-                                "OFFERS_LIST" => $arItem["OFFERS"],
-                                "WRAP_ID" => $itemId,
-                                "AREA_ID" => $this->GetEditAreaId($arItem["ID"])
-                            ],
-                            "PARAMS" => $arParams
-                        ],
-                        $component,
-                        ['HIDE_ICONS' => 'Y']
-                    );?>
-                </div>
-            <?endforeach;?>
+        <div id="<?=$itemId?>" class="catalog_item">
+            <?$APPLICATION->IncludeComponent(
+                "kDevelop:catalog.item",
+                $arResult["INNER_TEMPLATE"],
+                [
+                    "RESULT" => [
+                        "ITEM" => $arItem,
+                        "OFFER_KEY" => $arItem["OFFER_ID_SELECTED"],
+                        "OFFERS_LIST" => $arItem["OFFERS"],
+                        "WRAP_ID" => $itemId,
+                        "AREA_ID" => $this->GetEditAreaId($arItem["ID"])
+                    ],
+                    "PARAMS" => $arParams
+                ],
+                $component,
+                ['HIDE_ICONS' => 'Y']
+            );?>
         </div>
-        <?
-        $arResult['SECTIONS_COUNT'] --;
-    endforeach;?>
-<?else:?>
-    <p>Список товаров пуст</p>
-<?endif?>
-
-<?if ($showBottomPager) :?>
-    <?=$arResult['NAV_STRING']?>
+    <?endforeach;?>
+    <br><br>
+    <div align="center">
+        <button class="btn" onclick="obAjax.removeAllFavorite('favorites')">Очистить историю</button>
+    </div>
 <?endif?>

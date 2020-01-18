@@ -23,7 +23,7 @@ if ($arParams['DISPLAY_COMPARE']) :?>
 ?>
     <script>
         if (typeof window.catalogElement == "function") {
-            obCatalogElement_<?=$arResult["OFFER"]["ID"]?>.initFavorite(<?=\kDevelop\Ajax\Favorite::isAdded($arResult["ITEM"]["ID"]) ? "true" : "false"?>);
+            obCatalogElement_<?=$arResult["OFFER"]["ID"]?>.initFavorite(<?=\kDevelop\Ajax\Favorite::isAdded($arResult["OFFER"]["ID"]) ? "true" : "false"?>);
         }
     </script>
 <?

@@ -210,8 +210,15 @@
         </div>
         <div class="container footer_copyright" flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
             <div class="developers col-lg-4">
-                <div>Разработка сайта: <a href="#">Вячеслав Корнев</a></div>
-                <div>Верстка сайта: <a href="#">Алексей Колесниченко</a></div>
+                <?$APPLICATION->IncludeComponent(
+                    "bitrix:main.include",
+                    ".default",
+                    [
+                        "AREA_FILE_SHOW" => "file",
+                        "PATH" => SITE_TEMPLATE_PATH . "/include/footer/developers.php"
+                    ],
+                    false
+                );?>
             </div>
             <div class="col-lg-19">
                 <?$APPLICATION->IncludeComponent(
@@ -227,6 +234,25 @@
         </div>
     </footer>
     <noindex>
+        <div id="favorite-list" class="popup" data-animate>
+            <div class="popup_wrapper right">
+                <div class="popup_content small favorite_list_wrap js-popup_content">
+                    <div class="popup_content-inner">
+                        <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
+                            <div class="title-2 light">Вам понравилось</div>
+                            <a
+                                    href="#"
+                                    class="btn grey_white no-m"
+                                    data-popup-close
+                            >
+                                <i class="icon icon-arrow-black"></i>
+                            </a>
+                        </div>
+                        <div id="favorites" class="favorite_list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="callback" class="popup">
             <div class="popup_wrapper">
                 <div class="popup_content small js-popup_content">

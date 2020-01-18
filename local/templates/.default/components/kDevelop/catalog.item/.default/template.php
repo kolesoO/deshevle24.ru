@@ -77,15 +77,9 @@ if ($arParams['DISPLAY_COMPARE']) {
         <?else:?>
             <span>&nbsp;</span>
         <?endif?>
-        <?if (isset($arParams['FAVORITE_ITEM']) && $arParams['FAVORITE_ITEM'] == 'Y') :?>
-            <a href="#" onclick="obAjax.deleteFromFavorite('<?=$arResult["ITEM"]["ID"]?>', '<?=$arResult['WRAP_ID']?>', event)">
-                <i class="icon icon-close color"></i>
-            </a>
-        <?else:?>
-            <a href="#" class="pseudo_link" data-entity="favorite" data-id="<?=$arResult["ITEM"]["ID"]?>">
-                <i class="icon icon-like"></i>
-            </a>
-        <?endif?>
+        <a href="#" class="pseudo_link" data-entity="favorite" data-id="<?=$arResult["OFFER"]["ID"]?>" data-popup-open>
+            <i class="icon icon-like"></i>
+        </a>
     </div>
     <a
             href="<?=$arResult["OFFER"]["DETAIL_PAGE_URL"]?>"
@@ -177,7 +171,7 @@ if ($arParams['DISPLAY_COMPARE']) {
     <?endif?>
 </div>
 <script>
-    if (typeof window.catalogElement == "function") {
+    if (typeof window.catalogElement == "function" && !window['obCatalogElement_<?=$arResult["OFFER"]["ID"]?>']) {
         var obCatalogElement_<?=$arResult["OFFER"]["ID"]?> = new window.catalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
     }
 </script>

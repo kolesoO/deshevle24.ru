@@ -179,8 +179,12 @@ class Catalog
                 "DEVICE_TYPE" => DEVICE_TYPE,
                 "OFFER_ID_SELECTED" => isset($arParams["offerId_selected"]) ? $arParams["offerId_selected"] : "",
                 "IMAGE_SIZE" => [
-                    "WIDTH" => 557,
-                    "HEIGHT" => 366
+                    "WIDTH" => 620,
+                    "HEIGHT" => 400
+                ],
+                "THUMB_IMAGE_SIZE" => [
+                    "WIDTH" => 130,
+                    "HEIGHT" => 130
                 ],
                 "COMPARE_STATUS" => isset($_SESSION['CATALOG_COMPARE_LIST'][IBLOCK_CATALOG_CATALOG])
                     ? array_key_exists(
@@ -188,7 +192,7 @@ class Catalog
                             $_SESSION['CATALOG_COMPARE_LIST'][IBLOCK_CATALOG_CATALOG]['ITEMS']
                         )
                     : false,
-                "FAVORITE_STATUS" => Favorite::isAdded($arParams["itemId"]),
+                "FAVORITE_STATUS" => Favorite::isAdded($arParams["offerId"]),
                 "RATING_VALUE" => $offerRating,
                 "RATING_HTML" => Reviews::getHtmlStars($offerRating)
             )

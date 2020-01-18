@@ -1,2 +1,2 @@
 <?
-$MESS["KDB_EMPTY_FAVORITE"] = "Список избранных товаров пуст";
+$MESS["KDB_EMPTY_FAVORITE"] = "Список пустой";

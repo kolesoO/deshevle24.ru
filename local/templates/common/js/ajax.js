@@ -215,10 +215,10 @@ var obAjax = {
 
     /**
      *
-     * @param id
+     * @param offerId
      * @param evt
      */
-    addToFavorite: function(id, evt)
+    addToFavorite: function(offerId, evt)
     {
         evt.preventDefault();
 
@@ -230,7 +230,7 @@ var obAjax = {
                 class: "Favorite",
                 method: "add",
                 params: {
-                    id: id
+                    offer_id: offerId
                 }
             }),
             [
@@ -258,11 +258,11 @@ var obAjax = {
 
     /**
      *
-     * @param id
+     * @param offerId
      * @param wrapId
      * @param evt
      */
-    deleteFromFavorite: function(id, wrapId, evt)
+    deleteFromFavorite: function(offerId, wrapId, evt)
     {
         evt.preventDefault();
 
@@ -274,7 +274,7 @@ var obAjax = {
                 class: "Favorite",
                 method: "delete",
                 params: {
-                    id: id
+                    offer_id: offerId
                 }
             }),
             [
@@ -300,9 +300,89 @@ var obAjax = {
                 node.innerHTML = (data.full_count > 0 ? '<span class="icon-inner">' + data.full_count + '</span>' : '');
             }
         }
-        var node = document.getElementById(this.params.wrap_id);
+        this.getFavoriteList(this.params.wrap_id);
+        if (!!data.deleted_item) {
+            window['obCatalogElement_' + data.deleted_item].initFavoriteNode();
+            window['obCatalogElement_' + data.deleted_item].initFavorite(false);
+        }
+    },
+
+    /**
+     *
+     * @param targetId
+     */
+    removeAllFavorite: function(targetId)
+    {
+        this.setParams({wrap_id: targetId});
+        this.doRequest(
+            "POST",
+            location.href,
+            this.serializeData({
+                class: "Favorite",
+                method: "removeAll",
+                params: {}
+            }),
+            [
+                ["Content-type", "application/x-www-form-urlencoded"]
+            ]
+        );
+    },
+
+    /**
+     *
+     * @param data
+     */
+    removeAllFavoriteCallBack: function(data)
+    {
+        if (typeof data.full_count != "undefined") {
+            var favoriteNode = document.getElementById("favorite-wrapper");
+            if (!!favoriteNode) {
+                favoriteNode.innerHTML = (data.full_count > 0 ? '<span class="icon-inner">' + data.full_count + '</span>' : '');
+            }
+        }
+        if (!!data.msg) {
+            this.addPopupMessage("empty", data.msg);
+        }
+        if (!!data.deleted_list) {
+            for (var counter in data.deleted_list) {
+                window['obCatalogElement_' + data.deleted_list[counter]].initFavoriteNode();
+                window['obCatalogElement_' + data.deleted_list[counter]].initFavorite(false);
+            }
+        }
+        this.getFavoriteList(this.params.wrap_id);
+    },
+
+    /**
+     *
+     * @param targetId
+     */
+    getFavoriteList: function(targetId)
+    {
+        this.setParams({target_id: targetId});
+        this.doRequest(
+            "POST",
+            location.href,
+            this.serializeData({
+                class: "Favorite",
+                method: "getList",
+                params: {}
+            }),
+            [
+                ["Content-type", "application/x-www-form-urlencoded"]
+            ]
+        );
+    },
+
+    /**
+     *
+     * @param data
+     */
+    getFavoriteListCallBack: function(data)
+    {
+        var node = document.getElementById(this.params.target_id);
+
         if (!!node) {
-            node.remove();
+            node.innerHTML = data.html;
         }
     },
 

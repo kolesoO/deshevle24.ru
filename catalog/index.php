@@ -261,9 +261,22 @@ $APPLICATION->IncludeComponent(
         "SEF_URL_TEMPLATES" => $sefUrlTpl,
         "SECTIONS_ITEMS_IN_ROW" => $itemsInRow,
         "SECTION_ITEMS_IN_ROW" => $itemsInRowInner,
-        "SECTIONS_IMAGE_SIZE" => $arImageSize,
-        "ELEMENT_IMAGE_SIZE" => $arImageSize,
-        "DETAIL_IMAGE_SIZE" => $arDetailSize,
+        "SECTIONS_IMAGE_SIZE" => [
+            "WIDTH" => 175,
+            "HEIGHT" => 116
+        ],
+        "ELEMENT_IMAGE_SIZE" => [
+            "WIDTH" => 175,
+            "HEIGHT" => 116
+        ],
+        "DETAIL_IMAGE_SIZE" => [
+            "WIDTH" => 557,
+            "HEIGHT" => 366
+        ],
+        "DETAIL_THUMB_IMAGE_SIZE" => [
+            "WIDTH" => 130,
+            "HEIGHT" => 130
+        ],
         "DEVICE_TYPE" => DEVICE_TYPE,
         "INSTANT_RELOAD" => true
     ),

@@ -117,19 +117,42 @@ foreach ($arResult["PROPERTIES"] as $code => $arProp) {
                 $arResult["PROPERTIES"][$code]["VALUE"] = [];
                 foreach ($arProp["VALUE"] as $fileId) {
                     $fileInfo = \CFile::GetFileArray($fileId);
+                    $newValue = [
+                        'thumb' => $fileInfo["SRC"],
+                        'origin' => $fileInfo["SRC"]
+                    ];
+
+                    //origin
                     $thumb = \CFile::ResizeImageGet(
                         $fileInfo,
-                        ["width" => $arParams["IMAGE_SIZE"]["WIDTH"], "height" => $arParams["IMAGE_SIZE"]["HEIGHT"]],
+                        [
+                            "width" => $arParams["IMAGE_SIZE"]["WIDTH"],
+                            "height" => $arParams["IMAGE_SIZE"]["HEIGHT"]
+                        ],
                         BX_RESIZE_IMAGE_PROPORTIONAL,
                         true
                     );
-                    if (!$thumb["src"]) {
-                        $thumb["src"] = $fileInfo["SRC"];
+                    if ($thumb["src"]) {
+                        $newValue["origin"] = $thumb["src"];
                     }
-                    $arResult["PROPERTIES"][$code]["VALUE"][] = [
-                        "thumb" => $thumb["src"],
-                        "origin" => $fileInfo["SRC"]
-                    ];
+                    //end
+
+                    //thumb
+                    $thumb = \CFile::ResizeImageGet(
+                        $fileInfo,
+                        [
+                            "width" => $arParams["THUMB_IMAGE_SIZE"]["WIDTH"],
+                            "height" => $arParams["THUMB_IMAGE_SIZE"]["HEIGHT"]
+                        ],
+                        BX_RESIZE_IMAGE_PROPORTIONAL,
+                        true
+                    );
+                    if ($thumb["src"]) {
+                        $newValue["thumb"] = $thumb["src"];
+                    }
+                    //end
+
+                    $arResult["PROPERTIES"][$code]["VALUE"][] = $newValue;
                 }
             }
             break;

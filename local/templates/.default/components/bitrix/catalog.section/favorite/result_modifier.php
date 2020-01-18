@@ -132,11 +132,11 @@ if (count($arOfferKeys) > 0 && isset($arResult["CATALOGS"][$arParams["IBLOCK_ID"
     );
     while ($rsIblockItem = $rsElems->GetNextElement()) {
         $arFields = $rsIblockItem->getFields();
-        $arProps = $rsIblockItem->getProperties();
         $itemKey = $arOfferKeys[$arFields["ID"]]["ITEM_KEY"];
         $offerKey = $arOfferKeys[$arFields["ID"]]["KEY"];
         if (!$itemKey || !$offerKey) continue;
 
+        $arProps = $rsIblockItem->getProperties();
         foreach ($arProps as $code => $value) {
             if (in_array($code, $arParams["OFFERS_PROPERTY_CODE"]) && isset($arResult["ITEMS"][$itemKey]["OFFERS"][$offerKey])) {
                 $arResult["ITEMS"][$itemKey]["OFFERS"][$offerKey]["PROPERTIES"][$code] = $value;
@@ -178,32 +178,7 @@ if ($arParams["DEVICE_TYPE"] != 'DESKTOP') {
 }
 //end
 
-//информация по разделам
-$arResult["SECTIONS"] = [];
-if (count($arSectionsId) > 0) {
-    $secRes = \CIBlockSection::GetList(
-        [],
-        [
-            "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-            "ID" => array_unique($arSectionsId)
-        ],
-        false,
-        ["ID", "IBLOCK_ID", "NAME", "UF_MIN_PRICE"]
-    );
-    while ($arSection = $secRes->GetNext()) {
-        $arSection['ITEMS_COUNT'] = 0;
-        foreach ($arResult["ITEMS"] as $key => $arItem) {
-            if ($arItem["~IBLOCK_SECTION_ID"] == $arSection["ID"]) {
-                $arSection['ITEMS_COUNT'] ++;
-            }
-        }
-        $arResult["SECTIONS"][] = $arSection;
-    }
-}
-$arResult['SECTIONS_COUNT'] = count($arResult["SECTIONS"]);
-//end
-
 $cp = $this->__component;
 if (is_object($cp)) {
-    $cp->SetResultCacheKeys(["ITEMS_COUNT", "SECTIONS", "SECTIONS_COUNT"]);
+    $cp->SetResultCacheKeys(["ITEMS_COUNT"]);
 }

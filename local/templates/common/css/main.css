@@ -282,7 +282,7 @@ p.short_info{
     padding-bottom: 0;
 }
 .header{
-    z-index: 1;
+    z-index: 2;
     position: relative;
 }
 .header-part{
@@ -459,6 +459,7 @@ ymaps .logo{
     top: 0;
     left: 0;
     width: 100%;
+    min-height: 100%;
     background-color: #fff;
 }
 .catalog_slider,
@@ -571,16 +572,19 @@ ymaps .logo{
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 999;
 }
 .popup_wrapper {
     display: flex;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     align-items: center;
     justify-content: center;
+}
+.popup_wrapper.right{
+    justify-content: flex-end;
 }
 .popup_content {
     position: relative;
@@ -1145,7 +1149,7 @@ ymaps .logo{
     width:100%;
     height:100%;
     z-index:2;
-    background-color:rgba(255,255,255,0.7);
+    background-color:rgba(255,255,255,0.8);
     /*background-image:url("../images/icons/loading.gif");*/
     background-repeat:no-repeat;
     background-position:50% 50%;

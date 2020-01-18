@@ -39,7 +39,7 @@ class Result
     /**
      * @return false|string
      */
-    public function getAnser()
+    public function getAnswer()
     {
         return json_encode([
             "answer" => $this->data,
