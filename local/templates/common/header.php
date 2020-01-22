@@ -189,7 +189,7 @@ $rsAsset->addJs(SITE_TEMPLATE_PATH.'/js/ajax.js');
                 "SECTION_URL" => "",
                 "COUNT_ELEMENTS" => "N",
                 "TOP_DEPTH" => "2",
-                "SECTION_FIELDS" => ['ID'],
+                "SECTION_FIELDS" => ['ID', 'NAME', 'CODE', 'SECTION_PAGE_URL', 'PICTURE'],
                 "SECTION_USER_FIELDS" => ["UF_*"],
                 "ADD_SECTIONS_CHAIN" => "N",
                 "CACHE_TYPE" => "A",

@@ -594,6 +594,7 @@ ymaps .logo{
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
+    max-height: 95vh;
 }
 .popup_content-close {
     width: 22px;
