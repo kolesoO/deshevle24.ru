@@ -103,9 +103,9 @@ foreach ($this->basketItems as $row)
 
 	$hideDetailPicture = false;
 
-	if (!empty($row['PREVIEW_PICTURE_SRC']))
+	if (!empty($row['PREVIEW_PICTURE_SRC_2X']))
 	{
-		$rowData['IMAGE_URL'] = $row['PREVIEW_PICTURE_SRC'];
+		$rowData['IMAGE_URL'] = $row['PREVIEW_PICTURE_SRC_2X'];
 	}
 	elseif (!empty($row['DETAIL_PICTURE_SRC']))
 	{

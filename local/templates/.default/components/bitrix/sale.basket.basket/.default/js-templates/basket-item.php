@@ -17,7 +17,9 @@
         flex-wrap="wrap"
     >
         <div class="basket-item-col col-lg-6" align="center">
-            <img src="{{IMAGE_URL}}">
+            <div class="col-lg-22">
+                <img src="{{IMAGE_URL}}">
+            </div>
         </div>
         <div class="basket-item-col col-lg-6">
             <div class="catalog_item-block">
