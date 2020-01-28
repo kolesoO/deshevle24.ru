@@ -191,7 +191,7 @@ if (isset($arParams['USER_CONSENT_IS_LOADED']))
 
 $elementId = $APPLICATION->IncludeComponent(
     'bitrix:catalog.element',
-    'content',
+    '',
     $componentElementParams,
     $component
 );

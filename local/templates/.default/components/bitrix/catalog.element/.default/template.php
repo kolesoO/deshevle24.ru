@@ -21,7 +21,8 @@ $arPrice = $arOffer["PRICES"][$arParams["PRICE_CODE"][0]];
 
 //параметры для js
 $jsParams = [
-    "OFFER_ID" => $arOffer["ID"]
+    "OFFER_ID" => $arOffer["ID"],
+    "ITEM_ID" => $arResult['ID']
 ];
 if ($arParams['DISPLAY_COMPARE']) {
     $jsParams['compare'] = array(
@@ -38,24 +39,20 @@ if ($arParams['DISPLAY_COMPARE']) {
         <div flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
             <div class="col-lg-8 col-md-24">
                 <div flex-align="center" flex-wrap="wrap" flex-text_align="start">
-                    <div class="title-3 medium col-lg-13"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
+                    <div class="title-3 medium"><?=isset($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) ? $arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"] : $arOffer["NAME"]?></div>
                     <?if ($arOffer["CAN_BUY"]) :?>
                         <div class="catalog_label catalog_label-detail title-3 light" align="center"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
                     <?endif?>
                 </div>
             </div>
-            <div class="btn_list col-lg-15 col-md-24 col-xs-24" flex-align="center" flex-text_align="end" flex-wrap="wrap">
+            <div class="btn_list col-lg-16 col-md-24 col-xs-24" flex-align="center" flex-text_align="end" flex-wrap="wrap">
                 <div class="btn_list-block">
-                    <div class="btn grey_white col-xs-24" align="center">
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <i class="icon icon-star-gray-empty"></i>
-                        <span class="title-5 light">(0)</span>
+                    <div class="btn grey_white col-xs-24">
+                        <?=\kDevelop\Content\Reviews::getMarkeredHtmlStars($arOffer['ID'])?>
+                        <span>(<?=\kDevelop\Content\Reviews::getMarkeredRating($arOffer['ID'])?>)</span>
                     </div>
                     <a href="#" class="btn grey_white col-xs-24" align="center" data-entity="favorite" data-id="<?=$arOffer["ID"]?>">
-                        <i class="icon icon-favorite opacity"></i>
+                        <i class="icon icon-like opacity"></i>
                         <span>Мне нравится</span>
                     </a>
                 </div>
@@ -81,13 +78,11 @@ if ($arParams['DISPLAY_COMPARE']) {
             <div class="product_preview-img col-lg-24 col-md-24 col-xs-24" flex-align="stretch" flex-wrap="wrap" flex-text_align="space-between">
                 <?if (is_array($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) && count($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) > 0) :?>
                     <div
-                            class="product_preview-img_big col-lg-24"
-                            data-autoplay="true"
+                            class="product_preview-img_big js-slider col-lg-24"
+                            data-autoplay="false"
                             data-speed="1000"
                             data-arrows="false"
                             data-dots="false"
-                            data-centerMode="true"
-                            data-focusOnSelect="true"
                             data-asNavFor=".product_preview-nav"
                     >
                         <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $key => $arFileInfo) :?>
@@ -96,14 +91,15 @@ if ($arParams['DISPLAY_COMPARE']) {
                     </div>
                     <div class="col-lg-24" flex-align="start" flex-text_align="center">
                         <div
-                                class="product_preview-nav col-lg-21 hidden-xs"
-                                data-slidesToShow="3"
+                                class="product_preview-nav js-slider col-lg-21 hidden-xs"
+                                data-slidesToShow="10"
                                 data-autoplay="false"
                                 data-speed="1000"
-                                data-arrows="false"
+                                data-arrows="true"
                                 data-dots="false"
                                 data-asNavFor=".product_preview-img_big"
                                 data-focusOnSelect="true"
+                                data-centerMode="false"
                         >
                             <?foreach ($arResult["PROPERTIES"]["img_gallery"]["VALUE"] as $arFileInfo) :?>
                                 <div class="product_preview-nav-item" style="background-image: url('<?=$arFileInfo["thumb"]?>')"></div>
@@ -121,18 +117,20 @@ if ($arParams['DISPLAY_COMPARE']) {
 </section>
 <section class="section">
     <div class="catalog_detail-tab js-tabs">
-        <div flex-align="center" flex-text_align="space-between">
-            <a href="#" class="catalog_detail-tab-item col-lg-6 col-md-6 col-xs-12" data-tab_target="#description">
+        <div flex-align="center" class="catalog_detail-tab-btns container">
+            <a href="#" class="catalog_detail-tab-item" data-tab_target="#description">
                 <span class="title-5 light">Описание</span>
             </a>
-            <a href="#" class="catalog_detail-tab-item col-lg-3 col-md-6 col-xs-12" data-tab_target="#config">
-                <span class="title-5 light">Конфигурация</span>
+            <a href="#" class="catalog_detail-tab-item" data-tab_target="#config">
+                <span class="title-5 light">Характеристики</span>
             </a>
-            <a href="#" class="catalog_detail-tab-item col-lg-3 col-md-6 col-xs-12" data-tab_target="#reviews-old" align="center">
-                <span class="title-5 light">Отзывы (0)</span>
-            </a>
-            <a href="#" class="catalog_detail-tab-item col-lg-18 col-md-18 col-xs-12" data-tab_target="#reviews">
-                <span class="title-5 light">Отзывы (2)</span>
+            <a
+                    href="#"
+                    class="catalog_detail-tab-item"
+                    data-tab_target="#reviews"
+                    onclick="obAjax.getReviews('reviews-list', '<?=$arOffer['ID']?>')"
+            >
+                <span class="title-5 light">Отзывы (<?=\kDevelop\Content\Reviews::getMarkeredCount($arOffer['ID'])?>)</span>
             </a>
         </div>
         <div class="catalog_detail-tab-inner" data-tab_content>
@@ -143,129 +141,132 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
             <div id="config" data-tab_item>
                 <div class="container">
-                    <div class="catalog_detail-description" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                        <div class="catalog_detail-description-item">
-                            <?
-                            $propPerBlock = ceil(count($arParams["PRODUCT_PROPERTIES"]) / 4);
-                            $counter = 0;
-                            foreach ($arParams["PRODUCT_PROPERTIES"] as $code) :
-                                $arProp = isset($arResult["PROPERTIES"][$code]) ? $arResult["PROPERTIES"][$code] : $arOffer["PROPERTIES"][$code];
-                                if (!is_string($arProp["VALUE"]) || !$arProp || strlen($arProp["VALUE"]) == 0) continue;
-                                ?>
-                                <?if ($counter % $propPerBlock == 0 && $counter > 0) :?>
-                                    </div><div class="catalog_detail-description-item">
-                                <?endif?>
-                                <div class="catalog_item-block">
-                                    <div class="title-5 light"><?=$arProp["NAME"]?>:</div>
-                                    <div><?=$arProp["VALUE"]?></div>
-                                </div>
+                    <div class="catalog_detail-description" flex-align="start" flex-wrap="wrap">
+                        <div class="col-lg-19" flex-align="stretch">
+                            <div class="catalog_detail-description-item">
                                 <?
-                                $counter++;
-                            endforeach;?>
+                                $additionalProps = [
+                                    'size' => [
+                                        'title' => 'Размеры',
+                                        'items' => []
+                                    ],
+                                    'sleep_size' => [
+                                        'title' => 'Спальное место',
+                                        'items' => []
+                                    ],
+                                    'state_size' => [
+                                        'title' => 'Посадочное место',
+                                        'items' => []
+                                    ],
+                                ];
+                                $propPerBlock = ceil(count($arParams["PRODUCT_PROPERTIES"]) / 4);
+                                $counter = 0;
+                                foreach ($arParams["PRODUCT_PROPERTIES"] as $code) :
+                                    $arProp = isset($arResult["PROPERTIES"][$code]) ? $arResult["PROPERTIES"][$code] : $arOffer["PROPERTIES"][$code];
+                                    if (!is_string($arProp["VALUE"]) || !$arProp || strlen($arProp["VALUE"]) == 0) continue;
+                                    if (in_array($code, ['size_length', 'size_width', 'size_height'])) {
+                                        $additionalProps['size']['items'][] = [
+                                            'NAME' => $arProp['HINT'],
+                                            'VALUE' => $arProp["VALUE"]
+                                        ];
+                                        continue;
+                                    }
+                                    if (in_array($code, ['sleep_size_length', 'sleep_size_width', 'sleep_size_height'])) {
+                                        $additionalProps['sleep_size']['items'] = [
+                                            'NAME' => $arProp['HINT'],
+                                            'VALUE' => $arProp["VALUE"]
+                                        ];
+                                        continue;
+                                    }
+                                    if (in_array($code, ['state_size_length', 'state_size_width', 'state_size_height'])) {
+                                        $additionalProps['state_size']['items'] = [
+                                            'NAME' => $arProp['HINT'],
+                                            'VALUE' => $arProp["VALUE"]
+                                        ];
+                                        continue;
+                                    }
+                                    ?>
+                                    <?if ($counter % $propPerBlock == 0 && $counter > 0) :?>
+                                        </div><div class="catalog_detail-description-item">
+                                    <?endif?>
+                                    <div class="catalog_item-block">
+                                        <div class="title-5 light"><?=$arProp["NAME"]?>:</div>
+                                        <div><?=$arProp["VALUE"]?></div>
+                                    </div>
+                                    <?
+                                    $counter++;
+                                endforeach;?>
+                                <?foreach ($additionalProps as $prop) :
+                                    if (count($prop['items']) == 0) continue;
+                                    ?>
+                                    <?if ($counter % $propPerBlock == 0 && $counter > 0) :?>
+                                        </div><div class="catalog_detail-description-item">
+                                    <?endif?>
+                                    <div class="catalog_item-block">
+                                        <div class="title-5 light"><?=$prop['title']?>:</div>
+                                        <div flex-align="start" flex-wrap="wrap">
+                                            <?foreach ($prop['items'] as $propItem) :?>
+                                                <div class="catalog_item-footer-part">
+                                                    <small><?=$propItem['NAME']?></small>
+                                                    <span><?=$propItem['VALUE']?> см</span>
+                                                </div>
+                                            <?endforeach;?>
+                                        </div>
+                                    </div>
+                                    <?
+                                    $counter++;
+                                endforeach;?>
+                            </div>
                         </div>
                         <?if ($arOffer["CAN_BUY"]) :?>
-                            <div class="catalog_detail-description-item">
-                                <div class="catalog_item-block">
-                                    <div class="title-5 light">Цена:</div>
-                                    <?if ($arParams['SHOW_OLD_PRICE'] == "Y") :?>
-                                        <div flex-align="center">
-                                            <div class="catalog_item-price">
-                                                <s><?=number_format($arPrice['VALUE'], 0, '.', ' ')?></s>
+                            <div class="col-lg-5" flex-align="start" flex-text_align="end">
+                                <div>
+                                    <div class="catalog_item-block">
+                                        <div class="title-5 light">Цена:</div>
+                                        <?if ($arParams['SHOW_OLD_PRICE'] == "Y") :?>
+                                            <div flex-align="center">
+                                                <div class="catalog_item-price">
+                                                    <s><?=number_format($arPrice['VALUE'], 0, '.', ' ')?></s>
+                                                </div>
+                                                <?if ($arPrice["DISCOUNT_DIFF_PERCENT"] > 0) :?>
+                                                    <div class="sale_label">-<?=$arPrice['DISCOUNT_DIFF_PERCENT']?>%</div>
+                                                <?endif?>
                                             </div>
-                                            <?if ($arPrice["DISCOUNT_DIFF_PERCENT"] > 0) :?>
-                                                <div class="sale_label">-<?=$arPrice['DISCOUNT_DIFF_PERCENT']?>%</div>
-                                            <?endif?>
-                                        </div>
-                                    <?endif?>
-                                    <div class="catalog_item-price"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
-                                </div>
-                                <div class="catalog_item-block">
-                                    <a href="#" class="btn btn-arrow col-lg-24 col-xs-24" align="center" data-popup-open="#buy-one-click">
-                                        <span>Купить в 1 клик</span>
-                                        <i class="icon icon-arrow-orange"></i>
-                                    </a>
-                                </div>
-                                <div class="catalog_item-block">
-                                    <a
-                                            href="#"
-                                            class="btn color btn-arrow col-lg-24 col-xs-24"
-                                            align="center"
-                                            onclick="obAjax.addToBasket('<?=$arOffer["ID"]?>', '<?=$arPrice["PRICE_ID"]?>', event)"
-                                    >
-                                        <span>В корзину</span>
-                                        <i class="icon icon-arrow"></i>
-                                    </a>
+                                        <?endif?>
+                                        <div class="catalog_item-price"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
+                                    </div>
+                                    <div class="catalog_item-block">
+                                        <a href="#" class="btn btn-arrow col-lg-24 col-xs-24" align="center" data-popup-open="#buy-one-click">
+                                            <span>Купить в 1 клик</span>
+                                            <i class="icon icon-arrow-orange"></i>
+                                        </a>
+                                    </div>
+                                    <div class="catalog_item-block">
+                                        <a
+                                                href="#"
+                                                class="btn color btn-arrow col-lg-24 col-xs-24"
+                                                align="center"
+                                                onclick="obAjax.addToBasket('<?=$arOffer["ID"]?>', '<?=$arPrice["PRICE_ID"]?>', event)"
+                                        >
+                                            <span>В корзину</span>
+                                            <i class="icon icon-arrow"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         <?endif?>
                     </div>
-                    <div class="articles_list" flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
-                            <div class="title-5 medium">Скандинавский стиль</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
-                        </div>
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
-                            <div class="title-5 medium">Скандинавский стиль</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
-                        </div>
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
-                            <div class="title-5 medium">Скандинавский стиль</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
-                        </div>
-                        <div class="articles_list-item col-lg-5 col-md-11 col-xs-24">
-                            <div class="articles_list-img catalog_item-block" style="background-image:url('<?=SITE_TEMPLATE_PATH?>/images/config-item.png')"></div>
-                            <div class="title-5 medium">Скандинавский стиль</div>
-                            <div class="articles_list-desc">Прямоугольные, слегка скругленные формы дивана «Динс» – образец традиционного скандинавского стиля. Приподнятое над полом основание делает модель визуально легкой, а симметричные стяжки на подушках дополняют образ.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="reviews-old" data-tab_item>
-                <div class="container">
-                    <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
-                        <div>
-                            <div class="title-5 light">Рейтинг (0)</div>
-                            <div>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <a href="#" class="btn color btn-arrow" flex-text_align="end" data-popup-open="#myfeedback">
-                                <span>Оставить отзыв</span>
-                                <i class="icon icon-arrow"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="feedback-list">
-                        <div class="feedback-empty" flex-align="center" flex-wrap="wrap" flex-text_align="center">
-                            <div align="center">
-                                <i class="icon icon-chat_msg"></i>
-                                <br><br><br>
-                                <div>Отзывов о данном товаре пока нет</div>
-                                <div class="title-5 medium">Оставь отзыв первым</div>
-                            </div>
-                        </div>
-                    </div>
+                    <?=kDevelop\Content\ProductArticles::getMarkeredId($arOffer['ID'])?>
                 </div>
             </div>
             <div id="reviews" data-tab_item>
                 <div class="container">
                     <div flex-align="center" flex-wrap="wrap" flex-text_align="space-between">
                         <div>
-                            <div class="title-5 light">Рейтинг (0)</div>
+                            <div class="title-5 light">Рейтинг</div>
                             <div>
-                                <i class="icon icon-star"></i>
-                                <i class="icon icon-star"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
-                                <i class="icon icon-star-gray-empty"></i>
+                                <?=\kDevelop\Content\Reviews::getMarkeredHtmlStars($arOffer['ID'])?>
+                                <span>(<?=\kDevelop\Content\Reviews::getMarkeredRating($arOffer['ID'])?>)</span>
                             </div>
                         </div>
                         <div>
@@ -275,50 +276,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                             </a>
                         </div>
                     </div>
-                    <div class="feedback-list">
-                        <div class="feedback-list-item">
-                            <div flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="user-info col-lg-18" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                    <div class="title-5 medium">Иванов Максим</div>
-                                    <p>26.01.2019 12.30</p>
-                                    <div class="feedback-stars col-lg-24">
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star"></i>
-                                        <i class="icon icon-star-gray-empty"></i>
-                                    </div>
-                                    <div class="user-info-txt col-lg-24">
-                                        <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
-                                    </div>
-                                    <div class="feedback-like col-lg-24" flex-align="start">
-                                        <i class="icon icon-like-black"></i>
-                                        <p>Да, я рекомендую эту модель!</p>
-                                    </div>
-                                </div>
-                                <img src="/local/templates/common/images/instagram-item.png" class="col-lg-5">
-                            </div>
-                        </div>
-                        <div class="feedback-list-item">
-                            <div class="user-info col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                                <div class="title-5 medium">Иванов Максим</div>
-                                <p>26.01.2019 12.30</p>
-                                <div class="feedback-stars col-lg-24">
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star"></i>
-                                    <i class="icon icon-star-gray-empty"></i>
-                                </div>
-                                <div class="user-info-txt col-lg-24">
-                                    <p>Все понравилось. Удобный диван, хорошая продавщица в салоне, няшные доставщики. Рекомендую!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div flex-align="center" flex-text_align="center">
-                        <a href="#" class="title-5 medium btn" align="center" data-popup-open="#">Все отзывы</a>
-                    </div>
+                    <div id="reviews-list"></div>
                 </div>
             </div>
         </div>
@@ -391,5 +349,5 @@ if ($arParams['DISPLAY_COMPARE']) {
         BTN_MESSAGE_FAVORITE_REDIRECT: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_FAVORITE_REDIRECT')?>',
         FAVORITE_TITLE: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_FAVORITE_TITLE')?>'
     });
-    var obCatalogElementDetail = new window.catalogElementDetail(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
+    var obCatalogElement_<?=$arOffer["ID"]?> = new window.catalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
 </script>

@@ -35,39 +35,39 @@ if ($arResult["IPROP_VALUES"]["ELEMENT_PAGE_TITLE"]) {
 
 if (!empty($templateData['TEMPLATE_LIBRARY']))
 {
-	$loadCurrency = false;
+    $loadCurrency = false;
 
-	if (!empty($templateData['CURRENCIES']))
-	{
-		$loadCurrency = Loader::includeModule('currency');
-	}
+    if (!empty($templateData['CURRENCIES']))
+    {
+        $loadCurrency = Loader::includeModule('currency');
+    }
 
-	CJSCore::Init($templateData['TEMPLATE_LIBRARY']);
-	if ($loadCurrency)
-	{
-		?>
-		<script>
-			BX.Currency.setCurrencies(<?=$templateData['CURRENCIES']?>);
-		</script>
-		<?
-	}
+    CJSCore::Init($templateData['TEMPLATE_LIBRARY']);
+    if ($loadCurrency)
+    {
+        ?>
+        <script>
+            BX.Currency.setCurrencies(<?=$templateData['CURRENCIES']?>);
+        </script>
+        <?
+    }
 }
 
 // check compared state
 if ($arParams['DISPLAY_COMPARE']) :?>
-    <script>obCatalogElementDetail.initCompare(<?=array_key_exists($arOffer['ID'], $_SESSION[$arParams['COMPARE_NAME']][$arParams['IBLOCK_ID']]['ITEMS']) ? "true" : "false"?>);</script>
+    <script>obCatalogElement_<?=$arOffer["ID"]?>.initCompare(<?=array_key_exists($arOffer['ID'], $_SESSION[$arParams['COMPARE_NAME']][$arParams['IBLOCK_ID']]['ITEMS']) ? "true" : "false"?>);</script>
 <?endif;
 //end
 
 // check favorite
 ?>
-<script>obCatalogElementDetail.initFavorite(<?=\kDevelop\Ajax\Favorite::isAdded($arResult["ID"]) ? "true" : "false"?>);</script>
+<script>obCatalogElement_<?=$arOffer["ID"]?>.initFavorite(<?=\kDevelop\Ajax\Favorite::isAdded($arOffer["ID"]) ? "true" : "false"?>);</script>
 
 <?
 //с этим товаром покупают
 $GLOBALS["arMoreItemsFilter"] = [
     "OFFERS" => [
-        "!ID" => $arOffer["ID"]
+        "ID" => $arOffer['PROPERTIES']['more_products']['VALUE']
     ]
 ];
 $arCatalogTopParams = [
@@ -131,7 +131,7 @@ $APPLICATION->IncludeComponent(
         "LINE_ELEMENT_COUNT" => $arCatalogTopParams["LINE_ELEMENT_COUNT"],
         "LOAD_ON_SCROLL" => "N",
         "MESSAGE_404" => "",
-        "MESS_BTN_ADD_TO_BASKET" => $arParams["MESS_BTN_ADD_TO_BASKET"],
+        "MESS_BTN_ADD_TO_BASKET" => $arParams["MESS_BTN_BUY"],
         "MESS_BTN_BUY" => "Купить",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_BTN_LAZY_LOAD" => "Показать ещё",
@@ -206,7 +206,7 @@ $APPLICATION->IncludeComponent(
         "USE_COMPARE_LIST" => 'Y',
         "IMAGE_SIZE" => $arParams["ELEMENT_IMAGE_SIZE"],
         "DEVICE_TYPE" => $arParams["DEVICE_TYPE"],
-        "SECTION_TITLE" => "Похожие товары"
+        "SECTION_TITLE" => "С этим обычно покупают"
     )
 );
 //end
@@ -218,40 +218,42 @@ $APPLICATION->IncludeComponent(
             <a href="#" class="popup_content-close" data-popup-close>
                 <i class="icon icon-close"></i>
             </a>
-            <?$APPLICATION->IncludeComponent(
-                "bitrix:form.result.new",
-                "",
-                [
-                    "SEF_MODE" => "N",
-                    "WEB_FORM_ID" => WEB_FORM_BUY_ONE_CLICK,
-                    "LIST_URL" => "",
-                    "EDIT_URL" => "",
-                    "SUCCESS_URL" => "",
-                    "CHAIN_ITEM_TEXT" => "",
-                    "CHAIN_ITEM_LINK" => "",
-                    "IGNORE_CUSTOM_TEMPLATE" => "Y",
-                    "USE_EXTENDED_ERRORS" => "Y",
-                    "CACHE_TYPE" => "A",
-                    "CACHE_TIME" => "3600",
-                    "AJAX_MODE" => "Y",
-                    "AJAX_OPTION_SHADOW" => "N",
-                    "AJAX_OPTION_JUMP" => "N",
-                    "AJAX_OPTION_STYLE" => "Y",
-                    "AJAX_OPTION_HISTORY" => "N",
-                    "SHOW_TITLE" => "Y",
-                    "FIELD_VALUES" => [
-                        "product" => htmlspecialcharsback($arOffer["NAME"])
+            <div class="popup_content-inner">
+                <?$APPLICATION->IncludeComponent(
+                    "bitrix:form.result.new",
+                    "",
+                    [
+                        "SEF_MODE" => "N",
+                        "WEB_FORM_ID" => WEB_FORM_BUY_ONE_CLICK,
+                        "LIST_URL" => "",
+                        "EDIT_URL" => "",
+                        "SUCCESS_URL" => "",
+                        "CHAIN_ITEM_TEXT" => "",
+                        "CHAIN_ITEM_LINK" => "",
+                        "IGNORE_CUSTOM_TEMPLATE" => "Y",
+                        "USE_EXTENDED_ERRORS" => "Y",
+                        "CACHE_TYPE" => "A",
+                        "CACHE_TIME" => "3600",
+                        "AJAX_MODE" => "Y",
+                        "AJAX_OPTION_SHADOW" => "N",
+                        "AJAX_OPTION_JUMP" => "N",
+                        "AJAX_OPTION_STYLE" => "Y",
+                        "AJAX_OPTION_HISTORY" => "N",
+                        "SHOW_TITLE" => "Y",
+                        "FIELD_VALUES" => [
+                            "product" => htmlspecialcharsback($arOffer["NAME"])
+                        ]
                     ]
-                ]
-            );?>
-            <div id="popup_content-success" class="popup_content-success">
-                <a href="#" class="popup_content-close js-toggle_class" data-class="active" data-target="#popup_content-success">
-                    <i class="icon icon-close"></i>
-                </a>
-                <div flex-align="center" flex-text_align="center" flex-wrap="wrap">
-                    <div>
-                        <div class="popup_content-success-title col-lg-24 col-md-24 col-xs-24">Спасибо!</div>
-                        <span>Менеджер перезвонит Вам <br>в ближайшее время.</span>
+                );?>
+                <div id="popup_content-success" class="popup_content-success">
+                    <a href="#" class="popup_content-close js-toggle_class" data-class="active" data-target="#popup_content-success">
+                        <i class="icon icon-close"></i>
+                    </a>
+                    <div flex-align="center" flex-text_align="center" flex-wrap="wrap">
+                        <div>
+                            <div class="popup_content-success-title col-lg-24 col-md-24 col-xs-24">Спасибо!</div>
+                            <span>Менеджер перезвонит Вам <br>в ближайшее время.</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -265,66 +267,29 @@ $APPLICATION->IncludeComponent(
             <a href="#" class="popup_content-close" data-popup-close>
                 <i class="icon icon-close"></i>
             </a>
-            <div class="title-5 medium">Мой отзыв</div>
-            <br>
-            <div>
-                <small>Диван</small>
-                <div class="title-2 medium">Beige</div>
+            <div class="popup_content-inner">
+                <?$APPLICATION->IncludeComponent(
+                    "kDevelop:blank",
+                    "review-form",
+                    [
+                        'SECTION_NAME' => $arResult['SECTION']['NAME'],
+                        'PRODUCT_NAME' => $arOffer['NAME'],
+                        'PRODUCT_SKU_ID' => $arOffer['ID'],
+                        'IBLOCK_ID' => IBLOCK_CONTENT_REVIEWS,
+                    ]
+                );?>
             </div>
-            <br>
-            <form class="def_form">
-                <div class="def_form-item">
-                    <input type="text" placeholder="Номер заказа" class="col-lg-24 col-md-24 col-xs-24" required>
-                </div>
-                <div class="def_form-item">
-                    <input type="text" placeholder="Ваше имя" class="col-lg-24 col-md-24 col-xs-24" required>
-                </div>
-                <div class="def_form-item">
-                    <textarea  name="Текст отзыва" class="col-lg-24 col-md-24 col-xs-24" placeholder="Текст отзыва" required></textarea>
-                </div>
-                <div class="def_form-item def_form_footer col-lg-24" flex-align="start" flex-text_align="space-between" flex-wrap="wrap">
-                    <div class="def_form-item col-lg-15">
-                        <div class="catalog_item-block">
-                            <span class="form-item-rate title-5 medium">Поставьте оценку</span>
-                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
-                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
-                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
-                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
-                            <a href="#"><i class="icon icon-star-gray-empty"></i></a>
-                        </div>
-                        <div class="title-5 medium">Вы рекомендуете этот товар?</div>
-                        <a href="#" flex-align="center" class="list_block-item">
-                            <div class="col-lg-2">
-                                <i class="icon icon-like"></i>
-                            </div>
-                            <div class="col-lg-22">
-                                <span>Да, я рекомендую эту модель!</span>
-                            </div>
-                        </a>
-                        <a href="#" flex-align="center" class="list_block-item">
-                            <div class="col-lg-2">
-                                <i class="icon icon-close dark"></i>
-                            </div>
-                            <div class="col-lg-22">
-                                <span>Я не рекомендую эту модель!</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="file_input">
-                            <label for="file">
-                                <i class="icon icon-file"></i>
-                                <small>Добавить<br>фотографию</small>
-                            </label>
-                            <input id="file" type="file">
-                        </div>
-                    </div>
-                </div>
-                <div class="def_form-item def_form_footer" flex-align="start" flex-text_align="space-between">
-                    <button type="submit" class="btn color col-lg-14 col-md-24 col-xs-24" align="center">Отправить отзыв</button>
-                    <button class="btn light_grey col-lg-8 col-md-24 col-xs-24" align="center" data-popup-close="myfeedback">Отменить</button>
-                </div>
-            </form>
+        </div>
+    </div>
+</div>
+
+<div id="video-popup" class="popup">
+    <div class="popup_wrapper">
+        <div class="popup_content js-popup_content">
+            <a href="#" class="popup_content-close" data-popup-close>
+                <i class="icon icon-close"></i>
+            </a>
+            <div id="video-popup-content" class="popup_content-inner"></div>
         </div>
     </div>
 </div>

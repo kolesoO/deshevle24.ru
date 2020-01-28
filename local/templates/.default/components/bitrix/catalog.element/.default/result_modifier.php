@@ -117,22 +117,57 @@ foreach ($arResult["PROPERTIES"] as $code => $arProp) {
                 $arResult["PROPERTIES"][$code]["VALUE"] = [];
                 foreach ($arProp["VALUE"] as $fileId) {
                     $fileInfo = \CFile::GetFileArray($fileId);
+                    $newValue = [
+                        'thumb' => $fileInfo["SRC"],
+                        'origin' => $fileInfo["SRC"]
+                    ];
+
+                    //origin
                     $thumb = \CFile::ResizeImageGet(
                         $fileInfo,
-                        ["width" => $arParams["IMAGE_SIZE"]["WIDTH"], "height" => $arParams["IMAGE_SIZE"]["HEIGHT"]],
+                        [
+                            "width" => $arParams["IMAGE_SIZE"]["WIDTH"],
+                            "height" => $arParams["IMAGE_SIZE"]["HEIGHT"]
+                        ],
                         BX_RESIZE_IMAGE_PROPORTIONAL,
                         true
                     );
-                    if (!$thumb["src"]) {
-                        $thumb["src"] = $fileInfo["SRC"];
+                    if ($thumb["src"]) {
+                        $newValue["origin"] = $thumb["src"];
                     }
-                    $arResult["PROPERTIES"][$code]["VALUE"][] = [
-                        "thumb" => $thumb["src"],
-                        "origin" => $fileInfo["SRC"]
-                    ];
+                    //end
+
+                    //thumb
+                    $thumb = \CFile::ResizeImageGet(
+                        $fileInfo,
+                        [
+                            "width" => $arParams["THUMB_IMAGE_SIZE"]["WIDTH"],
+                            "height" => $arParams["THUMB_IMAGE_SIZE"]["HEIGHT"]
+                        ],
+                        BX_RESIZE_IMAGE_PROPORTIONAL,
+                        true
+                    );
+                    if ($thumb["src"]) {
+                        $newValue["thumb"] = $thumb["src"];
+                    }
+                    //end
+
+                    $arResult["PROPERTIES"][$code]["VALUE"][] = $newValue;
                 }
             }
             break;
+    }
+}
+//end
+
+//update product properties param
+if (is_array($arParams["PRODUCT_PROPERTIES"])) {
+    $arOffer = $arResult["OFFERS"][$arResult["OFFER_ID_SELECTED"]];
+    foreach ($arParams["PRODUCT_PROPERTIES"] as $key => $code) {
+        $arProp = isset($arResult["PROPERTIES"][$code]) ? $arResult["PROPERTIES"][$code] : $arOffer["PROPERTIES"][$code];
+        if (!is_string($arProp["VALUE"]) || !$arProp || strlen($arProp["VALUE"]) == 0) {
+            unset($arParams["PRODUCT_PROPERTIES"][$key]);
+        }
     }
 }
 //end

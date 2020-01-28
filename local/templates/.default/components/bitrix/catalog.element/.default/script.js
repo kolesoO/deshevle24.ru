@@ -1,38 +1,55 @@
 (function(window){
 	'use strict';
-	window.catalogElementDetail = function(obParams)
+	window.catalogElement = function(obParams)
 	{
 		this.params = obParams;
-		this.obFavorite = document.querySelector('[data-entity="favorite"]');
-		this.obCompare = document.querySelector('[data-entity="compare"]');
+		this.initFavoriteNode();
+		this.initCompareNode();
 	};
 
-	window.catalogElementDetail.prototype = {
+	window.catalogElement.prototype = {
+		initFavoriteNode: function()
+		{
+			this.arFavorite = document.querySelectorAll('[data-entity="favorite"][data-id="' + this.params.OFFER_ID + '"]');
+		},
+
+		initCompareNode: function()
+		{
+			this.arCompare = document.querySelectorAll('[data-entity="compare"][data-id="' + this.params.OFFER_ID + '"]');
+		},
+
 		/**
 		 *
 		 * @param flag
 		 */
 		initCompare: function(flag)
 		{
-			if (!!this.obCompare) {
-				var text = BX.message("COMPARE_TITLE");
+			if (!!this.arCompare) {
+				var text = BX.message("COMPARE_TITLE"),
+					key = 0;
 				if (flag) {
 					text = BX.message("BTN_MESSAGE_COMPARE_REDIRECT");
-					this.obCompare.href = this.params.compare.COMPARE_PATH;
+					for (key = 0; key < this.arCompare.length; key ++) {
+						this.arCompare[key].href = this.params.compare.COMPARE_PATH;
+					}
 				} else {
 					var ctx = this;
-					ctx.obCompare.addEventListener("click", function() {
-						BX.ajax({
-							method: 'POST',
-							dataType: 'json',
-							url: ctx.params.compare.COMPARE_PATH + "?action=ADD_TO_COMPARE_LIST&ajax_action=Y&id=" + ctx.params.OFFER_ID,
-							onsuccess: function(response) {
-								ctx.doCompareCallBack(response);
-							}
+					for (key = 0; key < this.arCompare.length; key ++) {
+						this.arCompare[key].addEventListener("click", function() {
+							BX.ajax({
+								method: 'POST',
+								dataType: 'json',
+								url: ctx.params.compare.COMPARE_PATH + "?action=ADD_TO_COMPARE_LIST&ajax_action=Y&id=" + ctx.params.OFFER_ID,
+								onsuccess: function(response) {
+									ctx.doCompareCallBack(response);
+								}
+							});
 						});
-					});
+					}
 				}
-				this.obCompare.querySelector("span").innerHTML = text;
+				for (key = 0; key < this.arCompare.length; key ++) {
+					this.arCompare[key].querySelector("span").innerHTML = text;
+				}
 			}
 		},
 
@@ -42,21 +59,62 @@
 		 */
 		initFavorite: function(flag)
 		{
-			if (!!this.obFavorite) {
-				var text = BX.message("FAVORITE_TITLE"),
-					ctx = this;
+			if (!!this.arFavorite) {
+				var iconClass = 'icon-like',
+					ctx = this,
+					key = 0,
+					iconNode = null;
 				if (flag) {
-					text = BX.message("BTN_MESSAGE_FAVORITE_REDIRECT");
-					ctx.obFavorite.href = "/favorite/";
-					this.classList.add("active");
+					iconClass = 'icon-favorite-full';
+					for (key = 0; key < this.arFavorite.length; key ++) {
+						ctx.arFavorite[key].removeEventListener(
+							'click',
+							this.addToFavoriteHandler
+						);
+						ctx.arFavorite[key].addEventListener(
+							'click',
+							this.getFavoriteListHandler = function() { //fix method
+								var node = document.getElementById('favorite-list'),
+									popupCollection = null,
+									popupContentollection = null;
+								obAjax.getFavoriteList('favorites');
+								if (!!node) {
+									popupCollection = document.querySelectorAll('.popup');
+									popupContentollection = document.querySelectorAll('.popup .popup_content');
+									if (!!popupCollection) {
+										popupCollection.style.display = 'none';
+									}
+									if (!!!!popupContentollection) {
+										popupCollection.style.display = 'none';
+									}
+									node.style.display = 'block';
+									node.querySelector('.popup_content').classList.add('animate');
+								}
+							}
+						);
+					}
 				} else {
-					ctx.obFavorite.addEventListener("click", function(event) {
-						ctx.initFavorite(true);
-						obAjax.addToFavorite(this.getAttribute("data-id"), event);
-						this.classList.add("active");
-					});
+					for (key = 0; key < this.arFavorite.length; key ++) {
+						ctx.arFavorite[key].removeEventListener(
+							'click',
+							this.getFavoriteListHandler
+						);
+						ctx.arFavorite[key].addEventListener(
+							"click",
+							this.addToFavoriteHandler = function(event) {
+								ctx.initFavorite(true);
+								obAjax.addToFavorite(this.getAttribute("data-id"), event);
+							}
+						);
+					}
 				}
-				this.obFavorite.querySelector("span").innerHTML = text;
+				for (key = 0; key < this.arFavorite.length; key ++) {
+					iconNode = this.arFavorite[key].querySelector('i');
+					if (!!iconNode) {
+						iconNode.classList.remove('icon-like', 'opacity', 'icon-favorite-full');
+						iconNode.classList.add(iconClass);
+					}
+				}
 			}
 		},
 

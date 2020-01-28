@@ -65,7 +65,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
         <?else:?>
             <div
-                    class="product_preview-img_big-item"
+                    class="product_preview-img_big-item col-lg-24"
                     style="background-image: url('<?=is_array($arOffer["DETAIL_PICTURE"]) ? $arOffer["DETAIL_PICTURE"]["SRC"] : SITE_TEMPLATE_PATH."/images/no-image.png"?>')"
             ></div>
         <?endif?>
