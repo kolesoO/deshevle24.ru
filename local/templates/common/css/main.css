@@ -5,12 +5,12 @@ html, body {
 }
 body {
     position: relative;
-    font-family: Gilroy;
+    font-family: Gilroy, sans-serif;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5;
     background: #fff;
-    color: #101010;
+    color: #000;
 }
 * { box-sizing: border-box; }
 *:focus{ outline:none!important; }
@@ -44,7 +44,7 @@ li{
 img { max-width:100%; max-height: 100%; }
 input, textarea, select, button{
     font-size: 100%;
-    font-family: Gilroy;
+    font-family: Gilroy, sans-serif;
 }
 input, select, button{
     line-height: 1;
