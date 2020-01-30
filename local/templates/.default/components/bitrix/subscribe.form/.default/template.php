@@ -17,7 +17,7 @@
         <div flex-align="center" flex-text_align="space-between" flex-wrap="wrap">
             <div class="col-lg-9 col-md-12 col-xs-24">
                 <div class="title-2 short_info">Будь в курсе акций и скидок</div>
-                <p class="short_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <!--p class="short_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p-->
             </div>
             <div id="subscribe-form" class="col-lg-14 col-md-10 col-xs-24">
                 <?$frame = $this->createFrame("subscribe-form", false)->begin();?>
