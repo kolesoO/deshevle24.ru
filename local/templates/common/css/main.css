@@ -1129,6 +1129,7 @@ ymaps .logo{
     box-shadow: rgb(173, 171, 171) 0 0 15px;
     z-index: 5;
     transition: .3s height;
+    background-color: #fff;
 }
 .dropdown-content.big{
     width: 350px;

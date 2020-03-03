@@ -130,19 +130,26 @@ if ($arParams['DISPLAY_COMPARE']) {
                 </div>
             </div>
         <?endif?>
-        <!--div class="catalog_item-block">
-            <div class="light_grey_link">Цвет</div>
-            <div class="catalog_color" flex-align="start" flex-wrap="wrap">
-                <a href="#" class="catalog_color-item" flex-align="center">
-                    <span class="catalog_color-color" style="background-color: #ff9901"></span>
-                    <span>Оранжевый</span>
-                </a>
-                <a href="#" class="catalog_color-item" flex-align="center">
-                    <span class="catalog_color-color" style="background-color: blue"></span>
-                    <span>Синий</span>
-                </a>
+        <?if (count($arResult['OFFERS_WITH_COLORS']) > 0) :?>
+            <div class="catalog_item-block">
+                <div class="light_grey_link">Цвет</div>
+                <div class="catalog_color" flex-align="start" flex-wrap="wrap">
+                    <?foreach ($arResult['OFFERS_WITH_COLORS'] as $key) :?>
+                        <a
+                                href="<?=$arResult['OFFERS'][$key]['DETAIL_PAGE_URL']?>"
+                                class="catalog_color-item"
+                                flex-align="center"
+                        >
+                            <span
+                                    class="catalog_color-color"
+                                    style="background-color: <?=$arResult['OFFERS'][$key]['PROPERTIES']['color']['VALUE_XML_ID']?>"
+                            ></span>
+                            <span><?=$arResult['OFFERS'][$key]['PROPERTIES']['color']['VALUE']?></span>
+                        </a>
+                    <?endforeach;?>
+                </div>
             </div>
-        </div-->
+        <?endif?>
         <?if (
             (isset($arOffer["PROPERTIES"]["size_length"]) && strlen($arOffer["PROPERTIES"]["size_length"]["VALUE"]) > 0) &&
             (isset($arOffer["PROPERTIES"]["size_width"]) && strlen($arOffer["PROPERTIES"]["size_width"]["VALUE"]) > 0) &&

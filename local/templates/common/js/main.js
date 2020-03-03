@@ -56,7 +56,7 @@ $(document).ready(function(){
     $("body").on("click touchstart", function(e){
         if($(e.target).closest(".js-drop_down-btn").length > 0) return;
         if($(e.target).closest(".js-drop_down-content").length > 0) return;
-        $(".js-drop_down-content[data-height]:not([is-active='true'])").each(function(){
+        $(".js-drop_down-content[data-height]:not([is-active='true']):not([data-static])").each(function(){
             $dropdownWrap = $(this).parents(".js-drop_down").first();
             $dropdownWrap.find(".js-drop_down-btn").removeClass("active");
             $dropdownWrap.find(".js-drop_down-content").removeClass("active");
@@ -252,6 +252,8 @@ $(document).ready(function(){
             obSlider.init('.catalog_list-content');
         }
     });
+    $('.js-catalog_filter').trigger('click');
+
     $('body').on('click', '.js-basket-step input', function() {
         var $rootWrap = $(this).closest('.js-basket-step').parent();
 

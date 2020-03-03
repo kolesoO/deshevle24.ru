@@ -90,7 +90,7 @@
 			this.editTotal();
 			this.editWarnings();
 
-			this.adjustBasketWrapperHeight();
+			//this.adjustBasketWrapperHeight();
 			this.getCacheNode(this.ids.basketRoot).style.opacity = 1;
 
 			this.bindInitialEvents();
@@ -145,7 +145,7 @@
 			BX.bind(window, 'scroll', BX.proxy(this.lazyLoad, this));
 
 			BX.bind(window, 'resize', BX.throttle(this.checkStickyHeaders, 20, this));
-			BX.bind(window, 'resize', BX.throttle(this.adjustBasketWrapperHeight, 20, this));
+			//BX.bind(window, 'resize', BX.throttle(this.adjustBasketWrapperHeight, 20, this));
 		},
 
 		bindWarningEvents: function()
@@ -353,7 +353,7 @@
 
 			if (offsetChanged && !basketScrolledToEnd)
 			{
-				this.adjustBasketWrapperHeight();
+				//this.adjustBasketWrapperHeight();
 			}
 		},
 
@@ -388,6 +388,8 @@
 
 		adjustBasketWrapperHeight: function()
 		{
+			return;
+
 			var itemListContainer = this.getCacheNode(this.ids.itemListContainer),
 				itemList = this.getCacheNode(this.ids.itemList);
 
@@ -687,7 +689,7 @@
 					this.editBasketItems(this.getItemsToEdit());
 					this.editTotal();
 
-					this.adjustBasketWrapperHeight();
+					//this.adjustBasketWrapperHeight();
 					this.applyPriceAnimation();
 					this.editWarnings();
 

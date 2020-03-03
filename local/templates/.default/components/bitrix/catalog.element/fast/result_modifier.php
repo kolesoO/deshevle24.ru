@@ -8,6 +8,7 @@ $hasResizeImage = is_array($arParams["IMAGE_SIZE"]);
 $updateOfferProps = count($arParams["OFFERS_PROPERTY_CODE"]) > 0;
 $arOfferKeys = [];
 $arResult["OFFERS_COUNT"] = count($arResult["OFFERS"]);
+$arResult['OFFERS_WITH_COLORS'] = [];
 
 //на входе имеем код выбранного sku, ищем ключ этого sku
 if (strlen($arParams["OFFER_CODE_SELECTED"]) > 0) {
@@ -26,6 +27,12 @@ if (isset($arResult["OFFERS"][$arResult["OFFER_ID_SELECTED"]])) {
             $arOfferKeys[$arOffer["ID"]] = $key;
         }
         $arOffer["DETAIL_PAGE_URL"] = $arResult["DETAIL_PAGE_URL"] . \kDevelop\Help\Tools::getOfferPrefixInUrl() . $arOffer["CODE"] . "/";
+        if (
+            strlen($arOffer['PROPERTIES']['color']['VALUE']) > 0
+            && $arResult["OFFER_ID_SELECTED"] != $key
+        ) {
+            $arResult['OFFERS_WITH_COLORS'][] = $key;
+        }
     }
     unset($arOffer);
     //Доп. свойства основного товара

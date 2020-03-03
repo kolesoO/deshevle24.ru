@@ -18,7 +18,7 @@ $this->setFrameMode(true);
         <span>Скрыть фильтры</span>
         <i class="icon"></i>
     </a>
-    <div class="catalog_filter-inner js-drop_down-content">
+    <div class="catalog_filter-inner js-drop_down-content" data-static>
         <form
                 name="<?=$arResult["FILTER_NAME"]?>_form"
                 action="<?=$arResult["FORM_ACTION"]?>"
