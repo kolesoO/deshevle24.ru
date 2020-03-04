@@ -244,11 +244,13 @@ $(document).ready(function(){
             $('.catalog_list').removeClass('col-lg-24');
             $('.catalog_list').addClass('col-lg-18');
             $('.catalog_list').removeClass('filter_inctive');
+            $(this).text('Скрыть фильтры');
             obSlider.destroy('.catalog_list-content');
         } else {
             $('.catalog_list').addClass('col-lg-24');
             $('.catalog_list').removeClass('col-lg-18');
             $('.catalog_list').addClass('filter_inctive');
+            $(this).text('Показать фильтры');
             obSlider.init('.catalog_list-content');
         }
     });

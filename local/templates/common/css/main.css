@@ -940,7 +940,7 @@ ymaps .logo{
     background-color: #f5f5f5;
 }
 .catalog_list-top-links{
-
+    font-weight: 300;
 }
 .catalog_checkbox{
     position: relative;
