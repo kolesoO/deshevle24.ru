@@ -21,6 +21,47 @@ $mobileColumns = array_fill_keys($mobileColumns, true);
 $result['BASKET_ITEM_RENDER_DATA'] = array();
 $result['ITEMS_COUNT'] = 0;
 
+$iblockId = 0;
+$sections = [];
+
+foreach ($this->basketItems as &$row)
+{
+    $parentProduct = CCatalogSku::GetProductInfo($row['PRODUCT_ID'], $row['IBLOCK_ID']);
+    $iblockId = $parentProduct['IBLOCK_ID'];
+    $row['PARENT_PRODUCT_ID'] = $parentProduct['ID'];
+}
+unset($row);
+
+//parent iblock element
+$rs = \Bitrix\Iblock\ElementTable::getList([
+    'filter' => [
+        'IBLOCK_ID' => $iblockId,
+        'ID' => array_column($this->basketItems, 'PARENT_PRODUCT_ID')
+    ],
+    'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID']
+]);
+while ($item = $rs->fetch()) {
+    foreach ($this->basketItems as &$row) {
+        if ($item['ID'] != $row['PARENT_PRODUCT_ID']) continue;
+        $row['IBLOCK_SECTION_ID'] = $item['IBLOCK_SECTION_ID'];
+    }
+    unset($row);
+}
+//end
+
+//parent iblock section
+$rs = \Bitrix\Iblock\SectionTable::getList([
+    'filter' => [
+        'IBLOCK_ID' => $iblockId,
+        'ID' => array_column($this->basketItems, 'IBLOCK_SECTION_ID')
+    ],
+    'select' => ['ID', 'NAME']
+]);
+while ($sectionInfo = $rs->fetch()) {
+    $sections[$sectionInfo['ID']] = $sectionInfo;
+}
+//end
+
 foreach ($this->basketItems as $row)
 {
     $result['ITEMS_COUNT'] += $row['QUANTITY'];
@@ -71,7 +112,8 @@ foreach ($this->basketItems as $row)
                 '#COUNT#' => $row['QUANTITY'],
                 '#SUFFIX#' => GetDeclNum($row['QUANTITY'])
             ]
-        )
+        ),
+        'SECTION' => $sections[$row['IBLOCK_SECTION_ID']]['NAME'] ?? '',
 	);
 
 	// show price including ratio

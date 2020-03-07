@@ -223,10 +223,10 @@ if ($arParams['DISPLAY_COMPARE']) {
                                 <div>
                                     <div class="catalog_item-block">
                                         <div class="title-5 light">Цена:</div>
-                                        <?if ($arParams['SHOW_OLD_PRICE'] == "Y") :?>
+                                        <?if ($arParams['SHOW_OLD_PRICE'] == "Y" && $arPrice['DISCOUNT_DIFF'] > 0) :?>
                                             <div flex-align="center">
                                                 <div class="catalog_item-price">
-                                                    <s><?=number_format($arPrice['VALUE'], 0, '.', ' ')?></s>
+                                                    <s><?=$arPrice['PRINT_VALUE']?></s>
                                                 </div>
                                                 <?if ($arPrice["DISCOUNT_DIFF_PERCENT"] > 0) :?>
                                                     <div class="sale_label">-<?=$arPrice['DISCOUNT_DIFF_PERCENT']?>%</div>

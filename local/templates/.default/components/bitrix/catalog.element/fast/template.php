@@ -34,7 +34,7 @@ if ($arParams['DISPLAY_COMPARE']) {
 ?>
 
 <div class="product_preview" flex-align="stretch" flex-wrap="wrap">
-    <div class="product_preview-img col-lg-14" flex-align="stretch" flex-wrap="wrap">
+    <div class="product_preview-img col-lg-15" flex-align="stretch" flex-wrap="wrap">
         <?if (is_array($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) && count($arResult["PROPERTIES"]["img_gallery"]["VALUE"]) > 0) :?>
             <div
                     class="product_preview-img_big js-slider col-lg-24"
@@ -70,10 +70,10 @@ if ($arParams['DISPLAY_COMPARE']) {
             ></div>
         <?endif?>
     </div>
-    <div class="product_preview-description col-lg-10">
+    <div class="product_preview-description col-lg-9">
         <div class="catalog_item-block" flex-align="start" flex-text_align="space-between">
             <?if (isset($arParams['RATING_VALUE']) && strlen($arParams['RATING_VALUE']) > 0) :?>
-                <div class="btn grey_white col-lg-11" align="center">
+                <div class="btn grey_white col-lg-11_5" align="center">
                     <?=htmlspecialcharsback($arParams['RATING_HTML'])?>
                     <?if (isset($arParams['RATING_VALUE']) && strlen($arParams['RATING_VALUE']) > 0) :?>
                         <span>(<?=$arParams['RATING_VALUE']?>)</span>
@@ -83,7 +83,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             <?if ($arParams['FAVORITE_STATUS']) :?>
                 <a
                         href="#"
-                        class="btn grey_white col-lg-11"
+                        class="btn grey_white col-lg-11_5"
                         align="center"
                         data-popup-open="#favorite-list"
                         onclick="obAjax.getFavoriteList('favorites')"
@@ -94,7 +94,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             <?else:?>
                 <a
                         href="#"
-                        class="btn grey_white col-lg-11"
+                        class="btn grey_white col-lg-11_5"
                         align="center"
                         data-entity="favorite"
                         data-id="<?=$arOffer["ID"]?>"
@@ -105,7 +105,7 @@ if ($arParams['DISPLAY_COMPARE']) {
                 </a>
             <?endif?>
         </div>
-        <div class="catalog_item-block">
+        <div class="catalog_item-block_small">
             <?if (isset($arResult["PARENT_SECTION"])) :?>
                 <div flex-align="start" flex-wrap="wrap">
                     <div class="light_grey_link"><?=$arResult["PARENT_SECTION"]["NAME"]?></div>
@@ -117,7 +117,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             <div class="title-2 light"><?=$arResult["NAME"]?></div>
         </div>
         <?if ($arOffer["CAN_BUY"]) :?>
-            <div class="catalog_item-block">
+            <div class="catalog_item-block_small">
                 <div class="light_grey_link">Цена</div>
                 <div flex-align="center" flex-wrap="wrap">
                     <?if ($arPrice["DISCOUNT_DIFF_PERCENT"] > 0) :?>
@@ -131,7 +131,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
         <?endif?>
         <?if (count($arResult['OFFERS_WITH_COLORS']) > 0) :?>
-            <div class="catalog_item-block">
+            <div class="catalog_item-block_small">
                 <div class="light_grey_link">Цвет</div>
                 <div class="catalog_color" flex-align="start" flex-wrap="wrap">
                     <?foreach ($arResult['OFFERS_WITH_COLORS'] as $key) :?>
@@ -155,7 +155,7 @@ if ($arParams['DISPLAY_COMPARE']) {
             (isset($arOffer["PROPERTIES"]["size_width"]) && strlen($arOffer["PROPERTIES"]["size_width"]["VALUE"]) > 0) &&
             (isset($arOffer["PROPERTIES"]["size_height"]) && strlen($arOffer["PROPERTIES"]["size_height"]["VALUE"]) > 0)
         ) :?>
-            <div class="catalog_item-block">
+            <div class="catalog_item-block_small">
                 <div class="title-5 light">Размеры</div>
                 <div flex-align="start" flex-wrap="wrap">
                     <div class="catalog_item-footer-part">
@@ -197,10 +197,10 @@ if ($arParams['DISPLAY_COMPARE']) {
             </div>
         <?endif?>
         <div flex-align="start" flex-wrap="wrap" flex-text_align="space-between">
-            <a href="<?=$arOffer["DETAIL_PAGE_URL"]?>" class="btn col-lg-11" align="center">Узнать больше</a>
+            <a href="<?=$arOffer["DETAIL_PAGE_URL"]?>" class="btn col-lg-11_5" align="center">Узнать больше</a>
             <a
                     href="#"
-                    class="btn color col-lg-11"
+                    class="btn color col-lg-11_5"
                     align="center"
                     onclick="obAjax.addToBasket('<?=$arOffer["ID"]?>', '<?=$arPrice["PRICE_ID"]?>', event)"
             ><?=$arParams["MESS_BTN_ADD_TO_BASKET"]?></a>

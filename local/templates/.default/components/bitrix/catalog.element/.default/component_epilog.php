@@ -15,7 +15,7 @@ $arOffer = $arResult["OFFERS"][$arResult["OFFER_ID_SELECTED"]];
 if (!$arOffer) {
     $arOffer = $arResult;
 }
-$arPrice = $arOffer["ITEM_PRICES"][$arOffer["ITEM_PRICE_SELECTED"]];
+$arPrice = $arOffer["PRICES"][$arParams["PRICE_CODE"][0]];
 $arOffer["CAN_BUY"] = $arOffer["CAN_BUY"] && $arPrice["PRICE"] > 0;
 
 //seo fields
@@ -214,11 +214,11 @@ $APPLICATION->IncludeComponent(
 
 <div id="buy-one-click" class="popup">
     <div class="popup_wrapper">
-        <div class="popup_content small js-popup_content">
+        <div class="popup_content js-popup_content">
             <a href="#" class="popup_content-close" data-popup-close>
                 <i class="icon icon-close"></i>
             </a>
-            <div class="popup_content-inner">
+            <div class="popup_content-inner big">
                 <?$APPLICATION->IncludeComponent(
                     "bitrix:form.result.new",
                     "",
@@ -242,7 +242,10 @@ $APPLICATION->IncludeComponent(
                         "SHOW_TITLE" => "Y",
                         "FIELD_VALUES" => [
                             "product" => htmlspecialcharsback($arOffer["NAME"])
-                        ]
+                        ],
+                        'SECTION_NAME' => $arResult['SECTION']['NAME'],
+                        'PRODUCT_NAME' => htmlspecialcharsback($arOffer['NAME']),
+                        'PRODUCT_PRICE' => $arPrice["PRINT_DISCOUNT_VALUE"],
                     ]
                 );?>
                 <div id="popup_content-success" class="popup_content-success">
@@ -267,13 +270,13 @@ $APPLICATION->IncludeComponent(
             <a href="#" class="popup_content-close" data-popup-close>
                 <i class="icon icon-close"></i>
             </a>
-            <div class="popup_content-inner">
+            <div class="popup_content-inner big">
                 <?$APPLICATION->IncludeComponent(
                     "kDevelop:blank",
                     "review-form",
                     [
                         'SECTION_NAME' => $arResult['SECTION']['NAME'],
-                        'PRODUCT_NAME' => $arOffer['NAME'],
+                        'PRODUCT_NAME' => htmlspecialcharsback($arOffer['NAME']),
                         'PRODUCT_SKU_ID' => $arOffer['ID'],
                         'IBLOCK_ID' => IBLOCK_CONTENT_REVIEWS,
                     ]

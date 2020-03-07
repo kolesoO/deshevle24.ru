@@ -254,7 +254,9 @@ $(document).ready(function(){
             obSlider.init('.catalog_list-content');
         }
     });
-    $('.js-catalog_filter').trigger('click');
+    setTimeout(function () {
+        $('.js-catalog_filter').trigger('click');
+    }, 1000);
 
     $('body').on('click', '.js-basket-step input', function() {
         var $rootWrap = $(this).closest('.js-basket-step').parent();

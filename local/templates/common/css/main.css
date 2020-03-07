@@ -282,7 +282,7 @@ p.short_info{
     padding-bottom: 0;
 }
 .header{
-    z-index: 2;
+    z-index: 9;
     position: relative;
 }
 .header-part{

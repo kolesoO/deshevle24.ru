@@ -23,7 +23,8 @@
         </div>
         <div class="basket-item-col col-lg-6">
             <div class="catalog_item-block">
-                <div class="title-2 medium">{{NAME}}</div>
+                <div class="light_grey_link">{{SECTION}}</div>
+                <div class="title-3 light">{{NAME}}</div>
             </div>
             <div class="catalog_item-block">
                 <div class="title-5 light">Цвет</div>

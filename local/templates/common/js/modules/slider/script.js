@@ -78,7 +78,11 @@ var obSlider = {
      */
     destroy: function(strWrapper) {
         $(strWrapper).find(this.defSliderTarget).each(function(){
-            $(this).slick("unslick");
+            try {
+                $(this).slick("unslick");
+            } catch (e) {
+                console.log('Warning: try to unslick');
+            }
             $(this).find(".slick-active").attr('style', '');
         })
     },
@@ -90,7 +94,11 @@ var obSlider = {
     reInit: function(strWrapper){
 
         $(strWrapper).find(this.defSliderTarget).each(function(){
-            $(this).slick("unslick");
+            try {
+                $(this).slick("unslick");
+            } catch (e) {
+                console.log('Warning: try to unslick');
+            }
         });
         this.init(strWrapper);
 
